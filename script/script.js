@@ -82,6 +82,10 @@ function updateRootVars() {
   root.style.setProperty('--mx', String(mx));
   root.style.setProperty('--my', String(my));
   root.style.setProperty('--scroll', String(scrollY));
+
+  // ✅ 추가: 히어로 3D 회전 각도(마우스 기반)
+  root.style.setProperty('--ry', `${(mx - 0.5) * 14}deg`);  // 좌우
+  root.style.setProperty('--rx', `${(my - 0.5) * -10}deg`); // 상하
 }
 
 document.addEventListener('mousemove', (e) => {
@@ -578,3 +582,111 @@ window.addEventListener('load', () => {
   scrollY = window.pageYOffset || 0;
   updateRootVars();
 });
+
+
+
+
+// =======================================================
+// Mouse follower spaceship (smooth + floating)
+// =======================================================
+const fxFollower = document.getElementById('fxFollower');
+
+// 현재 위치
+let shipX = window.innerWidth * 0.2;
+let shipY = window.innerHeight * 0.3;
+
+// 목표 위치(마우스)
+let targetX = shipX;
+let targetY = shipY;
+
+// 마우스 움직이면 목표 위치 변경
+document.addEventListener('mousemove', (e) => {
+  targetX = e.clientX + 20; // 마우스 살짝 뒤
+  targetY = e.clientY + 20;
+});
+
+function shipTick(){
+  if (!fxFollower) return;
+
+  // ✅ 부드럽게 따라오기 (숫자 ↓ = 더 느리고 부드러움)
+  shipX = lerp(shipX, targetX, 0.08);
+  shipY = lerp(shipY, targetY, 0.08);
+
+  // 이동 방향에 따라 살짝 기울기
+  const dx = targetX - shipX;
+  const rot = clamp(dx * 0.08, -18, 18);
+
+  // 둥실둥실 떠다니는 효과
+  const floatY = Math.sin(Date.now() * 0.004) * 6;
+
+  fxFollower.style.transform =
+    `translate3d(${shipX}px, ${shipY + floatY}px, 0) rotate(${rot}deg)`;
+
+  requestAnimationFrame(shipTick);
+}
+requestAnimationFrame(shipTick);
+
+
+
+
+const hero = document.querySelector('.hero');
+if (hero && !prefersReducedMotion) {
+  setInterval(() => {
+    if (Math.random() < 0.22) {
+      hero.classList.add('cyber-glitch');
+      setTimeout(() => hero.classList.remove('cyber-glitch'), 120);
+    }
+  }, 1800);
+}
+
+
+
+
+// =======================================================
+// Heavy + Smooth Glass Tilt (only for .hero-container)
+// =======================================================
+(() => {
+  const glass = document.querySelector('.hero-container');
+  if (!glass) return;
+
+  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  // ✅ 움직임 강도(작을수록 더 안정적)
+  const MAX_RY = 10;   // 좌우 최대 각도(추천 6~12)
+  const MAX_RX = 6;    // 상하 최대 각도(추천 4~8)
+
+  // ✅ 무게감(작을수록 더 “무겁고” 느림)
+  const FOLLOW = 0.06; // 추천 0.04 ~ 0.09
+
+  // 목표 각도 / 현재 각도
+  let tRx = 0, tRy = 0;
+  let rx = 0, ry = 0;
+
+  // 마우스는 목표값만 바꾼다
+  window.addEventListener('mousemove', (e) => {
+    const mx = e.clientX / window.innerWidth;  // 0..1
+    const my = e.clientY / window.innerHeight; // 0..1
+
+    tRy = clamp((mx - 0.5) * (MAX_RY * 2), -MAX_RY, MAX_RY);
+    tRx = clamp((my - 0.5) * (MAX_RX * -2), -MAX_RX, MAX_RX);
+  });
+
+  // 마우스 나가면 천천히 원위치
+  window.addEventListener('mouseleave', () => {
+    tRx = 0; tRy = 0;
+  });
+
+  function tick() {
+    // ✅ 무겁게 따라가기
+    rx = lerp(rx, tRx, FOLLOW);
+    ry = lerp(ry, tRy, FOLLOW);
+
+    // ✅ 글래스 패널만 회전 + 살짝 Z로 띄워서 입체감
+    glass.style.transform =
+      `perspective(1400px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(18px)`;
+
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();

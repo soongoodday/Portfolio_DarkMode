@@ -67,6 +67,7 @@ button { font: inherit; }
 /* ========================================
    FX LAYERS
    ======================================== */
+   
 .fx{
   position: fixed;
   inset: 0;
@@ -282,15 +283,49 @@ button { font: inherit; }
   padding: var(--space-xxl) var(--space-lg);
   position: relative;
   overflow: hidden;
+  perspective: 1400px;
+  transform-style: preserve-3d;
 }
 
-.hero-container{
-  max-width: 1400px;
-  margin: 0 auto;
-  text-align: center;
-  position: relative;
-  z-index: 1;
+.hero-bg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
   transform-style: preserve-3d;
+}
+
+.hero-video{
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 배경처럼 꽉 채움 */
+  object-position: center;
+  filter: saturate(1.05) contrast(1.05);
+  transform:
+    translate3d(
+      calc((var(--mx) - 0.5) * -40px),
+      calc((var(--my) - 0.5) * -40px),
+      0
+    )
+    scale(1.08);
+  will-change: transform;
+}
+
+/* 영상 위에 가독성용 오버레이(그라데이션/어둡게) */
+.hero-video-overlay{
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,0.15), rgba(0,0,0,0.75)),
+    linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.85));
+}
+
+/* ✅ 글래스 패널(네모)만 무겁게 */
+.hero-container{
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform-origin: 50% 40%;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hero-badge{
@@ -322,23 +357,32 @@ button { font: inherit; }
 
 .hero-title{
   font-family: var(--font-display);
-  font-size: clamp(4rem, 15vw, 12rem);
-  font-weight: 900;
-  line-height: .9;
+  font-size: clamp(1.9rem, 5.2vw, 4.6rem);
+  line-height: 1.05;
   margin-bottom: var(--space-xl);
   position: relative;
+
+  transform-style: preserve-3d;
+  transform: translateZ(40px) rotateX(calc(var(--rx) * .25)) rotateY(calc(var(--ry) * .25));
+  will-change: transform;
+  text-align: center;
 }
 
 .title-word{
+  font-family: 'Press Start 2P', var(--font-display);
   display: block;
-  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+  position: relative;
+
+  background: linear-gradient(90deg, #f4f7ff, #ffe9f8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: var(--glow-strong);
-  animation: titleFloat 3s ease-in-out infinite;
-  position: relative;
+
+  /* ❌ 과한 요소 제거 */
+  animation: none;
+  -webkit-text-stroke: 0.5px rgba(255,255,255,0.12);
 }
+
 
 .title-word::before{
   content: attr(data-text);
@@ -348,9 +392,39 @@ button { font: inherit; }
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: blur(18px);
-  opacity: .7;
+  filter: blur(2px);
+  opacity: .08;
   z-index: -1;
+  display: none;
+}
+
+/* (선택) 타이틀에 “빛이 지나가는” 얇은 하이라이트 */
+.hero-title::after{
+  content:"";
+  position:absolute;
+  inset:-20px;
+  pointer-events:none;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    rgba(255,255,255,.10) 40%,
+    transparent 60%
+  );
+  transform:
+    translateZ(120px)
+    translateX(calc((var(--mx) - 0.5) * 40px));
+  mix-blend-mode: screen;
+  opacity: .55;
+}
+
+/* 모션 최소화 환경 */
+@media (prefers-reduced-motion: reduce){
+  .hero-container,
+  .hero-video,
+  .hero-video-overlay,
+  .hero-title::after{
+    transform: none !important;
+  }
 }
 
 @keyframes titleFloat{
@@ -524,6 +598,7 @@ button { font: inherit; }
   max-width: 600px;
   margin: 0 auto var(--space-xl);
   animation: fadeIn 1.5s ease;
+  text-align: center;
 }
 
 .hero-scroll{
@@ -658,6 +733,7 @@ section{
   opacity: 0;
   transition: opacity .25s ease;
   pointer-events: none;
+  display: none;
 }
 
 [data-tilt]:hover::before{ opacity: .9; }
@@ -1422,4 +1498,125 @@ section{
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .fx-cursor-glow{ display:none; }
+}
+
+
+
+
+.title-word{
+  text-shadow: 0 0 18px currentColor;
+}
+
+.title-word::before{
+  filter: blur(10px);
+  opacity: .45;
+}
+
+
+
+#fxFollower{
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 5;           /* 화면 위로 */
+  pointer-events: none; /* 클릭 방해 X */
+  filter: drop-shadow(0 0 18px rgba(0,240,255,.35));
+  will-change: transform;
+}
+
+#fxFollower img{
+  width: 140px;
+  height: auto;
+}
+
+
+
+.hero.cyber-glitch .hero-container{
+  transform:
+    perspective(1400px)
+    rotateX(calc(var(--rx) + 2deg))
+    rotateY(calc(var(--ry) - 2deg))
+    translate3d(-2px, 1px, 0);
+}
+.hero.cyber-glitch .hero-video{
+  transform:
+    translate3d(
+      calc((var(--mx) - 0.5) * -40px + 8px),
+      calc((var(--my) - 0.5) * -40px - 6px),
+      0
+    )
+    scale(1.08);
+}
+
+
+
+
+.hero-title{
+  position: relative;
+  overflow: visible;
+}
+
+.hero-title::after{
+  content:"";
+  position:absolute;
+  inset:-30px;
+  pointer-events:none;
+  background: linear-gradient(
+    110deg,
+    transparent 0%,
+    rgba(0,240,255,.12) 40%,
+    rgba(157,0,255,.10) 50%,
+    transparent 60%
+  );
+  mix-blend-mode: screen;
+  filter: blur(6px);
+  opacity: .6;
+  animation: lightSweep 3.6s ease-in-out infinite;
+  display: none;
+}
+
+@keyframes lightSweep{
+  0%{ transform: translateX(-18%) }
+  50%{ transform: translateX(18%) }
+  100%{ transform: translateX(-18%) }
+}
+
+
+
+
+.hero-badge.badge-sign{
+  display:inline-flex;
+  align-items:center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: rgba(10,10,15,0.30);
+  border: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(16px);
+}
+
+.sign-name{
+  font-family: var(--font-display);
+  letter-spacing:.18em;
+  font-size:.78rem;
+  color: rgba(255,255,255,.82);
+}
+.sign-dot{
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #3b82f6;
+  box-shadow: 0 0 14px rgba(157,0,255,.45);
+}
+.sign-role{
+  font-size:.76rem;
+  letter-spacing:.16em;
+  color: rgba(255,255,255,.62);
+}
+.sign-year{
+  font-size:.72rem;
+  letter-spacing:.18em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #3b82f6;
+  color: rgba(255,255,255,.70);
 }
