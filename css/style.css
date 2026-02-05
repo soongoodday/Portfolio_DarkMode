@@ -372,49 +372,9 @@ button { font: inherit; }
   font-family: 'Press Start 2P', var(--font-display);
   display: block;
   position: relative;
-
-  background: linear-gradient(90deg, #f4f7ff, #ffe9f8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-
-  /* ❌ 과한 요소 제거 */
-  animation: none;
-  -webkit-text-stroke: 0.5px rgba(255,255,255,0.12);
-}
-
-
-.title-word::before{
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: blur(2px);
-  opacity: .08;
-  z-index: -1;
-  display: none;
-}
-
-/* (선택) 타이틀에 “빛이 지나가는” 얇은 하이라이트 */
-.hero-title::after{
-  content:"";
-  position:absolute;
-  inset:-20px;
-  pointer-events:none;
-  background: linear-gradient(
-    110deg,
-    transparent 0%,
-    rgba(255,255,255,.10) 40%,
-    transparent 60%
-  );
-  transform:
-    translateZ(120px)
-    translateX(calc((var(--mx) - 0.5) * 40px));
-  mix-blend-mode: screen;
-  opacity: .55;
+  text-shadow: none !important;              /* 번짐 제거 */
+  -webkit-text-stroke: 0 !important;         /* 흐릿한 외곽선 제거 */
+  filter: none !important; 
 }
 
 /* 모션 최소화 환경 */
@@ -1620,3 +1580,62 @@ section{
   border: 1px solid #3b82f6;
   color: rgba(255,255,255,.70);
 }
+
+
+
+
+/* ================================
+   ✅ BACKGROUND MOTION – smoother & refined (붙여넣기)
+================================ */
+
+/* 1) 그리드 움직임: 속도 ↓, 이동량 ↓, 더 부드럽게 */
+.grid-lines{
+  opacity: 0.16;                 /* 살짝 더 은은 */
+  background-size: 64px 64px;    /* 패턴이 촘촘하면 산만 → 조금 넓게 */
+  animation: gridMoveSmooth 34s cubic-bezier(0.22,1,0.36,1) infinite;
+  will-change: transform;
+}
+
+@keyframes gridMoveSmooth{
+  0%{
+    transform: perspective(560px) rotateX(62deg) translateZ(0) translateY(0);
+  }
+  100%{
+    transform: perspective(560px) rotateX(62deg) translateZ(26px) translateY(10px);
+  }
+}
+
+/* 2) 노이즈: 너무 튀면 싸보일 수 있음 → 더 은은하게 */
+.fx-noise{
+  opacity: 0.045;
+  background-size: 280px 280px;
+}
+
+/* 3) 커서 글로우: 부드럽게 따라오고 너무 크지 않게 */
+.fx-cursor-glow{
+  width: 460px;
+  height: 460px;
+  transition: opacity .35s ease, transform .12s linear;
+  background: radial-gradient(circle,
+    rgba(0,240,255,0.14) 0%,
+    rgba(157,0,255,0.08) 32%,
+    transparent 72%
+  );
+}
+
+/* 4) 전체 FX 레이어 살짝 톤 다운 (배경이 과하면 콘텐츠가 죽음) */
+.fx-canvas{
+  opacity: 0.70;
+  filter: saturate(1.05) contrast(1.03);
+}
+
+/* 5) 배경 레이어가 '바르르' 떨리는 느낌 방지 (GPU 안정화) */
+.fx,
+.grid-lines,
+.fx-canvas,
+.fx-noise{
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.grid-lines{ opacity: 0.12; }
