@@ -252,6 +252,8 @@ button { font: inherit; }
   overflow: hidden;
   border-radius: 12px;
   transform: translateZ(0);
+  border-radius: 10px;
+  text-transform: uppercase;
 }
 
 .nav-cta::before{
@@ -271,6 +273,25 @@ button { font: inherit; }
   transform: translateY(-2px);
 }
 .nav-cta:hover::before{ opacity: .6; }
+
+.nav-cta::after{
+  content:"";
+  position:absolute;
+  inset: -2px;
+  border-radius: 12px;
+  background: conic-gradient(from 180deg,
+    rgba(0,240,255,.0),
+    rgba(0,240,255,.7),
+    rgba(157,0,255,.7),
+    rgba(0,240,255,.0)
+  );
+  opacity: 0;
+  filter: blur(10px);
+  transition: opacity .35s var(--easing);
+  z-index: -2;
+}
+
+.nav-cta:hover::after{ opacity: .65; }
 
 /* ========================================
    HERO SECTION
@@ -1460,20 +1481,6 @@ section{
   .fx-cursor-glow{ display:none; }
 }
 
-
-
-
-.title-word{
-  text-shadow: 0 0 18px currentColor;
-}
-
-.title-word::before{
-  filter: blur(10px);
-  opacity: .45;
-}
-
-
-
 #fxFollower{
   position: fixed;
   left: 0;
@@ -1639,3 +1646,191 @@ section{
 }
 
 .grid-lines{ opacity: 0.12; }
+
+
+
+
+/* ========================================
+   ✅ HERO TREND PACK (타이포 믹스 + 미세 글리치 + 스캔라인)
+   - style.css 맨 아래에 붙여넣기
+======================================== */
+
+.hero-title{
+  text-align: center;
+  line-height: 1.0;
+  margin-bottom: var(--space-xl);
+  transform: none; /* 기존 rotateX/rotateY 과하면 촌스러워 보일 수 있어 일단 정리 */
+}
+
+.hero-title .title-row{
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: clamp(12px, 2vw, 24px);
+}
+
+.hero-title .title-meta{
+  font-family: var(--font-body);            /* Inter */
+  font-weight: 300;
+  letter-spacing: .22em;
+  font-size: clamp(.85rem, 1.25vw, 1.05rem);
+  color: rgba(255,255,255,.55);
+  transform: translateY(-6px);
+}
+
+.hero-title .title-pixel{
+  font-family: 'Press Start 2P', sans-serif;
+  font-size: clamp(2.2rem, 5.6vw, 5.1rem);
+  letter-spacing: .02em;
+  color: rgba(255,255,255,.96);
+  position: relative;
+  text-shadow: none;          /* 번짐 제거 */
+  filter: none;               /* 흐릿함 제거 */
+}
+
+/* hover 때만 1회 글리치 느낌 */
+.hero-title .title-pixel::before,
+.hero-title .title-pixel::after{
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-title .title-pixel::before{
+  transform: translate(2px, -1px);
+  color: rgba(0,240,255,.85);
+}
+.hero-title .title-pixel::after{
+  transform: translate(-2px, 1px);
+  color: rgba(157,0,255,.80);
+}
+
+.hero-title .title-pixel.glitch-on::before{
+  opacity: 1;
+  animation: miniGlitch .22s steps(2,end) 1;
+}
+.hero-title .title-pixel.glitch-on::after{
+  opacity: 1;
+  animation: miniGlitch .22s steps(2,end) 1;
+}
+
+@keyframes miniGlitch{
+  0%{ clip-path: inset(0 0 70% 0); }
+  50%{ clip-path: inset(30% 0 30% 0); }
+  100%{ clip-path: inset(70% 0 0 0); }
+}
+
+/* ✅ 스캔라인: 과하면 촌 → “진짜 미세하게” */
+.hero-scanlines{
+  position:absolute;
+  inset:0;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.045) 0px,
+      rgba(255,255,255,0.045) 1px,
+      rgba(0,0,0,0) 3px,
+      rgba(0,0,0,0) 6px
+    );
+  opacity: .18;
+  mix-blend-mode: overlay;
+  pointer-events:none;
+}
+
+/* ✅ 글리치 레이어: 아주 낮은 확률로만 */
+.hero-glitch{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg, rgba(0,240,255,.06), transparent 30%, rgba(157,0,255,.05));
+  opacity: 0;
+  mix-blend-mode: screen;
+  filter: blur(10px);
+  pointer-events:none;
+}
+
+/* 히어로가 흔들리는 대신 "한 번 번쩍" */
+.hero.cyber-glitch .hero-glitch{ opacity: .55; }
+
+/* 마우스 우주선이 nav 위로 올라오면 방해될 수 있어 z-index 조정 */
+#fxFollower{ z-index: 2; }
+.main-nav{ z-index: 1000; }
+
+/* hover 글리치 느리게 */
+.hero-title .title-pixel.glitch-on::before{
+  opacity: 1;
+  animation: miniGlitch 0.9s steps(3,end) 1; /* ✅ 0.22s -> 0.9s */
+}
+.hero-title .title-pixel.glitch-on::after{
+  opacity: 1;
+  animation: miniGlitch 0.9s steps(3,end) 1; /* ✅ 0.22s -> 0.9s */
+}
+
+@keyframes miniGlitch{
+  0%   { clip-path: inset(0 0 78% 0); transform: translate(2px,-1px); }
+  18%  { clip-path: inset(10% 0 55% 0); transform: translate(4px,-2px); }
+  38%  { clip-path: inset(40% 0 25% 0); transform: translate(-3px,2px); }
+  62%  { clip-path: inset(55% 0 10% 0); transform: translate(3px,1px); }
+  100% { clip-path: inset(78% 0 0 0); transform: translate(-2px,1px); }
+}
+
+/* ========================================
+   ✅ CYBER / GAME VIBE PACK (CRT + Vignette + RGB Split)
+======================================== */
+
+/* 전체 히어로에 CRT 비네팅 */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(70% 60% at 50% 35%, rgba(0,0,0,0.15), rgba(0,0,0,0.72)),
+    radial-gradient(120% 90% at 50% 40%, rgba(0,240,255,0.07), transparent 55%),
+    radial-gradient(120% 90% at 50% 55%, rgba(157,0,255,0.06), transparent 60%);
+  z-index: 1;
+}
+
+/* 스캔라인 강화 (단, 과하지 않게) */
+.hero-scanlines{
+  opacity: .26;              /* 기존보다 살짝 ↑ */
+  animation: scanMove 8s linear infinite;
+}
+
+@keyframes scanMove{
+  0%{ transform: translateY(0); }
+  100%{ transform: translateY(24px); }
+}
+
+/* 작은 노이즈/CRT 깜빡임 */
+.hero-bg::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity: .06;
+  mix-blend-mode: overlay;
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,0,110,0.08) 0 1px, transparent 1px 3px);
+}
+
+/* 타이틀에 RGB 분리(게임 글리치 느낌) */
+.hero-title .title-pixel{
+  text-shadow:
+    2px 0 rgba(0,240,255,.18),
+   -2px 0 rgba(157,0,255,.16);
+}
+
+/* 랜덤 글리치 때만 RGB 분리 강하게 */
+.hero.cyber-glitch .hero-title .title-pixel{
+  text-shadow:
+    6px 0 rgba(0,240,255,.35),
+   -6px 0 rgba(157,0,255,.30),
+    0 0 18px rgba(0,240,255,.25);
+}
+
+/* hero 컨텐츠가 overlay 위로 오도록 */
+.hero-container{ position: relative; z-index: 2; }
+.hero-bg{ z-index: 0; }

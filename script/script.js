@@ -690,3 +690,29 @@ if (hero && !prefersReducedMotion) {
   }
   requestAnimationFrame(tick);
 })();
+
+
+
+
+// ✅ HERO: hover 시 타이틀 픽셀만 1회 글리치 (느리게)
+document.querySelectorAll('.title-pixel').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    el.classList.add('glitch-on');
+    clearTimeout(el._glitchTimer);
+    el._glitchTimer = setTimeout(() => el.classList.remove('glitch-on'), 900); // ✅ 260 -> 900ms
+  });
+});
+
+
+// ======================================
+// ✅ 랜덤 글리치: 빈도 낮추고, 짧게 (싸보이는 반복 방지)
+// ======================================
+const heroEl = document.querySelector('.hero');
+if (heroEl && !prefersReducedMotion) {
+  setInterval(() => {
+    if (Math.random() < 0.10) { // ✅ 빈도 더 낮게
+      heroEl.classList.add('cyber-glitch');
+      setTimeout(() => heroEl.classList.remove('cyber-glitch'), 220); // ✅ 90 -> 220ms
+    }
+  }, 2400);
+}
