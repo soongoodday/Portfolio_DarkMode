@@ -517,7 +517,7 @@ document.addEventListener('keydown', (e) => {
       topic: "가상의 반지 브랜딩/nouvedilie",
       age: "반지 구입 의향이 있는 30대 ~ 40대 이상 여성",
       figma: "https://www.figma.com/",
-      img: "images/detail_nouvedilie1.png"
+      images: "images/detail_nouvedilie1.png"
     },
     {
       tag: "ARCHIVE",
@@ -528,7 +528,51 @@ document.addEventListener('keydown', (e) => {
       topic: "가상의 반지 브랜딩/nouvedilie",
       age: "반지 구입 의향이 있는 30대 ~ 40대 이상 여성",
       figma: "https://www.figma.com/",
-      img: "images/nouvedilie_banner.png"
+      images: "images/nouvedilie_banner.png"
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "중앙대학교 리플렛",
+      meta: "Design • 2026",
+      desc: "중앙대학교 리플렛",
+      topic: "중앙대학교/리플렛",
+      age: "중앙대학교 관계자 및 학생",
+      figma: "https://www.figma.com/",
+      images: ["images/university_brochure1.jpg", "images/university_brochure2.jpg"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "당근마켓 웹 배너",
+      meta: "Design • 2026",
+      desc: "당근마켓 웹 배너",
+      topic: "당근마켓/배너",
+      age: "당근마켓 사용자",
+      figma: "https://www.figma.com/",
+      images: ["images/carrot_banner1.png","images/carrot_banner2.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "학원 모집 홍보 포스터",
+      meta: "Design • 2026",
+      desc: "학원 모집 홍보 포스터",
+      topic: "학원/홍보 포스터",
+      age: "학원 수강에 관심있는 고객",
+      figma: "https://www.figma.com/",
+      images: "images/green17_poster.png"
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "미대입시닷컴 웹페이지 배너",
+      meta: "Design • 2026",
+      desc: "미대입시닷컴 웹페이지 배너",
+      topic: "미대입시닷컴/배너",
+      age: "미대 입시생(10대 ~ 20대), 미술 입시 관련 선생님(20대 이상)",
+      figma: "https://www.figma.com/",
+      images: ["images/art_banner1.png", "images/art_banner2.png"]
     }
   ];
 
@@ -547,10 +591,59 @@ document.addEventListener('keydown', (e) => {
   const elNext = document.getElementById("owNext");
   const elIndex = document.getElementById("owIndex");
   const elTotal = document.getElementById("owTotal");
+  const elThumbs = document.getElementById("owThumbs");
 
   if (!grid || !modal) return;
 
   let current = 0;
+  let currentImg = 0;
+  let activeImages = [];
+
+
+
+
+    // ✅ 이미지 배열 통일 (string/array 모두 지원)
+  function normalizeImages(w){
+    if (Array.isArray(w.images) && w.images.length) return w.images.filter(Boolean);
+    if (typeof w.images === 'string' && w.images) return [w.images];
+    return [];
+  }
+
+  // ✅ 현재 이미지 표시
+  function showImg(idx){
+    if (!activeImages.length) {
+      console.error('❌ activeImages empty. check images path:', OTHER_WORKS[current]?.images);
+      return;
+    }
+    currentImg = (idx + activeImages.length) % activeImages.length;
+    setImgSafe(elImg, activeImages[currentImg], elTitle?.textContent || '');
+    if (elIndex) elIndex.textContent = String(currentImg + 1);
+    if (elTotal) elTotal.textContent = String(activeImages.length);
+    // 썸네일 active 표시
+    if (elThumbs){
+    elThumbs.querySelectorAll('.ow-thumb').forEach((b, i) => {
+    b.classList.toggle('active', i === currentImg);
+  });
+}
+
+  }
+
+  // ✅ 이미지 클릭하면 다음 이미지
+  elImg?.addEventListener('click', () => {
+    if (activeImages.length <= 1) return;
+    showImg(currentImg + 1);
+  });
+
+  // ✅ 키보드 Up/Down도 이미지 넘기기
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('is-open')) return;
+    if (activeImages.length <= 1) return;
+
+    if (e.key === 'ArrowUp') showImg(currentImg - 1);
+    if (e.key === 'ArrowDown') showImg(currentImg + 1);
+  });
+
+
 
   function renderCards() {
     grid.innerHTML = OTHER_WORKS.map((w, i) => `
@@ -576,33 +669,50 @@ document.addEventListener('keydown', (e) => {
   }
 
   function openModal(index) {
-    current = index;
-    const w = OTHER_WORKS[current];
+  current = index;
+  const w = OTHER_WORKS[current];
 
-    elTitle.textContent = w.title;
-    elMeta.textContent = w.meta;
-    elDesc.textContent = w.desc;
-    elTopic.textContent = w.topic;
-    elAge.textContent = w.age;
+  elTitle.textContent = w.title;
+  elMeta.textContent = w.meta;
+  elDesc.textContent = w.desc;
+  elTopic.textContent = w.topic;
+  elAge.textContent = w.age;
 
-    setImgSafe(elImg, w.img, w.title);
+  activeImages = normalizeImages(w);
+  currentImg = 0;
+  showImg(0); // ✅ 여기서 이미지 + 인덱스/토탈까지 한 번에 처리
 
-    const hasLink = !!w.figma && w.figma !== "#";
-    elFigma.href = hasLink ? w.figma : "#";
-    elFigma.style.pointerEvents = hasLink ? "auto" : "none";
-    elFigma.style.opacity = hasLink ? "1" : ".5";
+  // ✅ 썸네일 만들기
+if (elThumbs){
+  elThumbs.innerHTML = activeImages.map((src, i) => `
+    <button class="ow-thumb ${i===0 ? 'active' : ''}" type="button" data-thumb="${i}">
+      <img src="${resolveAsset(src)}" alt="thumb ${i+1}">
+    </button>
+  `).join("");
 
-    elTotal.textContent = String(OTHER_WORKS.length);
-    elIndex.textContent = String(current + 1);
+  elThumbs.onclick = (e) => {
+    const b = e.target.closest('[data-thumb]');
+    if (!b) return;
+    showImg(Number(b.dataset.thumb));
+  };
+}
 
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+  // figma 링크
+  const hasLink = !!w.figma && w.figma !== "#";
+  elFigma.href = hasLink ? w.figma : "#";
+  elFigma.style.pointerEvents = hasLink ? "auto" : "none";
+  elFigma.style.opacity = hasLink ? "1" : ".5";
 
-    const bodyEl = modal.querySelector(".ow-panel-body");
-    if (bodyEl) bodyEl.scrollTop = 0;
+  // ✅ (선택) 이미지가 여러 장이면 콘솔로 확인
+  // console.log('activeImages=', activeImages);
 
-  }
+  modal.classList.add("is-open");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+
+  const bodyEl = modal.querySelector(".ow-panel-body");
+  if (bodyEl) bodyEl.scrollTop = 0;
+}
 
   function closeModal() {
     modal.classList.remove("is-open");

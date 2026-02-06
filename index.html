@@ -425,8 +425,10 @@
         <p class="section-subtitle">기타 퀘스트 작업물로 구성됩니다. 클릭하면 상세 확인할 수 있어요.</p>
       </header>
 
-  <!-- ✅ 시맨틱: 목록 -->
-  <ul class="ow-grid" id="otherWorksGrid" aria-label="Other works list"></ul>
+  <!-- ✅ 이 div 추가 (stage3랑 동일한 폭/정렬 기준) -->
+  <div class="quest-layout">
+    <ul class="ow-grid" id="otherWorksGrid" aria-label="Other works list"></ul>
+  </div>
 </section>
 
 <!-- =========================
@@ -447,6 +449,7 @@
     <div class="ow-panel-body">
       <figure class="ow-preview">
         <img id="owImg" alt="" />
+        <div class="ow-thumbs" id="owThumbs"></div>
       </figure>
 
       <section class="ow-info" aria-label="work details">

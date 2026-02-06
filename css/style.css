@@ -33,6 +33,12 @@
   --mx:.5;
   --my:.5;
   --scroll:0;
+
+
+
+
+  --stage-max-width: 1200px;      /* QUEST LOG 기준 */
+  --stage-padding-x: clamp(16px, 3vw, 28px);
 }
 
 html{ scroll-behavior:smooth; font-size:16px; }
@@ -1417,6 +1423,7 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 
 .ow-actions{
   margin-top: 12px;
+  display: none;
 }
 
 .ow-link{
@@ -1898,3 +1905,51 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   display: block !important;
 }
 
+
+
+
+#stage3 .container,
+#stage4 .container{
+  max-width: var(--stage-max-width);
+  margin: 0 auto;
+  padding-left: var(--stage-padding-x);
+  padding-right: var(--stage-padding-x);
+  width: 100%;
+}
+
+
+
+
+
+
+/* OW 썸네일 */
+.ow-preview{ display:flex; flex-direction:column; gap:10px; }
+
+.ow-thumbs{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  border-top:1px solid rgba(255,255,255,.10);
+}
+
+.ow-thumb{
+  width:64px; height:64px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,.14);
+  overflow:hidden;
+  cursor:pointer;
+  opacity:.7;
+  background: rgba(0,0,0,.25);
+}
+
+.ow-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.ow-thumb.active{
+  opacity:1;
+  border-color: rgba(0,240,255,.6);
+}
