@@ -133,7 +133,7 @@ button{ font:inherit; }
 }
 .nav-logo{ text-decoration:none; }
 .logo-text{
-  font-family:var(--font-display);
+  font-family:var(--font-pixel);
   font-size:1.1rem;
   font-weight:800;
   letter-spacing:.12em;
@@ -594,12 +594,21 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   background:rgba(0,240,255,.04);
 }
 .stat2{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   grid-column: 1 / -1;
   padding:12px 14px;
   border-radius:14px;
   border:1px solid rgba(0,240,255,.18);
   background:rgba(0,240,255,.04);
 }
+
+.stat2 img {
+  width: 70%;
+ height: auto;
+}
+
 .stat-k{
   display:block;
   font-family:var(--font-pixel);
@@ -1029,10 +1038,14 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 .modal-body{ padding:28px; }
 .modal-title{ font-family:var(--font-display); font-size:2.2rem; margin-bottom:12px; }
 .modal-meta{ color:var(--lighter-gray); margin-bottom:18px; }
-.modal-image{ width:100%; height:360px; background:rgba(17,17,26,.85); border-radius:14px; margin-bottom:18px; border:1px solid rgba(42,42,53,.75); }
 .modal-description{ font-size:1.05rem; line-height:1.9; color:var(--lighter-gray); margin-bottom:18px; }
 .modal-details{ padding-top:18px; border-top:1px solid rgba(42,42,53,.85); }
 
+.modal-image1{ width:100%; height:360px; background:rgba(17,17,26,.85); border-radius:14px; margin-bottom:18px; border:1px solid rgba(42,42,53,.75); display: flex; justify-content: center;}
+.modal-image1 img {
+  max-width: 100%;
+  height: auto;
+}
 /* ==========================
    RESPONSIVE
 ========================== */
@@ -1265,4 +1278,304 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   transform: translateY(-50%);
   z-index: 9999;
 }
+
+
+
+
+/* ==========================
+   HIDE HUD ON SMALLER SCREENS
+========================== */
+
+/* 기본: 보이게 */
+.hero-hud{ display:block; }
+
+/* ✅ 여기 수치만 조절하면 됨 */
+@media (max-width:1200px){
+  .hero-hud{ display:none !important; }
+}
+
+/* 모바일은 확실히 숨김 */
+@media (max-width:768px){
+  .hero-hud{ display:none !important; }
+}
+
+
+
+/* ==========================
+   ✅ 1525px 이하부터 1단 레이아웃
+   (복붙용)
+========================== */
+
+@media (max-width:1525px){
+
+  /* STAGE 01 */
+  .character-layout{
+    grid-template-columns: 1fr;   /* ✅ 1단 */
+  }
+
+  /* STAGE 02 */
+  .skilltree-layout{
+    grid-template-columns: 1fr;   /* ✅ 1단 */
+  }
+
+  /* FINAL */
+  .ending{
+    grid-template-columns: 1fr;   /* ✅ 1단 */
+  }
+
+  /* HERO: HUD 숨기고 카드만 */
+  .hero-layout{
+    grid-template-columns: 1fr;   /* ✅ 1단 */
+  }
+  .hero-hud{
+    display: none !important;     /* ✅ HUD 숨김 */
+  }
+}
+
+/* 모바일 추가(선택): 메뉴 숨기기 */
+@media (max-width:768px){
+  .nav-menu{ display:none; }
+}
+
+
+
+
+
+/* ==========================
+   MODAL - BASE (공통)
+========================== */
+.modal{ display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; }
+.modal.active{ display:flex; }
+.modal-overlay{ position:absolute; inset:0; background:rgba(10,10,15,.92); backdrop-filter:blur(20px); }
+
+.modal-content{
+  position:relative;
+  background:linear-gradient(180deg, rgba(22,22,34,.96), rgba(17,17,26,.78));
+  border:1px solid rgba(42,42,53,.9);
+  max-width:1000px;
+  width:90%;
+  max-height:90vh;
+  overflow-y:auto;
+  border-radius:18px;
+  z-index:2001;
+  box-shadow:0 26px 120px rgba(0,0,0,.55);
+}
+
+.modal-body{ padding:28px; }
+.modal-title{ font-family:var(--font-display); font-size:2.2rem; margin-bottom:12px; }
+.modal-meta{ color:var(--lighter-gray); margin-bottom:18px; }
+.modal-description{ font-size:1.05rem; line-height:1.9; color:var(--lighter-gray); margin-bottom:18px; }
+.modal-details{ padding-top:18px; border-top:1px solid rgba(42,42,53,.85); }
+
+.modal-image{
+  width:100%;
+  height:360px;
+  background:rgba(17,17,26,.85);
+  border-radius:14px;
+  margin-bottom:18px;
+  border:1px solid rgba(42,42,53,.75);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.modal-image img{
+  max-width:100%;
+  max-height:100%;
+  height:auto;
+  object-fit:contain;
+}
+
+
+
+
+/* ==========================
+   ✅ HERO FINAL (COPY & PASTE)
+   - 메인 카드 + HUD를 "한 덩어리"로 화면 정중앙
+   - HUD를 fixed/absolute로 빼지 않음 (덩어리 중앙정렬 목적)
+========================== */
+
+/* 1) HERO: 화면 가운데에 hero-layout 덩어리 배치 */
+.hero{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;      /* 세로 중앙 */
+  justify-content: center;  /* 가로 중앙 */
+  padding: var(--space-xxl) var(--space-lg);
+  position: relative;       /* hero-bg absolute 기준 */
+  overflow: hidden;
+}
+
+/* 2) 배경 레이어 */
+.hero-bg{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 3) ✅ 두 박스 묶음(덩어리) */
+.hero-layout{
+  position: relative;
+  z-index: 2;
+
+  width: min(1400px, 100%);
+  display: grid;
+  grid-template-columns: minmax(720px, 900px) 320px; /* 카드 / HUD */
+  gap: 32px;
+  align-items: center;
+}
+
+/* 4) 메인 카드(기존 스타일 유지 + 폭만 안전하게) */
+.hero-container{
+  max-width: none;   /* 기존 max-width 900 덮어씌우지 않게 */
+  width: 100%;
+}
+
+/* 5) HUD: 덩어리 안에서 같이 움직임 */
+.hero-hud{
+  position: relative;        /* ✅ fixed/absolute 금지 */
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  transform: none;
+
+  width: 320px;
+  max-width: 100%;
+  pointer-events: none;
+}
+
+/* 6) 반응형: 화면 좁으면 HUD 숨기고 카드만 중앙 */
+@media (max-width: 1200px){
+  .hero-layout{
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .hero-hud{
+    display: none !important;
+  }
+  .hero-container{
+    max-width: 900px;
+  }
+}
+
+@media (max-width: 768px){
+  .hero{
+    padding: var(--space-xl) var(--space-md);
+  }
+}
+
+
+
+
+/* ==========================
+   ✅ HERO HUD ALIGN FIX (맨 아래에 추가)
+========================== */
+.hero-layout{
+  align-items: center !important;   /* 두 박스 세로 가운데 */
+}
+
+.hero-hud{
+  align-self: center !important;    /* HUD만 확실히 가운데 */
+  margin: 0 !important;
+
+  /* 예전 bottom/top/transform 잔재 전부 무력화 */
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+
+  position: relative !important;    /* fixed/absolute 잔재 차단 */
+}
+
+
+
+
+/* ==========================
+   ✅ HUD LOG AREA 더 길게 (복붙)
+========================== */
+
+/* HUD 전체가 세로로 꽉 차게 */
+.hero-hud{
+  display: flex;
+  flex-direction: column;
+  height: min(70vh, 560px) !important; 
+}
+
+/* 상단/하단은 그대로 두고, 가운데 로그창만 최대 확장 */
+.hero-hud .hud-window{
+  flex: 1 !important;         /* ✅ 남는 높이 전부 차지 */
+  min-height: 260px;          /* ✅ 기본 길이 더 길게 */
+  max-height: none !important;/* ✅ 기존 max-height(150px) 무력화 */
+  overflow: hidden;           /* 창 자체는 고정 */
+}
+
+/* 로그 내용은 스크롤되게 */
+.hero-hud .hud-lines{
+  height: 100%;
+  overflow-y: auto;           /* ✅ 내용 길면 스크롤 */
+  padding-right: 6px;         /* 스크롤바 여백 */
+}
+
+/* (선택) 스크롤바 얇게 */
+.hero-hud .hud-lines::-webkit-scrollbar{
+  width: 6px;
+}
+.hero-hud .hud-lines::-webkit-scrollbar-thumb{
+  background: rgba(0,240,255,.25);
+  border-radius: 999px;
+}
+
+
+
+
+/* ==========================
+   ✅ HUD 채팅(로그) 더 많이 보이게 - FINAL (맨 아래 복붙)
+========================== */
+
+/* HUD 자체를 더 길게 + 내부를 세로 flex로 */
+.hero-hud{
+  display: flex !important;
+  flex-direction: column !important;
+
+  /* ⭐ HUD 전체 높이: 여기만 조절하면 됨 */
+  height: min(78vh, 680px) !important;
+
+  overflow: hidden !important;  /* 테두리 밖으로 안 새게 */
+}
+
+/* 가운데 로그 영역을 최대한 늘림 (기존 max-height 150px 완전 제거) */
+.hero-hud .hud-window{
+  flex: 1 1 auto !important;
+  max-height: none !important;
+  min-height: 420px !important;   /* ⭐ 최소 로그창 길이 */
+  overflow: hidden !important;
+}
+
+/* 로그 텍스트는 스크롤 가능하게(많이 쌓여도 더 보여줌) */
+.hero-hud .hud-lines{
+  height: 100% !important;
+  overflow-y: auto !important;     /* ✅ 더 많이 보이게 + 스크롤 */
+  padding-right: 8px;
+}
+
+/* (선택) 스크롤바 얇게 */
+.hero-hud .hud-lines::-webkit-scrollbar{ width: 6px; }
+.hero-hud .hud-lines::-webkit-scrollbar-thumb{
+  background: rgba(0,240,255,.25);
+  border-radius: 999px;
+}
+
+/* (선택) 한 줄이 너무 빨리 잘리면 줄바꿈 허용 */
+.hero-hud .hud-line{
+  white-space: normal !important;  /* ✅ 더 많이 보여주는 느낌 */
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+
+
+
+
 

@@ -208,68 +208,99 @@ const projectData = {
     title: '넥스트랩 웹페이지',
     category: 'MAIN QUEST • TEAM PROJECT',
     date: '2025.12 - 2026.02',
-    status: '95% Complete',
-    description: '건설 현장 AI 스마트 CCTV 업체 웹사이트. 팀 프로젝트에서 메인 디자이너를 담당했습니다. 반응형 웹디자인으로 모바일과 데스크톱 모두에서 최적화된 사용자 경험을 제공합니다.',
-    role: '메인 디자이너',
-    tools: ['Figma', 'Photoshop', 'HTML/CSS', 'JavaScript'],
-    tags: ['Responsive', 'AI CCTV', 'Team Project']
+    status: '100% Complete',
+    description: '기업 외주 작업으로 진행한 팀 프로젝트입니다. 건설(산업) 현장 같은 특수한 공간에 설치하는 AI 스마트 CCTV 업체로, 사용자 연령대는 30대 이상입니다. 메인 디자이너를 맡아 진행했고, 코딩은 AI(ChatGPT, Claude)를 활용해서 서브 페이지 일부를 진행했습니다. 색상은 CI에서 메인과 서브 컬러를 도출했습니다.',
+    role: '메인 디자이너 & 서브 페이지(2페이지) 코딩',
+    tools: ['Figma', 'ChatGPT', 'HTML5', 'CSS3', 'Claude'],
+    tags: ['Responsive', 'AI CCTV', 'Team Project'],
+    image: 'images/nextlab_mac_pixel.png',
+    imageAlt: '넥스트랩 웹페이지 미리보기'
   },
   badaju: {
     title: '바다주 웹페이지',
     category: 'SIDE QUEST • WEB PUBLISHING',
-    date: '2025.10 - 2025.11',
+    date: '2025.11 - 2026.01',
     status: '100% Complete',
-    description: '와인 판매 사이트의 메인 및 서브페이지를 디자인하고 퍼블리싱했습니다. 타이포그래피와 여백 활용에 중점을 두었습니다.',
+    description: '기획부터 디자인, 코딩까지 모두 참여한 프로젝트입니다. 전체적으로 메인 컬러의 variaiton 안에서 콘셉트를 잡고 진행했습니다. 폰트는 아리따 돋움을 메인으로     사용했으며, 부분적으로 Pretendard를 적용했습니다. 타겟은 20대부터 실질적으로 작업 의뢰를 맡기게     될 40대 이상까지 적용했습니다.',
     role: '디자인 & 퍼블리싱',
-    tools: ['Figma', 'HTML/CSS', 'JavaScript'],
-    tags: ['Publishing', 'E-commerce']
+    tools: ['Figma', 'Photoshop', 'HTML5', 'CSS3', 'ChatGPT'],
+    tags: ['Publishing', 'Portfolio'],
+    image: 'images/badaju_mac_pixel.png',
+    imageAlt: '바다주 웹페이지 미리보기',
   },
-  olive: {
-    title: '올리브영 리디자인',
+  ukymelar: {
+    title: '유키멜라 웹페이지',
     category: 'SIDE QUEST • WEB REDESIGN',
-    date: '2025.09 - 2025.10',
+    date: '2025.12 - 2026.01',
     status: '100% Complete',
-    description: '올리브영 웹사이트 메인 페이지를 리디자인했습니다. 사용자 경험을 개선하고 더 직관적인 네비게이션을 제공하는 데 중점을 두었습니다.',
-    role: '개인 프로젝트',
-    tools: ['Figma', 'Photoshop'],
-    tags: ['Redesign', 'UX/UI']
+    description: '기획부터 디자인, 코딩까지 모두 참여한 프로젝트입니다. 지인의 포트폴리오 활용 웹페이지로 제작했습니다. 작업 문의 등의 정보성 전달을 위한 특징을 띄고 있습니다. 꽃잎이 휘날리거나 필름 형태를 띄는 디자인을 시도했고, 코딩 측면에서 스와이퍼 슬라이드 라이브러리를 적용하여 사용자 인터랙션을 유도했습니다.',
+    role: '디자인 & 퍼블리싱',
+    tools: ['Figma', 'Photoshop', 'HTML5', 'CSS3', 'Ideogram'],
+    tags: ['Photographer', 'UX/UI'],
+    image: 'images/ukymelar_mac_pixel.png',
+    imageAlt: '유키멜라 웹페이지 미리보기',
   },
-  jeju: {
-    title: '제주숨 웹페이지',
-    category: 'SIDE QUEST • LANDING',
-    date: '2025.08 - 2025.09',
+  cheil: {
+    title: '분당제일여성병원 웹페이지',
+    category: 'SIDE QUEST • WEB PUBLISHING',
+    date: '2025.12',
     status: '100% Complete',
-    description: '제주 숨결 고르기 활동을 테마로 한 랜딩페이지입니다. 제주의 자연과 문화를 모던하게 표현했습니다.',
+    description: '기획부터 디자인, 코딩까지 모두 참여한 프로젝트입니다. 마진이 좁고 와이드한 구성의 기존 홈페이지를 리디자인했습니다. 컬러는 기존 HI 색상과 차분함과 신뢰감을 전달하는 다소 명도가 낮은 네이비 계열을 선택했습니다. 히어로 메인 애니메이션 효과와 마우스 오버(크기가 커짐)를 적용하여 사용자 인터랙션을 유도했습니다.',
+    role: '디자인 & 퍼블리싱',
+    tools: ['Figma', 'Photoshop', 'HTML5', 'CSS3', 'Midjourney'],
+    tags: ['Bundang Cheil hospital', 'Redesign'],
+    image: 'images/cheil_mac_pixel.png',
+    imageAlt: '분당제일여성병원 웹페이지 미리보기',
+  },
+  nouvedilie: {
+    title: '누베딜리 웹페이지',
+    category: 'SIDE QUEST • WEB REDESIGN',
+    date: '2026.01',
+    status: '100% Complete',
+    description: '가상의 반지 브랜딩을 주제로 진행한 프로젝트입니다. 일상에서 부담없이 캐주얼하게 착용 가능하면서 합리적인 가격의 럭셔리를 누릴 수 있는 반지를 주제로 30대~40대 혹은 그 이상, 10만원대 이상 어포더블 럭셔리 (Affordable Luxury) 라인 캐주얼 반지를 기획/디자인했습니다. 많은 정보를 가독성있게 전달하기 위해 레이아웃은 깔끔하지만 디테일을 살린 방향으로 표현했습니다.',
     role: '기획 & 디자인',
-    tools: ['Figma', 'HTML/CSS'],
-    tags: ['Landing Page', 'Personal']
+    tools: ['Figma', 'Photoshop', 'Illustrator', 'ChatGPT', 'Ideogram'],
+    tags: ['Nouvedilie', 'Affordable Luxury'],
+    image: 'images/nouvedilie_mac_pixel.png',
+    imageAlt: '누베딜리 웹페이지 미리보기',
   },
-  starbucks: {
-    title: '스타벅스 클론코딩',
-    category: 'TRAINING • CLONE CODING',
-    date: '2025.07',
+  art: {
+    title: '미대입시닷컴 웹페이지',
+    category: 'SIDE QUEST • WEB REDESIGN',
+    date: '2025.12',
     status: '100% Complete',
-    description: '스타벅스 메인페이지 클론코딩 개인 작업입니다. HTML, CSS, JavaScript를 활용한 인터랙티브 요소 구현에 집중했습니다.',
-    role: '개인 학습',
-    tools: ['HTML/CSS', 'JavaScript'],
-    tags: ['Clone Coding', 'Interactive']
+    description: '기획부터 디자인까지 모두 참여한 프로젝트입니다. 내용이 많고 복잡한 기존 홈페이지를 리디자인했습니다. 폰트는 가평 물결체를 메인으로 사용했으며 부분적으로 Pretendard를 적용했습니다. 사용자 연령대는 미대 입시생(10대 ~ 20대), 미술 입시 관련 선생님(20대 이상)입니다.',
+    role: '기획 & 디자인',
+    tools: ['Figma', 'Photoshop', 'Illustrator', 'Ideogram'],
+    tags: ['Art academy', 'Redesign'],
+    image: 'images/art_mac_pixel.png',
+    imageAlt: '미대입시닷컴 웹페이지 미리보기',
   },
-  poster: {
-    title: '포스터 디자인',
-    category: 'ARCHIVE • EDITORIAL',
-    date: '2020 - 2025',
+  wethink: {
+    title: '위띵크 디자인 스트리밍 & 커뮤니티 앱',
+    category: 'SIDE QUEST • APP REDESIGN',
+    date: '2025.11',
     status: '100% Complete',
-    description: '편집디자인 경력 동안 작업한 다양한 포스터 디자인 모음입니다. 공공기관 안전 캠페인부터 브랜딩 포스터까지 다양한 주제를 다뤘습니다.',
-    role: '편집디자이너',
-    tools: ['InDesign', 'Photoshop', 'Illustrator'],
-    tags: ['Editorial', 'Print Design']
-  }
+    description: '모바일 앱 디자인으로 진행한 작업입니다. 스트리밍과 동시에 커뮤니티 활동을 할 수 있는 주제를 생각했고, 평소 즐겨 보는 치지직 앱과 피그마 협업 프로그램을 주로 참고했습니다. 메인 색상은 독특하고 신선한 느낌을 주는 보라색 계열로 선택했고 실시간 스트리밍 화면과 협업 공간인 디자인 캔버스 화면의 디자인에 특히 중점을 두고 작업을 진행했습니다.',
+    role: '기획 & 디자인',
+    tools: ['Figma', 'Photoshop', 'Illustrator', 'ChatGPT'],
+    tags: ['Collaboration Tool', 'Community'],
+    image: 'images/wethink_mac_pixel.png',
+    imageAlt: '미대입시닷컴 웹페이지 미리보기',
+  },
 };
 
 function openModal(projectId) {
   if (!modal) return;
   const project = projectData[projectId];
   if (!project) return;
+
+  // ✅ 이미지 세팅 (추가)
+  const imgEl = modal.querySelector('#modalMainImg');
+  if (imgEl) {
+    imgEl.src = project.image || '';
+    imgEl.alt = project.imageAlt || project.title || '';
+  }
 
   modal.querySelector('.modal-title').textContent = project.title;
 
@@ -365,7 +396,7 @@ document.addEventListener('keydown', (e) => {
     `;
     hudLines.appendChild(line);
     const lines = hudLines.querySelectorAll('.hud-line');
-    if (lines.length > 7) lines[0].remove();
+    if (lines.length > 20) lines[0].remove();
     hudLines.scrollTop = hudLines.scrollHeight;
   }
 
