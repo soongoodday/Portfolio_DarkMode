@@ -572,7 +572,139 @@ document.addEventListener('keydown', (e) => {
       topic: "미대입시닷컴/배너",
       age: "미대 입시생(10대 ~ 20대), 미술 입시 관련 선생님(20대 이상)",
       figma: "https://www.figma.com/",
-      images: ["images/art_banner1.png", "images/art_banner2.png"]
+      images: ["images/art_banner1.png", "images/art_banner2.png", "images/art_banner3.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "카트 게임 배너",
+      meta: "Design • 2026",
+      desc: "카트 게임 배너",
+      topic: "카트 게임/배너",
+      age: "카트 게임 이용자",
+      figma: "https://www.figma.com/",
+      images: ["images/game_banner.png", "images/KartRider_banner.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "한전MCS 플로깅 판넬 및 계획안",
+      meta: "Design • 2025",
+      desc: "한전MCS 플로깅 판넬 및 계획안",
+      topic: "한전MCS/플로깅/판넬/계획안",
+      age: "한전MCS 관계자",
+      figma: "https://www.figma.com/",
+      images: ["images/mcs1.jpg", "images/mcs2.jpg", "images/mcs3.jpg"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "AMC2024",
+      meta: "Design • 2024",
+      desc: "AMC2024",
+      topic: "AMC2024/X배너/프로그램북/현수막/네임택",
+      age: "AMC2024 관계자 및 참가자",
+      figma: "https://www.figma.com/",
+      images: ["images/AMC1.png", "images/AMC2.png", "images/AMC3.png", "images/AMC4.png", "images/AMC5.png", "images/AMC6.png", "images/AMC7.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "티오피월드 행정사사무소 명함",
+      meta: "Design • 2025",
+      desc: "티오피월드 행정사사무소 명함",
+      topic: "티오피월드/행정사사무소/명함",
+      age: "티오피월드 행정사",
+      figma: "https://www.figma.com/",
+      images: ["images/top.jpg"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "한전MCS 청렴수 물병 라벨지",
+      meta: "Design • 2025",
+      desc: "한전MCS 청렴수 물병 라벨지",
+      topic: "한전MCS/청렴수/라벨지",
+      age: "한전MCS 관계자 및 고객사",
+      figma: "https://www.figma.com/",
+      images: ["images/mcs_water.png", "images/mcs_water2.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "대한민국 공익광고제 포스터",
+      meta: "Design • 2025",
+      desc: "대한민국 공익광고제 포스터",
+      topic: "공익광고제/포스터",
+      age: "대한민국 공익광고 관계자",
+      figma: "https://www.figma.com/",
+      images: ["images/nanum_poster.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "경기도 금연공감문화제 포스터",
+      meta: "Design • 2025",
+      desc: "경기도 금연공감문화제 포스터",
+      topic: "경기도/금연공감문화제/포스터",
+      age: "경기도 금연공감문화제 관계자",
+      figma: "https://www.figma.com/",
+      images: ["images/medal_poster.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "웨딩스튜디오 인스타그램 디자인2",
+      meta: "Design • 2025",
+      desc: "웨딩스튜디오 인스타그램 디자인2",
+      topic: "웨딩스튜디오/인스타그램",
+      age: "웨딩스튜디오 관계자 및 고객",
+      figma: "https://www.figma.com/",
+      images: ["images/insta1.png", "images/insta2.png", "images/insta3.png", "images/insta4.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "웨딩스튜디오 인스타그램 디자인1",
+      meta: "Design • 2025",
+      desc: "웨딩스튜디오 인스타그램 디자인1",
+      topic: "웨딩스튜디오/인스타그램",
+      age: "웨딩스튜디오 관계자 및 고객",
+      figma: "https://www.figma.com/",
+      images: ["images/insta_ukymelar_mockup.png", "images/insta_ukymelar.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "iSuite 홍보물",
+      meta: "Design • 2025",
+      desc: "iSuite 홍보물",
+      topic: "iSuite/홍보물",
+      age: "iSuite 기술에 관심있는 기업",
+      figma: "https://www.figma.com/",
+      images: ["images/iSuite1.png", "images/iSuite2.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "스마트팩토리 툴킷 소개 홍보물",
+      meta: "Design • 2025",
+      desc: "스마트팩토리 툴킷 소개 홍보물",
+      topic: "스마트팩토리 툴킷/홍보물",
+      age: "스마트팩토리 툴킷에 관심있는 기업",
+      figma: "https://www.figma.com/",
+      images: ["images/smart1.png", "images/smart2.png"]
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "보령머드축제 포스터",
+      meta: "Design • 2024",
+      desc: "보령머드축제 포스터",
+      topic: "보령머드축제/포스터",
+      age: "보령머드축제 관계자 및 관심있는 국민",
+      figma: "https://www.figma.com/",
+      images: ["images/mud_poster.png"]
     }
   ];
 
