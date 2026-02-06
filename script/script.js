@@ -524,3 +524,143 @@ document.addEventListener('keydown', (e) => {
   setTimeout(sync, 0);
   setTimeout(sync, 300);
 })();
+
+
+
+
+/* =========================
+   OTHER WORKS ARCHIVE (NEW)
+========================= */
+(() => {
+  // ✅ 여기만 네 작업물 데이터로 채우면 끝!
+  const OTHER_WORKS = [
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "누베딜리 상세 페이지",
+      meta: "Design • 2026",
+      desc: "가상의 반지 브랜드 누베딜리 상세 페이지",
+      topic: "가상의 반지 브랜딩/nouvedilie",
+      age: "반지 구입 의향이 있는 30대 ~ 40대 이상 여성",
+      figma: "https://www.figma.com/",
+      img: "images/sample_01.png"
+    },
+    {
+      tag: "ARCHIVE",
+      status: "100%",
+      title: "기타 작업물 02",
+      meta: "Editorial • 2025",
+      desc: "작업물 요약 설명을 넣어주세요.",
+      topic: "주제/키워드",
+      age: "연령대",
+      figma: "https://www.figma.com/",
+      img: "images/sample_02.png"
+    }
+  ];
+
+  const grid = document.getElementById("otherWorksGrid");
+  const modal = document.getElementById("owModal");
+
+  const elTitle = document.getElementById("owTitle");
+  const elMeta = document.getElementById("owMeta");
+  const elDesc = document.getElementById("owDesc");
+  const elTopic = document.getElementById("owTopic");
+  const elAge = document.getElementById("owAge");
+  const elImg = document.getElementById("owImg");
+  const elFigma = document.getElementById("owFigma");
+
+  const elPrev = document.getElementById("owPrev");
+  const elNext = document.getElementById("owNext");
+  const elIndex = document.getElementById("owIndex");
+  const elTotal = document.getElementById("owTotal");
+
+  if (!grid || !modal) return;
+
+  let current = 0;
+
+  function renderCards() {
+    grid.innerHTML = OTHER_WORKS.map((w, i) => `
+      <li class="ow-item">
+        <article class="ow-card">
+          <button class="ow-card-btn" type="button" data-ow="${i}">
+            <div class="ow-top">
+              <span class="ow-tag">${w.tag}</span>
+              <span class="ow-status">${w.status}</span>
+            </div>
+
+            <h3 class="ow-title">${w.title}</h3>
+            <p class="ow-desc">${w.desc}</p>
+
+            <footer class="ow-footer">
+              <span class="ow-meta">${w.meta}</span>
+              <span class="ow-open">OPEN →</span>
+            </footer>
+          </button>
+        </article>
+      </li>
+    `).join("");
+  }
+
+  function openModal(index) {
+    current = index;
+    const w = OTHER_WORKS[current];
+
+    elTitle.textContent = w.title;
+    elMeta.textContent = w.meta;
+    elDesc.textContent = w.desc;
+    elTopic.textContent = w.topic;
+    elAge.textContent = w.age;
+
+    elImg.src = w.img;
+    elImg.alt = w.title;
+
+    const hasLink = !!w.figma && w.figma !== "#";
+    elFigma.href = hasLink ? w.figma : "#";
+    elFigma.style.pointerEvents = hasLink ? "auto" : "none";
+    elFigma.style.opacity = hasLink ? "1" : ".5";
+
+    elTotal.textContent = String(OTHER_WORKS.length);
+    elIndex.textContent = String(current + 1);
+
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function move(step) {
+    const next = (current + step + OTHER_WORKS.length) % OTHER_WORKS.length;
+    openModal(next);
+  }
+
+  // init
+  renderCards();
+
+  // open
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-ow]");
+    if (!btn) return;
+    openModal(Number(btn.dataset.ow));
+  });
+
+  // close
+  modal.addEventListener("click", (e) => {
+    if (e.target.matches("[data-ow-close]")) closeModal();
+  });
+
+  // nav + esc
+  document.addEventListener("keydown", (e) => {
+    if (!modal.classList.contains("is-open")) return;
+    if (e.key === "Escape") closeModal();
+    if (e.key === "ArrowLeft") move(-1);
+    if (e.key === "ArrowRight") move(1);
+  });
+
+  elPrev?.addEventListener("click", () => move(-1));
+  elNext?.addEventListener("click", () => move(1));
+})();

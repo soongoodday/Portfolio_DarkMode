@@ -35,6 +35,7 @@
         <li><a href="#stage1">STAGE 01</a></li>
         <li><a href="#stage2">STAGE 02</a></li>
         <li><a href="#stage3">STAGE 03</a></li>
+        <li><a href="#stage4">STAGE 04</a></li>
         <li><a href="#final">FINAL</a></li>
       </ul>
 
@@ -343,7 +344,7 @@
       <header class="section-header">
         <h2 class="section-title glitch" data-text="QUEST LOG">QUEST LOG</h2>
         <div class="title-line"></div>
-        <p class="section-subtitle">작업물은 퀘스트로 구성됩니다. 클릭하면 상세를 확인할 수 있어요.</p>
+        <p class="section-subtitle">작업물은 퀘스트로 구성됩니다. 클릭하면 상세 확인할 수 있어요.</p>
       </header>
 
       <div class="quest-layout">
@@ -410,6 +411,75 @@
         </div>
       </div>
     </section>
+
+
+    <!-- =========================
+     BONUS STAGE / OTHER WORKS
+========================= -->
+<section id="stage4" class="stage stage-quests">
+      <div class="section-number" aria-hidden="true">STAGE 04</div>
+
+      <header class="section-header">
+        <h2 class="section-title glitch" data-text="OTHER QUEST">OTHER QUEST</h2>
+        <div class="title-line"></div>
+        <p class="section-subtitle">기타 퀘스트 작업물로 구성됩니다. 클릭하면 상세 확인할 수 있어요.</p>
+      </header>
+
+  <!-- ✅ 시맨틱: 목록 -->
+  <ul class="ow-grid" id="otherWorksGrid" aria-label="Other works list"></ul>
+</section>
+
+<!-- =========================
+     MODAL
+========================= -->
+<div class="ow-modal" id="owModal" aria-hidden="true">
+  <div class="ow-backdrop" data-ow-close></div>
+
+  <article class="ow-panel" role="dialog" aria-modal="true" aria-labelledby="owTitle">
+    <header class="ow-panel-head">
+      <p class="ow-badge">ARCHIVE</p>
+      <h3 class="ow-panel-title" id="owTitle">TITLE</h3>
+      <p class="ow-panel-meta" id="owMeta">TYPE • DATE</p>
+
+      <button class="ow-close" type="button" aria-label="닫기" data-ow-close>×</button>
+    </header>
+
+    <div class="ow-panel-body">
+      <figure class="ow-preview">
+        <img id="owImg" alt="" />
+      </figure>
+
+      <section class="ow-info" aria-label="work details">
+        <dl class="ow-dl">
+          <div class="ow-row">
+            <dt>설명</dt>
+            <dd id="owDesc">-</dd>
+          </div>
+          <div class="ow-row">
+            <dt>주제</dt>
+            <dd id="owTopic">-</dd>
+          </div>
+          <div class="ow-row">
+            <dt>연령대</dt>
+            <dd id="owAge">-</dd>
+          </div>
+        </dl>
+
+        <div class="ow-actions">
+          <a class="ow-link" id="owFigma" href="#" target="_blank" rel="noreferrer">FIGMA LINK →</a>
+        </div>
+
+        <nav class="ow-nav" aria-label="work navigation">
+          <button class="ow-nav-btn" type="button" id="owPrev" aria-label="이전">‹</button>
+          <p class="ow-nav-text"><span id="owIndex">1</span> / <span id="owTotal">1</span></p>
+          <button class="ow-nav-btn" type="button" id="owNext" aria-label="다음">›</button>
+        </nav>
+      </section>
+    </div>
+  </article>
+</div>
+
+    
 
     <!-- FINAL -->
     <section id="final" class="stage stage-final">
