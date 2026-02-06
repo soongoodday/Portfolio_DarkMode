@@ -1,4 +1,29 @@
 // helpers
+function resolveAsset(path){
+  // "images/a.png" 같은 상대경로를
+  // 현재 페이지 기준으로 절대 URL로 바꿔줌 (GitHub Pages 하위경로에서도 안전)
+  try{
+    return new URL(path, document.baseURI).href;
+  }catch(e){
+    return path;
+  }
+}
+
+function setImgSafe(imgEl, path, alt = ''){
+  if (!imgEl) return;
+
+  const url = resolveAsset(path);
+
+  imgEl.onload = () => console.log('✅ IMG LOADED:', url);
+  imgEl.onerror = () => console.error('❌ IMG ERROR:', url);
+
+  imgEl.src = url;
+  imgEl.alt = alt || '';
+}
+
+
+
+
 const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -298,8 +323,7 @@ function openModal(projectId) {
   // ✅ 이미지 세팅 (추가)
   const imgEl = modal.querySelector('#modalMainImg');
   if (imgEl) {
-    imgEl.src = project.image || '';
-    imgEl.alt = project.imageAlt || project.title || '';
+    setImgSafe(imgEl, project.image || '', project.imageAlt || project.title || '');
   }
 
   modal.querySelector('.modal-title').textContent = project.title;
@@ -478,56 +502,6 @@ document.addEventListener('keydown', (e) => {
 
 
 
-
-// =======================
-// HUD height sync with hero card
-// =======================
-(() => {
-  const hero = document.querySelector('.hero-container');
-  const hud = document.querySelector('.hero-hud');
-  if (!hero || !hud) return;
-
-  const syncHeight = () => {
-    const rect = hero.getBoundingClientRect();
-    hud.style.height = `${rect.height}px`;
-  };
-
-  syncHeight();
-  window.addEventListener('resize', syncHeight);
-})();
-
-
-
-
-// =======================
-// Align HUD center with hero card center
-// =======================
-(() => {
-  const hero = document.querySelector('.hero-container');
-  const hud = document.querySelector('.hero-hud');
-  if (!hero || !hud) return;
-
-  const sync = () => {
-    const r = hero.getBoundingClientRect();
-    const centerY = r.top + (r.height / 2);
-    hud.style.top = `${centerY}px`;
-  };
-
-  // 최초 1회
-  sync();
-
-  // 리사이즈/스크롤/폰트 로드 등으로 위치가 달라질 수 있어서 계속 동기화
-  window.addEventListener('resize', sync);
-  window.addEventListener('scroll', sync, { passive: true });
-
-  // 폰트/레이아웃 안정화 후 한 번 더
-  setTimeout(sync, 0);
-  setTimeout(sync, 300);
-})();
-
-
-
-
 /* =========================
    OTHER WORKS ARCHIVE (NEW)
 ========================= */
@@ -543,18 +517,18 @@ document.addEventListener('keydown', (e) => {
       topic: "가상의 반지 브랜딩/nouvedilie",
       age: "반지 구입 의향이 있는 30대 ~ 40대 이상 여성",
       figma: "https://www.figma.com/",
-      img: "images/sample_01.png"
+      img: "images/detail_nouvedilie1.png"
     },
     {
       tag: "ARCHIVE",
       status: "100%",
-      title: "기타 작업물 02",
-      meta: "Editorial • 2025",
-      desc: "작업물 요약 설명을 넣어주세요.",
-      topic: "주제/키워드",
-      age: "연령대",
+      title: "누베딜리 웹 배너",
+      meta: "Design • 2026",
+      desc: "가상의 반지 브랜드 누베딜리 웹 배너",
+      topic: "가상의 반지 브랜딩/nouvedilie",
+      age: "반지 구입 의향이 있는 30대 ~ 40대 이상 여성",
       figma: "https://www.figma.com/",
-      img: "images/sample_02.png"
+      img: "images/nouvedilie_banner.png"
     }
   ];
 
@@ -611,8 +585,7 @@ document.addEventListener('keydown', (e) => {
     elTopic.textContent = w.topic;
     elAge.textContent = w.age;
 
-    elImg.src = w.img;
-    elImg.alt = w.title;
+    setImgSafe(elImg, w.img, w.title);
 
     const hasLink = !!w.figma && w.figma !== "#";
     elFigma.href = hasLink ? w.figma : "#";
@@ -625,6 +598,10 @@ document.addEventListener('keydown', (e) => {
     modal.classList.add("is-open");
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
+
+    const bodyEl = modal.querySelector(".ow-panel-body");
+    if (bodyEl) bodyEl.scrollTop = 0;
+
   }
 
   function closeModal() {
@@ -663,4 +640,234 @@ document.addEventListener('keydown', (e) => {
 
   elPrev?.addEventListener("click", () => move(-1));
   elNext?.addEventListener("click", () => move(1));
+})();
+
+
+
+
+/* =========================
+   OW PREVIEW -> LIGHTBOX OPEN (ROBUST)
+   ✅ DOM 로드 후 실행
+   ✅ 이벤트 위임(owImg src가 바뀌어도 항상 동작)
+========================= */
+window.addEventListener('DOMContentLoaded', () => {
+  const lb = document.getElementById('imgLb');
+  const lbImg = document.getElementById('imgLbImg');
+
+  if (!lb || !lbImg) {
+    console.error('❌ Lightbox DOM not found: #imgLb / #imgLbImg');
+    return;
+  }
+
+  function openLbWithSrc(src) {
+    if (!src) return;
+    lbImg.src = src;
+    lb.classList.add('is-open');
+    lb.setAttribute('aria-hidden', 'false');
+    // 모달도 이미 잠그고 있다면 유지되어도 괜찮음
+    document.body.style.overflow = 'hidden';
+    console.log('✅ Lightbox open:', src);
+  }
+
+  function closeLb() {
+    lb.classList.remove('is-open');
+    lb.setAttribute('aria-hidden', 'true');
+    lbImg.src = '';
+    // ⚠️ OW 모달이 열려있으면 overflow를 풀면 안 됨
+    const owModalOpen = document.getElementById('owModal')?.classList.contains('is-open');
+    if (!owModalOpen) document.body.style.overflow = '';
+  }
+
+  // ✅ (핵심) owImg를 직접 잡지 말고 문서에서 위임으로 잡기
+  document.addEventListener('click', (e) => {
+    const img = e.target.closest('#owImg');
+    if (!img) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const src = img.currentSrc || img.getAttribute('src');
+    console.log('🖱️ owImg clicked, src=', src);
+    openLbWithSrc(src);
+  });
+
+  // 모바일 사파리 대비 touch
+  document.addEventListener('touchend', (e) => {
+    const img = e.target.closest('#owImg');
+    if (!img) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const src = img.currentSrc || img.getAttribute('src');
+    console.log('👆 owImg touch, src=', src);
+    openLbWithSrc(src);
+  }, { passive: false });
+
+  // 닫기 (백드롭/닫기버튼)
+  lb.addEventListener('click', (e) => {
+    if (e.target.matches('[data-lb-close], .imglb-backdrop')) closeLb();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lb.classList.contains('is-open')) closeLb();
+  });
+});
+
+
+
+
+
+/* =========================
+   IMAGE LIGHTBOX: Zoom + Pan (FINAL CENTER FIX)
+========================= */
+(() => {
+  const lb = document.getElementById('imgLb');
+  const viewport = document.getElementById('imgLbViewport');
+  const img = document.getElementById('imgLbImg');
+  const pctEl = document.getElementById('imgLbPct');
+
+  if (!lb || !viewport || !img) return;
+
+  const btnZoomIn = lb.querySelector('[data-lb-zoom-in]');
+  const btnZoomOut = lb.querySelector('[data-lb-zoom-out]');
+  const btnReset = lb.querySelector('[data-lb-reset]');
+
+  let scale = 1;
+  let tx = 0;
+  let ty = 0;
+
+  const MIN = 0.25;  // ✅ 100%보다 더 축소 가능
+  const MAX = 6;
+
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+  function getImgSize(){
+    const iw = img.naturalWidth || img.width || 1;
+    const ih = img.naturalHeight || img.height || 1;
+    return { iw, ih };
+  }
+
+  // ✅ 항상 "가운데 유지" + (큰 경우엔 드래그 범위 제한)
+  function clampTranslate(){
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+    const { iw, ih } = getImgSize();
+
+    const sw = iw * scale;
+    const sh = ih * scale;
+
+    if (sw <= vw) tx = (vw - sw) / 2;
+    else tx = clamp(tx, vw - sw, 0);
+
+    if (sh <= vh) ty = (vh - sh) / 2;
+    else ty = clamp(ty, vh - sh, 0);
+  }
+
+  function render(){
+    clampTranslate();
+    img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+    if (pctEl) pctEl.textContent = `${Math.round(scale * 100)}%`;
+  }
+
+  function reset(){
+    scale = 1;
+    tx = 0;
+    ty = 0;
+    render();
+  }
+
+  // ✅ 특정 포인트 기준으로 줌
+  function zoomAt(newScale, clientX, clientY){
+    newScale = clamp(newScale, MIN, MAX);
+
+    const rect = viewport.getBoundingClientRect();
+    const px = clientX - rect.left;
+    const py = clientY - rect.top;
+
+    const ix = (px - tx) / scale;
+    const iy = (py - ty) / scale;
+
+    scale = newScale;
+    tx = px - ix * scale;
+    ty = py - iy * scale;
+
+    render();
+  }
+
+  /* WHEEL 줌 */
+  viewport.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const dir = e.deltaY > 0 ? -1 : 1;
+    const step = 0.12;
+    zoomAt(scale * (1 + step * dir), e.clientX, e.clientY);
+  }, { passive:false });
+
+  /* DRAG */
+  let isDown = false;
+  let startX = 0, startY = 0;
+  let baseTx = 0, baseTy = 0;
+
+  viewport.addEventListener('pointerdown', (e) => {
+    if (e.button !== undefined && e.button !== 0) return;
+    isDown = true;
+    viewport.classList.add('is-dragging');
+    startX = e.clientX;
+    startY = e.clientY;
+    baseTx = tx;
+    baseTy = ty;
+    viewport.setPointerCapture?.(e.pointerId);
+  });
+
+  viewport.addEventListener('pointermove', (e) => {
+    if (!isDown) return;
+    tx = baseTx + (e.clientX - startX);
+    ty = baseTy + (e.clientY - startY);
+    render();
+  });
+
+  function endDrag(e){
+    if (!isDown) return;
+    isDown = false;
+    viewport.classList.remove('is-dragging');
+    viewport.releasePointerCapture?.(e.pointerId);
+  }
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
+  viewport.addEventListener('pointerleave', endDrag);
+
+  /* DOUBLE CLICK */
+  viewport.addEventListener('dblclick', (e) => {
+    e.preventDefault();
+    if (scale < 1.8) zoomAt(2.2, e.clientX, e.clientY);
+    else reset();
+  });
+
+  /* BUTTONS */
+  btnZoomIn?.addEventListener('click', () => {
+    const r = viewport.getBoundingClientRect();
+    zoomAt(scale * 1.2, r.left + r.width/2, r.top + r.height/2);
+  });
+
+  btnZoomOut?.addEventListener('click', () => {
+    const r = viewport.getBoundingClientRect();
+    zoomAt(scale / 1.2, r.left + r.width/2, r.top + r.height/2);
+  });
+
+  btnReset?.addEventListener('click', reset);
+
+  // ✅ 라이트박스 열릴 때/이미지 로드될 때 항상 중앙 리셋
+  const mo = new MutationObserver(() => {
+    if (lb.classList.contains('is-open')) reset();
+  });
+  mo.observe(lb, { attributes:true, attributeFilter:['class'] });
+
+  img.addEventListener('load', () => {
+    reset();
+    // 이미지 로드 직후 레이아웃 튀는 경우 한 번 더
+    requestAnimationFrame(reset);
+  });
+
+  // 최초
+  render();
 })();

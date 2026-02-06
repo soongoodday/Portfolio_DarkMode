@@ -1067,345 +1067,22 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 }
 
 
-
-
 /* ==========================
-   HERO SIDE HUD (COPY & PASTE)
+   ✅ HERO FINAL (ONLY ONE)
+   - 카드+HUD를 한 덩어리로 중앙정렬
+   - 화면 좁으면 HUD 숨김
 ========================== */
-
-.hero-layout{
-  width: min(1400px, 100%);
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 520px;
-  gap: 24px;
-  align-items: center;
-}
-
-.hero-container{
-  max-width: none;
-}
-
-.hero-hud{
-  position: relative;
-  width: 520px;
-  max-width: 100%;
-}
-
-/* ✅ 모바일에서는 HUD 숨김 */
-@media (max-width:768px){
-  .hero-hud{
-    display: none;
-  }
-}
-
-
-
-
-/* ==========================
-   HERO: CENTER CARD + SLIM TALL HUD (COPY/PASTE)
-========================== */
-
-/* hero-layout은 HUD의 기준이 되는 "relative" 컨테이너 */
-.hero-layout{
-  position: relative;
-  width: min(1400px, 100%);
-  margin: 0 auto;
-  display: block;   /* ✅ grid 해제 */
-}
-
-/* GAME ONLINE 카드: 화면 정중앙 유지 */
-.hero-container{
-  max-width: 1100px;    /* 원하면 1000~1200 조절 */
-  margin: 0 auto;       /* ✅ 항상 가운데 */
-}
-
-/* HUD: 흐름에서 빼고 오른쪽에 슬림/롱으로 고정 */
-.hero-hud{
-  position: absolute;
-  top: 50%;
-  right: 0;                      /* hero-layout 오른쪽 끝 */
-  transform: translateY(-50%);
-
-  width: clamp(260px, 22vw, 340px);     /* ✅ 좁게 */
-  height: clamp(360px, 58vh, 520px);    /* ✅ 길게 */
-
-  pointer-events: none;
-  border: 1px solid rgba(0,240,255,.22);
-  border-radius: 14px;
-  background: rgba(10,10,15,.38);
-  backdrop-filter: blur(16px);
-  overflow: hidden;
-}
-
-/* HUD 내부를 "세로형"에 맞게 정리 (로그 영역이 스크롤되게) */
-.hero-hud .hud-window{
-  max-height: none;              /* 기존 max-height 제한 무력화 */
-  height: calc(100% - 44px - 52px); /* 대략: top(44) + bottom(52) 제외 */
-  overflow: hidden;
-}
-
-.hero-hud .hud-lines{
-  height: 100%;
-  overflow: hidden; /* 필요하면 auto로 바꾸면 로그 스크롤 가능 */
-}
-
-/* ✅ 화면이 좁아져서 HUD가 카드랑 겹칠 것 같으면 숨김 */
-@media (max-width:1200px){
-  .hero-hud{
-    display: none;
-  }
-}
-
-/* ✅ 모바일(768px 이하)에서도 당연히 숨김 */
-@media (max-width:768px){
-  .hero-hud{
-    display: none;
-  }
-}
-
-
-
-
-/* ✅ 레이어 순서 강제 */
-.hero-bg{ z-index:0; }               /* 배경 */
-.hero-layout{ position:relative; z-index:2; }  /* 컨텐츠 전체 */
-
-.hero-container{
-  position:relative;
-  z-index:2;                          /* 카드 */
-}
-
-.hero-hud{
-  position:absolute;                   /* 이미 absolute면 유지 */
-  z-index:5;                           /* ✅ 카드보다 위! */
-}
-
-
-
-
-/* ==========================
-   HERO HUD - FORCE RIGHT
-========================== */
-
-.hero-hud{
-  position: fixed;
-  top: 50%;
-  right: 32px;        /* ✅ 오른쪽 기준 */
-  left: auto;         /* ❌ 왼쪽 기준 완전 제거 */
-  bottom: auto;       /* ❌ 하단 기준 제거 */
-
-  transform: translateY(-50%);
-
-  width: 300px;
-  height: 480px;
-
-  z-index: 9999;
-  pointer-events: none;
-
-  border: 1px solid rgba(0,240,255,.25);
-  border-radius: 14px;
-  background: rgba(10,10,15,.38);
-  backdrop-filter: blur(16px);
-  overflow: hidden;
-}
-
-/* HUD 내부 세로 로그 영역 */
-.hero-hud .hud-window{
-  height: calc(100% - 44px - 52px);
-  overflow: hidden;
-}
-
-/* 겹칠 위험 구간부터 숨김 */
-@media (max-width:1280px){
-  .hero-hud{ display:none; }
-}
-@media (max-width:768px){
-  .hero-hud{ display:none; }
-}
-
-
-
-
-/* ==========================
-   HERO HUD - MATCH CENTER CARD HEIGHT
-========================== */
-
-/* hero-layout를 기준 컨테이너로 */
-.hero-layout{
-  position: relative;
-}
-
-/* 중앙 카드 */
-.hero-container{
-  position: relative;
-  z-index: 2;
-}
-
-/* ✅ HUD를 카드 높이에 맞춤 */
-.hero-hud{
-  position: fixed;
-  top: 50%;
-  right: 32px;
-  transform: translateY(-50%);
-
-  width: 300px;
-
-  /* ⭐ 핵심 */
-  height: auto;                /* 고정 높이 제거 */
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
-
-  z-index: 9999;
-  pointer-events: none;
-}
-
-/* HUD 내부 구성 비율 조정 */
-.hero-hud .hud-window{
-  flex: 1;                      /* 가운데 로그 영역이 늘어남 */
-  overflow: hidden;
-}
-
-
-
-
-/* HUD는 JS가 top(px)로 맞춤 */
-.hero-hud{
-  position: fixed;
-  right: 32px;
-  top: 0;                 /* JS가 넣어줄 거라 임시값 */
-  transform: translateY(-50%);
-  z-index: 9999;
-}
-
-
-
-
-/* ==========================
-   HIDE HUD ON SMALLER SCREENS
-========================== */
-
-/* 기본: 보이게 */
-.hero-hud{ display:block; }
-
-/* ✅ 여기 수치만 조절하면 됨 */
-@media (max-width:1200px){
-  .hero-hud{ display:none !important; }
-}
-
-/* 모바일은 확실히 숨김 */
-@media (max-width:768px){
-  .hero-hud{ display:none !important; }
-}
-
-
-
-/* ==========================
-   ✅ 1525px 이하부터 1단 레이아웃
-   (복붙용)
-========================== */
-
-@media (max-width:1525px){
-
-  /* STAGE 01 */
-  .character-layout{
-    grid-template-columns: 1fr;   /* ✅ 1단 */
-  }
-
-  /* STAGE 02 */
-  .skilltree-layout{
-    grid-template-columns: 1fr;   /* ✅ 1단 */
-  }
-
-  /* FINAL */
-  .ending{
-    grid-template-columns: 1fr;   /* ✅ 1단 */
-  }
-
-  /* HERO: HUD 숨기고 카드만 */
-  .hero-layout{
-    grid-template-columns: 1fr;   /* ✅ 1단 */
-  }
-  .hero-hud{
-    display: none !important;     /* ✅ HUD 숨김 */
-  }
-}
-
-/* 모바일 추가(선택): 메뉴 숨기기 */
-@media (max-width:768px){
-  .nav-menu{ display:none; }
-}
-
-
-
-
-
-/* ==========================
-   MODAL - BASE (공통)
-========================== */
-.modal{ display:none; position:fixed; inset:0; z-index:2000; align-items:center; justify-content:center; }
-.modal.active{ display:flex; }
-.modal-overlay{ position:absolute; inset:0; background:rgba(10,10,15,.92); backdrop-filter:blur(20px); }
-
-.modal-content{
-  position:relative;
-  background:linear-gradient(180deg, rgba(22,22,34,.96), rgba(17,17,26,.78));
-  border:1px solid rgba(42,42,53,.9);
-  max-width:1000px;
-  width:90%;
-  max-height:90vh;
-  overflow-y:auto;
-  border-radius:18px;
-  z-index:2001;
-  box-shadow:0 26px 120px rgba(0,0,0,.55);
-}
-
-.modal-body{ padding:28px; }
-.modal-title{ font-family:var(--font-display); font-size:2.2rem; margin-bottom:12px; }
-.modal-meta{ color:var(--lighter-gray); margin-bottom:18px; }
-.modal-description{ font-size:1.05rem; line-height:1.9; color:var(--lighter-gray); margin-bottom:18px; }
-.modal-details{ padding-top:18px; border-top:1px solid rgba(42,42,53,.85); }
-
-.modal-image{
-  width:100%;
-  height:360px;
-  background:rgba(17,17,26,.85);
-  border-radius:14px;
-  margin-bottom:18px;
-  border:1px solid rgba(42,42,53,.75);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.modal-image img{
-  max-width:100%;
-  max-height:100%;
-  height:auto;
-  object-fit:contain;
-}
-
-
-
-
-/* ==========================
-   ✅ HERO FINAL (COPY & PASTE)
-   - 메인 카드 + HUD를 "한 덩어리"로 화면 정중앙
-   - HUD를 fixed/absolute로 빼지 않음 (덩어리 중앙정렬 목적)
-========================== */
-
-/* 1) HERO: 화면 가운데에 hero-layout 덩어리 배치 */
 .hero{
   min-height: 100vh;
   display: flex;
-  align-items: center;      /* 세로 중앙 */
-  justify-content: center;  /* 가로 중앙 */
+  align-items: center;
+  justify-content: center;
   padding: var(--space-xxl) var(--space-lg);
-  position: relative;       /* hero-bg absolute 기준 */
+  position: relative;
   overflow: hidden;
 }
 
-/* 2) 배경 레이어 */
+/* 배경 레이어 */
 .hero-bg{
   position: absolute;
   inset: 0;
@@ -1413,7 +1090,7 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   pointer-events: none;
 }
 
-/* 3) ✅ 두 박스 묶음(덩어리) */
+/* ✅ 카드+HUD 덩어리 */
 .hero-layout{
   position: relative;
   z-index: 2;
@@ -1425,27 +1102,58 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   align-items: center;
 }
 
-/* 4) 메인 카드(기존 스타일 유지 + 폭만 안전하게) */
+/* 카드 */
 .hero-container{
-  max-width: none;   /* 기존 max-width 900 덮어씌우지 않게 */
+  max-width: none;
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
-/* 5) HUD: 덩어리 안에서 같이 움직임 */
+/* HUD */
 .hero-hud{
-  position: relative;        /* ✅ fixed/absolute 금지 */
-  left: auto;
-  right: auto;
-  top: auto;
-  bottom: auto;
-  transform: none;
-
+  position: relative;
   width: 320px;
   max-width: 100%;
   pointer-events: none;
+
+  /* ✅ HUD 로그 더 많이 보이게 */
+  display: flex;
+  flex-direction: column;
+  height: min(78vh, 680px);
+  overflow: hidden;
 }
 
-/* 6) 반응형: 화면 좁으면 HUD 숨기고 카드만 중앙 */
+/* HUD 중간 로그 영역 확장 */
+.hero-hud .hud-window{
+  flex: 1 1 auto;
+  max-height: none;
+  min-height: 420px;
+  overflow: hidden;
+}
+
+/* 로그 스크롤 */
+.hero-hud .hud-lines{
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* 줄바꿈 허용(더 많이 보이는 느낌) */
+.hero-hud .hud-line{
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* 스크롤바(선택) */
+.hero-hud .hud-lines::-webkit-scrollbar{ width: 6px; }
+.hero-hud .hud-lines::-webkit-scrollbar-thumb{
+  background: rgba(0,240,255,.25);
+  border-radius: 999px;
+}
+
+/* ✅ 화면 좁으면 HUD 숨기고 카드만 */
 @media (max-width: 1200px){
   .hero-layout{
     grid-template-columns: 1fr;
@@ -1464,118 +1172,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
     padding: var(--space-xl) var(--space-md);
   }
 }
-
-
-
-
-/* ==========================
-   ✅ HERO HUD ALIGN FIX (맨 아래에 추가)
-========================== */
-.hero-layout{
-  align-items: center !important;   /* 두 박스 세로 가운데 */
-}
-
-.hero-hud{
-  align-self: center !important;    /* HUD만 확실히 가운데 */
-  margin: 0 !important;
-
-  /* 예전 bottom/top/transform 잔재 전부 무력화 */
-  top: auto !important;
-  bottom: auto !important;
-  left: auto !important;
-  right: auto !important;
-  transform: none !important;
-
-  position: relative !important;    /* fixed/absolute 잔재 차단 */
-}
-
-
-
-
-/* ==========================
-   ✅ HUD LOG AREA 더 길게 (복붙)
-========================== */
-
-/* HUD 전체가 세로로 꽉 차게 */
-.hero-hud{
-  display: flex;
-  flex-direction: column;
-  height: min(70vh, 560px) !important; 
-}
-
-/* 상단/하단은 그대로 두고, 가운데 로그창만 최대 확장 */
-.hero-hud .hud-window{
-  flex: 1 !important;         /* ✅ 남는 높이 전부 차지 */
-  min-height: 260px;          /* ✅ 기본 길이 더 길게 */
-  max-height: none !important;/* ✅ 기존 max-height(150px) 무력화 */
-  overflow: hidden;           /* 창 자체는 고정 */
-}
-
-/* 로그 내용은 스크롤되게 */
-.hero-hud .hud-lines{
-  height: 100%;
-  overflow-y: auto;           /* ✅ 내용 길면 스크롤 */
-  padding-right: 6px;         /* 스크롤바 여백 */
-}
-
-/* (선택) 스크롤바 얇게 */
-.hero-hud .hud-lines::-webkit-scrollbar{
-  width: 6px;
-}
-.hero-hud .hud-lines::-webkit-scrollbar-thumb{
-  background: rgba(0,240,255,.25);
-  border-radius: 999px;
-}
-
-
-
-
-/* ==========================
-   ✅ HUD 채팅(로그) 더 많이 보이게 - FINAL (맨 아래 복붙)
-========================== */
-
-/* HUD 자체를 더 길게 + 내부를 세로 flex로 */
-.hero-hud{
-  display: flex !important;
-  flex-direction: column !important;
-
-  /* ⭐ HUD 전체 높이: 여기만 조절하면 됨 */
-  height: min(78vh, 680px) !important;
-
-  overflow: hidden !important;  /* 테두리 밖으로 안 새게 */
-}
-
-/* 가운데 로그 영역을 최대한 늘림 (기존 max-height 150px 완전 제거) */
-.hero-hud .hud-window{
-  flex: 1 1 auto !important;
-  max-height: none !important;
-  min-height: 420px !important;   /* ⭐ 최소 로그창 길이 */
-  overflow: hidden !important;
-}
-
-/* 로그 텍스트는 스크롤 가능하게(많이 쌓여도 더 보여줌) */
-.hero-hud .hud-lines{
-  height: 100% !important;
-  overflow-y: auto !important;     /* ✅ 더 많이 보이게 + 스크롤 */
-  padding-right: 8px;
-}
-
-/* (선택) 스크롤바 얇게 */
-.hero-hud .hud-lines::-webkit-scrollbar{ width: 6px; }
-.hero-hud .hud-lines::-webkit-scrollbar-thumb{
-  background: rgba(0,240,255,.25);
-  border-radius: 999px;
-}
-
-/* (선택) 한 줄이 너무 빨리 잘리면 줄바꿈 허용 */
-.hero-hud .hud-line{
-  white-space: normal !important;  /* ✅ 더 많이 보여주는 느낌 */
-  overflow: visible !important;
-  text-overflow: clip !important;
-}
-
-
-
 
 
 
@@ -1865,3 +1461,440 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 @media (max-width: 420px){
   .ow-grid{ grid-template-columns: 1fr; }
 }
+
+
+
+
+/* 모달이 화면 전체를 잡고 */
+.ow-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+/* 패널을 '화면 높이 안'에 넣고 */
+.ow-panel{
+  height: min(88vh, 860px);   /* ✅ 여기 핵심 */
+  margin: 6vh auto 0;         /* 화면 위쪽 여백 */
+  display: flex;              /* 헤더/바디 분리 */
+  flex-direction: column;
+}
+
+/* 헤더는 고정 */
+.ow-panel-head{
+  flex: 0 0 auto;
+}
+
+/* ✅ 바디(컨텐츠)만 스크롤 되게 */
+.ow-panel-body{
+  flex: 1 1 auto;
+  overflow: auto;             /* ✅ 여기 핵심 */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 모바일에서 더 꽉 차게 */
+@media (max-width: 860px){
+  .ow-panel{
+    height: 92vh;
+    margin: 4vh auto 0;
+  }
+}
+
+
+
+
+/* 1) 모달 전체 */
+.ow-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+}
+.ow-modal.is-open{ display:block; }
+
+.ow-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.68);
+}
+
+/* 2) 패널: 화면 안 높이 제한 + 내부 구조를 flex로 */
+.ow-panel{
+  position: relative;
+  width: min(980px, calc(100% - 24px));
+  height: min(88vh, 860px);     /* ✅ 핵심: 모달 높이 제한 */
+  margin: 6vh auto 0;
+
+  display: flex;                /* ✅ 핵심: head/body 분리 */
+  flex-direction: column;
+
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 18px;
+  background: rgba(8,10,14,.92);
+  overflow: hidden;             /* ✅ 내부만 스크롤되게 */
+}
+
+/* 3) 헤더는 고정 */
+.ow-panel-head{
+  flex: 0 0 auto;
+  padding: 16px 16px 14px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  position: relative;
+}
+
+/* 4) ✅ 바디만 스크롤(위아래) */
+.ow-panel-body{
+  flex: 1 1 auto;
+  min-height: 0;                /* ✅ 필수: flex 자식 스크롤 활성화 */
+  overflow-y: auto;             /* ✅ 핵심 */
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  /* 기존 grid 유지하고 싶으면 그대로 */
+  display: grid;
+  grid-template-columns: 1.25fr .9fr;
+  gap: 14px;
+  padding: 14px 16px 16px;
+}
+
+/* 5) 이미지 영역도 "부모 스크롤"을 방해하지 않게 */
+.ow-preview{
+  margin: 0;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(0,0,0,.35);
+}
+
+/* 6) 모바일: 1열로 */
+@media (max-width: 860px){
+  .ow-panel{
+    height: 92vh;
+    margin: 4vh auto 0;
+  }
+  .ow-panel-body{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* (중요) 마우스 팔로워가 있으면 스크롤/클릭 막을 수 있어서 */
+#fxFollower{ pointer-events: none; }
+
+
+
+
+/* =========================
+   OW MODAL - SCROLL FIX (FINAL)
+   ✅ 배경 고정
+   ✅ 모달 내부만 스크롤
+   ✅ 긴 이미지가 세로로 길게 나오면 스크롤 생성
+========================= */
+
+/* 모달: 전체 화면 */
+.ow-modal{
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+}
+.ow-modal.is-open{ display: block; }
+
+.ow-backdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.68);
+}
+
+/* 패널: 화면 높이 제한 + flex */
+.ow-panel{
+  position: relative;
+  width: min(980px, calc(100% - 24px));
+  height: min(88vh, 860px);
+  margin: 6vh auto 0;
+
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 18px;
+  background: rgba(8,10,14,.92);
+  overflow: hidden;
+}
+
+/* 헤더 고정 */
+.ow-panel-head{
+  flex: 0 0 auto;
+}
+
+/* ✅ 여기서 스크롤이 생겨야 함 */
+.ow-panel-body{
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;                 /* ✅ 스크롤 */
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+
+  display: grid;
+  grid-template-columns: 1.25fr .9fr;
+  gap: 14px;
+  padding: 14px 16px 16px;
+}
+
+/* ✅ 중요한 포인트:
+   preview는 '스크롤 컨테이너'가 아니라 그냥 흐르는 블록이어야 함 */
+.ow-preview{
+  margin: 0;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  overflow: visible;                /* ✅ hidden 금지(길게 나오는 느낌 방해) */
+  background: rgba(0,0,0,.35);
+  align-self: start;                /* ✅ 상단 정렬 */
+}
+
+/* ✅ 이미지가 "작게 맞춰지지" 않게 */
+.ow-preview img{
+  display: block;
+  width: 100%;
+  height: auto;                     /* ✅ 세로 길면 그대로 길어짐 */
+  max-height: none !important;      /* ✅ 혹시 다른 곳에서 제한 걸린 경우 제거 */
+  object-fit: initial !important;   /* ✅ contain/cover 강제 제거 */
+}
+
+/* 모바일: 1열 */
+@media (max-width: 860px){
+  .ow-panel{ height: 92vh; margin: 4vh auto 0; }
+  .ow-panel-body{ grid-template-columns: 1fr; }
+}
+
+/* 팔로워가 휠/클릭 막지 않게 */
+#fxFollower{ pointer-events: none; }
+
+
+
+
+/* 오른쪽 info 영역이 스크롤에 맞춰 따라오게 */
+.ow-info{
+  position: sticky;
+  top: 14px;             /* 모달 바디 안에서 위에서 14px 떨어져 고정 */
+  align-self: start;     /* grid에서 위 정렬 */
+}
+
+/* 모바일(1열)에서는 sticky 끄기(오히려 불편함) */
+@media (max-width: 860px){
+  .ow-info{
+    position: static;
+    top: auto;
+  }
+}
+
+
+
+
+/* ✅ 2컬럼일 때만: 왼쪽 미리보기 '세로 중앙' */
+@media (min-width: 861px){
+  .ow-preview{
+    align-self: center;        /* grid에서 세로 중앙 */
+    display: flex;
+    align-items: center;       /* 내부 이미지도 중앙 */
+    justify-content: center;
+    min-height: 0;             /* 불필요한 높이 강제 방지 */
+  }
+}
+
+/* 이미지가 가로/세로 어떤 비율이든 예쁘게 '미리보기'로 보이게 */
+.ow-preview img{
+  max-width: 100%;
+  max-height: 62vh;            /* ⭐ 미리보기에서 너무 커지지 않게 */
+  height: auto;
+  width: auto;
+  cursor: zoom-in;
+}
+
+
+
+
+/* =========================
+   IMAGE LIGHTBOX (Zoom + Pan)
+========================= */
+.imglb{
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: 10000;
+}
+.imglb.is-open{ display:block; }
+
+.imglb-backdrop{
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,.82);
+}
+
+.imglb-figure{
+  position: relative;
+  width: min(1200px, calc(100% - 24px));
+  height: min(92vh, 900px);
+  margin: 4vh auto 0;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 18px;
+  background: rgba(8,10,14,.92);
+  overflow: hidden;
+}
+
+/* 툴바 */
+.imglb-toolbar{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
+}
+
+.imglb-btn{
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.35);
+  color: rgba(255,255,255,.92);
+  cursor: pointer;
+  user-select: none;
+}
+
+.imglb-btn:hover{
+  border-color: rgba(0,240,255,.55);
+  box-shadow: 0 0 18px rgba(0,240,255,.12);
+}
+
+.imglb-btn-close{
+  margin-left: auto;
+  width: 44px;
+  padding: 0;
+  font-size: 22px;
+}
+
+.imglb-pct{
+  font-family: var(--font-pixel, monospace);
+  font-size: 12px;
+  letter-spacing: .1em;
+  opacity: .85;
+  margin-left: 4px;
+}
+
+/* 뷰포트 */
+.imglb-viewport{
+  position: absolute;
+  inset: 0;
+  padding-top: 56px; /* 툴바 공간 */
+  padding-bottom: 28px; /* 힌트 공간 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;  /* ✅ 여기서만 패닝 */
+  cursor: grab;
+  touch-action: none; /* ✅ 모바일/트랙패드 제스처 간섭 최소화 */
+}
+
+.imglb-viewport.is-dragging{ cursor: grabbing; }
+
+.imglb-viewport img{
+  transform-origin: 0 0; /* JS에서 translate+scale 계산할 거라 0 0 */
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+  max-width: none;   /* ✅ 원본 픽셀대로 확대/이동 */
+  max-height: none;
+}
+
+.imglb-hint{
+  position: absolute;
+  left: 14px;
+  bottom: 10px;
+  margin: 0;
+  font-size: 12px;
+  opacity: .7;
+  z-index: 2;
+}
+
+
+
+
+.imglb-figure{ position: relative; z-index: 2; }
+.imglb-backdrop{ z-index: 1; }
+
+
+
+
+/* ✅ 모달 레이어 순서/클릭 막힘 해결 */
+.ow-modal{ position: fixed; inset: 0; z-index: 9999; }
+.ow-backdrop{ position:absolute; inset:0; z-index: 0; pointer-events: auto; }
+.ow-panel{ position: relative; z-index: 2; pointer-events: auto; }
+.ow-panel-body{ position: relative; z-index: 2; }
+
+
+
+
+/* ✅ 이미지 클릭/터치 강제 활성화 */
+.ow-preview,
+.ow-preview img{
+  pointer-events: auto !important;
+  cursor: zoom-in;
+}
+
+
+
+
+.fx, .fx *{
+  pointer-events: none !important;
+}
+
+
+
+
+/* ✅ owImg가 확실히 눌리게 */
+#owImg { pointer-events: auto !important; }
+
+
+
+
+/* ✅ LIGHTBOX VIEWPORT: 높이 0 문제 해결 (FINAL) */
+.imglb-viewport{
+  position: absolute;   /* ✅ 다시 absolute */
+  inset: 0;             /* ✅ figure 안을 꽉 채움 */
+  padding: 56px 0 28px; /* 툴바/힌트 공간 유지(원하면 0으로) */
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.imglb-viewport.is-dragging{ cursor: grabbing; }
+
+.imglb-viewport img{
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+  max-width: none;
+  max-height: none;
+}
+
+
+
+
+
+/* OW 모달 이미지 강제 표시 */
+.ow-preview img{
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  opacity: 1 !important;
+  display: block !important;
+}
+

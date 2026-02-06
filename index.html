@@ -562,6 +562,27 @@
       </div>
     </div>
   </div>
+    <!-- IMAGE LIGHTBOX (Zoom + Pan) -->
+<div class="imglb" id="imgLb" aria-hidden="true">
+  <div class="imglb-backdrop" data-lb-close></div>
+
+  <figure class="imglb-figure" role="dialog" aria-modal="true" aria-label="원본 이미지 확대 보기">
+    <div class="imglb-toolbar" aria-label="이미지 확대 도구">
+      <button class="imglb-btn" type="button" data-lb-zoom-out aria-label="축소">−</button>
+      <button class="imglb-btn" type="button" data-lb-zoom-in aria-label="확대">＋</button>
+      <button class="imglb-btn" type="button" data-lb-reset aria-label="리셋">RESET</button>
+      <span class="imglb-pct" id="imgLbPct">100%</span>
+      <button class="imglb-btn imglb-btn-close" type="button" data-lb-close aria-label="닫기">×</button>
+    </div>
+
+    <div class="imglb-viewport" id="imgLbViewport" aria-label="이미지 뷰포트">
+      <img id="imgLbImg" alt="원본 이미지" draggable="false" />
+    </div>
+
+    <p class="imglb-hint">휠: 확대/축소 · 드래그: 이동 · 더블클릭: 확대</p>
+  </figure>
+</div>
+
 
   <script src="script/script.js"></script>
 </body>
