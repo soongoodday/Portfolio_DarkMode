@@ -2502,3 +2502,13 @@ section{
 #owThumbs .ow-thumb{
   flex:0 0 auto;
 }
+
+
+
+
+@media (max-width: 1024px),
+       (hover: none) and (pointer: coarse) {
+  #fxFollower {
+    display: none !important;
+  }
+}
