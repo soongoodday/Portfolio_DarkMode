@@ -400,32 +400,39 @@ document.addEventListener('keydown', (e) => {
   setInterval(updateTime, 1000);
 
   const pool = [
-    ['BOOT', 'Initializing UI modules…', true],
-    ['SCAN', 'Rendering neon grid layers', false],
-    ['NET',  'Handshake established', true],
-    ['GPU',  'Bloom shader: OK', false],
-    ['SYS',  'Loading portfolio quests…', false],
-    ['AI',   'Assistant pipeline ready', true],
-    ['HUD',  'Overlay synced', false],
-    ['SEC',  'Integrity check passed', true],
-    ['IO',   'Listening for input events', false],
+    ['디자인은 즐거워', '디자인은 매번 즐겁지만 참 어렵기도 해…', false],
+    ['퍼블이 가장 쉬웠어요', '마크업하러 가야지', false],
+    ['개발하는 개미',  '공부 열심히 해야지', false],
+    ['프론트론',  '바이브 코딩하기 좋은 AI 추천해주라', false],
+    ['취준생A',  '취업난을 이겨내고 말겠어!!!!!!', false],
+    ['이직아직',   '나는 Claude랑 ChatGPT 많이 사용했어!', false],
+    ['시닙',  '채용 공고 떴더라', false],
+    ['웹디자인 마스터',  '합격하고 싶당', false],
+    ['잘될사람누구게',   '나를 믿어 잘 될거야', false],
+    ['취업하고싶다',   '디자인 정보 공유 좀!!', false]
   ];
 
   function addLine(tag, msg, accent){
-    const line = document.createElement('div');
-    line.className = 'hud-line';
-    line.innerHTML = `
-      <span class="hud-tag">[${tag}]</span>
-      <span class="${accent ? 'hud-accent' : ''}">${msg}</span>
-    `;
-    hudLines.appendChild(line);
-    const lines = hudLines.querySelectorAll('.hud-line');
-    if (lines.length > 20) lines[0].remove();
-    hudLines.scrollTop = hudLines.scrollHeight;
-  }
+  const line = document.createElement('div');
+  line.className = 'hud-line';
+  line.innerHTML = `
+    <span class="hud-tag">[${tag}]</span>
+    <span class="${accent ? 'hud-accent' : ''}">${msg}</span>
+  `;
 
-  addLine('SYS', 'SYSTEM ONLINE', true);
-  addLine('BOOT', 'Preparing hero sequence…', false);
+  const caret = document.getElementById('hudCaret');
+  if (caret) hudLines.insertBefore(line, caret);
+  else hudLines.appendChild(line);
+
+  const lines = hudLines.querySelectorAll('.hud-line');
+  if (lines.length > 20) lines[0].remove();
+
+  hudLines.scrollTop = hudLines.scrollHeight;
+}
+
+
+  addLine('운영자', '디자인은 즐거워님. 오늘도 즐거운 하루 보내세요.', true);
+  addLine('서버', '데이터를 불러오는 중…', true);
 
   // progress
   let p = 0;
@@ -438,7 +445,7 @@ document.addEventListener('keydown', (e) => {
     fillEl.style.width = `${show}%`;
 
     if (show >= 100) {
-      addLine('SYS', 'READY. PRESS START.', true);
+      addLine('운영자', '게임 시작 버튼을 눌러주세요.', true);
       return;
     }
     const delay = p < 60 ? (Math.random()*160 + 110) : (Math.random()*220 + 180);
@@ -1112,4 +1119,77 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // 최초
   render();
+})();
+
+
+
+
+function syncHudHeight(){
+  const card = document.querySelector('.hero-container');
+  const hud  = document.querySelector('.hero-hud');
+  if(!card || !hud) return;
+
+  // 카드 높이를 HUD에 그대로 적용
+  hud.style.height = card.offsetHeight + 'px';
+}
+
+// 최초 1번 + 리사이즈/폰트 로딩 후
+window.addEventListener('load', syncHudHeight);
+window.addEventListener('resize', syncHudHeight);
+
+// 폰트 때문에 로딩 후 높이가 바뀌는 경우 대비
+setTimeout(syncHudHeight, 200);
+setTimeout(syncHudHeight, 800);
+
+
+
+
+(() => {
+  const lines = document.getElementById('hudLines');
+  const form  = document.getElementById('hudForm');
+  const input = document.getElementById('hudInput');
+  const caret = document.getElementById('hudCaret');
+
+  if(!lines || !form || !input) return;
+
+  // ✅ 항상 맨 아래로 스크롤
+  function scrollToBottom(){
+    lines.scrollTop = lines.scrollHeight;
+  }
+
+  function addLine(tag, text){
+    const row = document.createElement('div');
+    row.className = 'hud-line';
+
+    const t = document.createElement('span');
+    t.className = 'hud-tag';
+    t.textContent = `[${tag}]`;
+
+    const msg = document.createElement('span');
+    msg.className = 'hud-msg';
+    msg.textContent = ` ${text}`;
+
+    row.append(t, msg);
+
+    // caret가 항상 맨 아래에 있게: caret 전에 삽입
+    if (caret) lines.insertBefore(row, caret);
+    else lines.appendChild(row);
+
+    scrollToBottom();
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = input.value.trim();
+    if(!value) return;
+
+    addLine('YOU', value);
+    input.value = '';
+
+    // 예시: 자동 응답(원하면 삭제)
+    setTimeout(() => addLine('SYSTEM', '입력 확인 완료.'), 350);
+  });
+
+  // 처음 로드 시도 맨 아래
+  scrollToBottom();
 })();
