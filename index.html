@@ -754,6 +754,68 @@
     })();
   </script>
 
+<script>
+(() => {
+  const cards = document.querySelectorAll('.ow-card-btn');
+
+  // 카드 순서대로 미리보기 이미지 지정
+  const PREVIEWS = [
+    'images/detail_nouvedilie1.png',
+    'images/nouvedilie_banner.png',
+    'images/previews/cau_leaflet.png',
+    'images/previews/daangn_banner.png',
+    'images/previews/academy_poster.png',
+    'images/previews/midai_banner.png',
+    'images/previews/cardgame_banner.png',
+    'images/previews/mcs_panel.png',
+    'images/previews/amc2024.png',
+  ];
+
+  /* ===== preview tooltip ===== */
+  const tip = document.createElement('div');
+  tip.className = 'preview-tip';
+  tip.innerHTML = `<img alt="preview">`;
+  document.body.appendChild(tip);
+
+  const img = tip.querySelector('img');
+  let activeIndex = -1;
+
+  function place(x, y){
+    const gap = 18;
+    const w = 420, h = 240;
+    let tx = x + gap, ty = y + gap;
+
+    if (tx + w > innerWidth) tx = x - w - gap;
+    if (ty + h > innerHeight) ty = y - h - gap;
+
+    tip.style.left = tx + 'px';
+    tip.style.top  = ty + 'px';
+  }
+
+  cards.forEach((card, i) => {
+    const src = PREVIEWS[i];
+    if (!src) return;
+
+    card.addEventListener('mouseenter', e => {
+      activeIndex = i;
+      img.src = src;
+      tip.classList.add('is-on');
+      place(e.clientX, e.clientY);
+    });
+
+    card.addEventListener('mousemove', e => {
+      if (activeIndex !== i) return;
+      place(e.clientX, e.clientY);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      activeIndex = -1;
+      tip.classList.remove('is-on');
+      img.removeAttribute('src');
+    });
+  });
+})();
+</script>
 
 </body>
 

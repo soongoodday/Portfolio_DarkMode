@@ -3237,3 +3237,100 @@ section{
 @media (hover: none){
   .preview-tip{ display:none !important; }
 }
+
+
+
+
+.preview-tip{
+  position: fixed;
+  z-index: 9999;
+  width: 420px;
+  aspect-ratio: 16/9;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px) scale(.98);
+  transition: opacity .12s ease, transform .12s ease;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(5,7,11,.75);
+  border: 1px solid rgba(0,240,255,.35);
+  box-shadow: 0 16px 60px rgba(0,0,0,.6);
+}
+.preview-tip.is-on{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.preview-tip img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+
+
+
+/* ✅ 카드가 relative여야 내부 absolute 오버레이가 먹음 */
+.quest{
+  position: relative;
+  overflow: hidden;
+}
+
+/* hover 시 프리뷰 오버레이 */
+.card-preview{
+  position:absolute;
+  inset: 16px;
+  border-radius: 22px;
+  background: rgba(5,7,11,.65);
+  border: 1px solid rgba(0,240,255,.35);
+  box-shadow:
+    0 18px 70px rgba(0,0,0,.65),
+    0 0 0 1px rgba(255,255,255,.06) inset;
+  backdrop-filter: blur(10px);
+
+  display:grid;
+  place-items:center;
+
+  opacity:0;
+  transform: translateY(10px) scale(.985);
+  transition: opacity .18s ease, transform .18s ease;
+  pointer-events:none;
+  z-index: 5;
+}
+
+/* ✅ 카드에 클래스 붙으면 표시 */
+.quest.is-preview-on .card-preview{
+  opacity:1;
+  transform: translateY(0) scale(1);
+}
+
+/* 이미지(목업) */
+.card-preview img{
+  width: min(88%, 980px);
+  max-height: 86%;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 40px rgba(0,0,0,.65));
+}
+
+/* PREVIEW 라벨 */
+.preview-badge{
+  position:absolute;
+  left:16px;
+  bottom:16px;
+  padding:10px 16px;
+  border-radius:999px;
+  font-family: var(--font-display, 'Orbitron', sans-serif);
+  letter-spacing:.08em;
+  font-size:18px;
+  color: rgba(255,255,255,.92);
+
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 10px 26px rgba(0,0,0,.55);
+}
+
+
+
+
+
+
+

@@ -717,10 +717,12 @@ document.addEventListener('keydown', (e) => {
 
 
   function renderCards() {
-    grid.innerHTML = OTHER_WORKS.map((w, i) => `
+    grid.innerHTML = OTHER_WORKS.map((w, i) => {
+      const pv = normalizeImages(w)[0] || ''; // ✅ 첫 이미지 = preview로 사용
+      return `
       <li class="ow-item">
         <article class="ow-card">
-          <button class="ow-card-btn" type="button" data-ow="${i}">
+          <button class="ow-card-btn" type="button" data-ow="${i}" data-preview="${pv}">
             <div class="ow-top">
               <span class="ow-tag">${w.tag}</span>
               <span class="ow-status">${w.status}</span>
@@ -736,7 +738,8 @@ document.addEventListener('keydown', (e) => {
           </button>
         </article>
       </li>
-    `).join("");
+    `;
+    }).join("");
   }
 
   function openOwModal(index) {
@@ -1400,13 +1403,13 @@ setTimeout(syncHudHeight, 800);
 /* =========================
    FINAL STAGE: 로고 보스 모드
 ========================= */
-(function finalStageLogo(){
+(function finalStageLogo() {
   const finalSec = document.getElementById('final');
   const logoText = document.querySelector('.nav-logo .logo-text');
   const nav = document.querySelector('.main-nav');
-  if(!finalSec || !logoText || !nav) return;
+  if (!finalSec || !logoText || !nav) return;
 
-  const io = new IntersectionObserver((entries)=>{
+  const io = new IntersectionObserver((entries) => {
     const isIn = entries[0]?.isIntersecting;
     logoText.classList.toggle('is-final', !!isIn);
     nav.classList.toggle('is-final', !!isIn);
@@ -1425,8 +1428,8 @@ setTimeout(syncHudHeight, 800);
    - iOS touch 대응
 ========================= */
 window.addEventListener('DOMContentLoaded', () => {
-  const burger   = document.getElementById('navBurger');
-  const panel    = document.getElementById('navPanel');
+  const burger = document.getElementById('navBurger');
+  const panel = document.getElementById('navPanel');
   const closeBtn = document.getElementById('navPanelClose');
   const backdrop = document.getElementById('navPanelBackdrop');
 
@@ -1580,6 +1583,9 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') closePanel();
   });
 });
+
+
+
 
 
 
