@@ -1,4 +1,12 @@
 /* ==========================
+   FINAL CSS (복붙용)
+   - Stage 공통 폭/패딩 통일
+   - Hero(비디오 contain) + HUD 1200↓ 숨김
+   - 모바일(iOS) 안전영역/100svh 대응
+   - OW Modal / Lightbox 포함
+========================== */
+
+/* ==========================
    RESET & BASE
 ========================== */
 *{ margin:0; padding:0; box-sizing:border-box; }
@@ -35,11 +43,16 @@
   --my:.5;
   --scroll:0;
 
-  --stage-max-width: 1200px;      /* QUEST LOG 기준 */
+  /* ✅ 전체 섹션 컨테이너 기준(Quest Log 폭 기준으로 통일) */
+  --stage-max-width: 1400px;
   --stage-padding-x: clamp(16px, 3vw, 28px);
 }
 
-html{ scroll-behavior:smooth; font-size:16px; }
+html{
+  scroll-behavior:smooth;
+  font-size:16px;
+  -webkit-text-size-adjust:100%;
+}
 body{
   font-family:var(--font-body);
   background:
@@ -53,7 +66,6 @@ body{
 }
 a{ color:inherit; }
 button{ font:inherit; }
-
 
 /* ==========================
    FX
@@ -119,7 +131,6 @@ button{ font:inherit; }
 /* FX는 전부 클릭 막지 않게 */
 .fx, .fx *{ pointer-events:none !important; }
 
-
 /* ==========================
    NAV
 ========================== */
@@ -127,7 +138,13 @@ button{ font:inherit; }
   position:fixed;
   top:0; left:0; right:0;
   z-index:1000;
-  padding:var(--space-md) var(--space-lg);
+
+  /* ✅ iOS safe-area 대응 */
+  padding:
+    calc(var(--space-md) + env(safe-area-inset-top))
+    var(--stage-padding-x)
+    var(--space-md);
+
   background:rgba(10,10,15,.76);
   backdrop-filter:blur(18px);
   border-bottom:1px solid rgba(42,42,53,.75);
@@ -179,15 +196,17 @@ button{ font:inherit; }
   box-shadow:0 22px 90px rgba(0,240,255,.12);
 }
 
-
 /* ==========================
-   SECTIONS
+   SECTIONS (공통 폭/패딩 통일)
 ========================== */
-section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
+section{
+  position:relative;
+  padding: var(--space-xxl) 0;
+}
 .section-number{
   position:absolute;
   top:var(--space-xl);
-  left:var(--space-lg);
+  left:var(--stage-padding-x);
   font-family:var(--font-display);
   font-size:.95rem;
   color:var(--neon-purple);
@@ -195,8 +214,24 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   letter-spacing:.2em;
   opacity:.9;
 }
-.section-header{ max-width:1400px; margin:0 auto var(--space-xl); }
+
+/* ✅ 공통 컨테이너(섹션 안의 내용 폭 맞추기) */
+.section-header,
+.character-layout,
+.skilltree-layout,
+.quest-layout,
+.ending{
+  width:100%;
+  max-width: var(--stage-max-width);
+  margin-left:auto;
+  margin-right:auto;
+  padding-left: var(--stage-padding-x);
+  padding-right: var(--stage-padding-x);
+}
+
+.section-header{ margin:0 auto var(--space-xl); }
 .section-header.center{ text-align:center; }
+
 .section-title{
   font-family:var(--font-display);
   font-size:clamp(2.6rem, 7vw, 5.4rem);
@@ -237,19 +272,22 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 }
 .section-subtitle{ color:var(--light-gray); font-size:1.05rem; margin-top:var(--space-md); }
 
-
 /* ==========================
    HERO (FINAL)
-   - video 레이어 정리
-   - 카드 + HUD: 그리드
-   - 1200px 이하 HUD 숨김
 ========================== */
 .hero{
-  min-height: 100vh;
+  /* ✅ iOS 주소창 변화 대응 */
+  min-height: 100svh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding: var(--space-xxl) var(--space-lg);
+
+  /* ✅ NAV 높이만큼 상단 여백 */
+  padding:
+    calc(var(--space-xxl) + 72px + env(safe-area-inset-top))
+    var(--stage-padding-x)
+    var(--space-xxl);
+
   position: relative;
   overflow:hidden;
 }
@@ -266,7 +304,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   transform:none;
   z-index:0;
 }
-
 .hero-video-overlay{ position:absolute; inset:0; z-index:1;
   background:
     radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.15), rgba(0,0,0,.75)),
@@ -306,11 +343,11 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   pointer-events:none;
 }
 
-/* ✅ layout */
+/* layout */
 .hero-layout{
   position:relative;
   z-index:5;
-  width:min(1400px, 100%);
+  width:min(var(--stage-max-width), 100%);
   display:grid;
   grid-template-columns: minmax(720px, 900px) 320px;
   gap:32px;
@@ -322,7 +359,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 .hero-container{
   position:relative;
   z-index:2;
-  max-width:none;
   width:100%;
   text-align:center;
 
@@ -389,15 +425,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   justify-content:center;
   gap:clamp(10px, 1.6vw, 18px);
 }
-.hero-title .title-meta{
-  font-family:var(--font-body);
-  font-weight:300;
-  letter-spacing:.22em;
-  font-size:clamp(.85rem,1.25vw,1.05rem);
-  color:rgba(255,255,255,.55);
-  transform:translateY(-6px);
-  text-shadow:0 2px 10px rgba(0,0,0,.55);
-}
 .hero-title .title-pixel{
   font-family:var(--font-pixel);
   font-size:clamp(1.9rem, 4.6vw, 4.3rem);
@@ -436,7 +463,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   line-height:1.9;
   max-width:640px;
   margin:0 auto 18px;
-
   color:rgba(255,255,255,.72);
   text-shadow:0 2px 12px rgba(0,0,0,.55);
 }
@@ -509,23 +535,13 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   color:rgba(255,255,255,.92);
   text-shadow:3px 0 rgba(0,240,255,.18), -3px 0 rgba(157,0,255,.16);
 }
-.ps-sub{
-  display:block;
-  margin-top:8px;
-  font-size:12px;
-  letter-spacing:.22em;
-  color:rgba(255,255,255,.62);
-}
 
-/* HUD (scroll + input 활성화) */
+/* HUD */
 .hero-hud{
   position:relative;
   width:320px;
   max-width:100%;
-  height:auto;
   overflow:hidden;
-
-  /* ✅ 입력/스크롤 가능 */
   pointer-events:auto !important;
 
   border-radius:14px;
@@ -598,14 +614,12 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 .hero-hud .hud-window{
   display:flex;
   flex-direction:column;
-  flex:1 1 auto;
   min-height:0;
   overflow:hidden;
   position:relative;
   z-index:1;
 }
 .hero-hud .hud-lines{
-  flex:1 1 auto;
   min-height:0;
   overflow-y:auto;
   padding:14px 10px;
@@ -619,14 +633,10 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   background:rgba(0,240,255,.25);
   border-radius:999px;
 }
-
 .hero-hud .hud-line{
   display:flex;
   gap:10px;
-  margin:0;
   white-space:normal;
-  overflow:visible;
-  text-overflow:clip;
   font-size:12px;
   line-height:1.45;
   color:rgba(255,255,255,.62);
@@ -642,18 +652,8 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   box-shadow:0 0 26px rgba(157,0,255,.10);
 }
 
-.hud-caret{
-  width:12px;
-  height:2px;
-  margin-top:6px;
-  background:rgba(0,240,255,.85);
-  box-shadow:0 0 14px rgba(0,240,255,.35);
-  animation:caretBlink .8s steps(2,end) infinite;
-}
-
 /* input */
 .hud-input{
-  flex:0 0 auto;
   display:flex;
   align-items:center;
   gap:10px;
@@ -679,7 +679,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 }
 #hudInput::placeholder{ color:rgba(255,255,255,.35); }
 .hud-send{
-  position:relative;
   border:1px solid rgba(0,240,255,.35);
   background:rgba(0,240,255,.08);
   color:rgba(0,240,255,.9);
@@ -689,7 +688,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   font-family:var(--font-pixel);
   font-size:10px;
   letter-spacing:.12em;
-
   box-shadow:0 10px 0 rgba(0,240,255,.10);
   transform:translateY(0);
 }
@@ -704,7 +702,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 
 .npc-cursor{ display:inline-block; margin-left:2px; animation:npcBlink .9s steps(1) infinite; }
 @keyframes npcBlink{ 50%{opacity:0;} }
-
 
 /* ==========================
    COMMON CARDS
@@ -727,15 +724,12 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   font-weight:700;
 }
 
-
 /* ==========================
    STAGE 1: CHARACTER
 ========================== */
 .stage-character{ background:linear-gradient(180deg, rgba(7,7,13,.55) 0%, rgba(17,17,26,.95) 100%); }
 
 .character-layout{
-  max-width:1400px;
-  margin:0 auto;
   display:grid;
   grid-template-columns: 2fr 1fr;
   gap:var(--space-xl);
@@ -810,7 +804,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   border-color:rgba(0,240,255,.45);
   background:linear-gradient(180deg, rgba(15,15,26,.92), rgba(10,10,15,.65));
 }
-
 .list{ list-style:none; display:flex; flex-direction:column; gap:12px; }
 .list li{
   display:flex; justify-content:space-between; gap:12px;
@@ -852,18 +845,17 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   box-shadow:0 0 18px rgba(0,240,255,.55);
 }
 
-
 /* ==========================
    STAGE 2: SKILL TREE
 ========================== */
 .stage-skills{ background:linear-gradient(180deg, rgba(7,7,13,.65) 0%, rgba(15,5,34,.95) 100%); }
+
 .skilltree-layout{
-  max-width:1400px;
-  margin:0 auto;
   display:grid;
   grid-template-columns: 1.2fr .8fr;
   gap:var(--space-xl);
 }
+
 .tree{
   border-radius:18px;
   border:1px solid rgba(42,42,53,.9);
@@ -948,7 +940,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   margin-bottom:6px;
 }
 .powerup-desc{ color:var(--lighter-gray); }
-
 .power-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
 .power-card{
   border-radius:16px;
@@ -961,12 +952,11 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 .pct{ font-family:var(--font-display); color:var(--neon-purple); font-weight:900; }
 .power-card p{ margin-top:10px; color:var(--lighter-gray); font-size:.9rem; }
 
-
 /* ==========================
-   STAGE 3: QUEST LOG
+   STAGE 3/4: QUEST LOG
 ========================== */
 .stage-quests{ background:rgba(7,7,13,.65); }
-.quest-layout{ max-width:1400px; margin:0 auto; }
+
 .quest{
   position:relative;
   border-radius:18px;
@@ -1011,7 +1001,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   background:rgba(157,0,255,.85);
   box-shadow:0 0 18px rgba(157,0,255,.35);
 }
-
 .quest-btn{
   display:inline-flex;
   align-items:center;
@@ -1033,7 +1022,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   box-shadow:0 0 34px rgba(0,240,255,.75);
   transform:translateX(5px);
 }
-
 .quest.featured{ margin-bottom:22px; }
 .quest-grid{
   display:grid;
@@ -1043,14 +1031,11 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 }
 .quest-meta{ margin-top:10px; color:var(--light-gray); font-size:.85rem; }
 
-
 /* ==========================
    FINAL
 ========================== */
 .stage-final{ background:rgba(7,7,13,.65); }
 .ending{
-  max-width:1400px;
-  margin:0 auto;
   display:grid;
   grid-template-columns: 1fr 1fr;
   gap:var(--space-xl);
@@ -1097,25 +1082,27 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 .card-label{ font-size:.75rem; letter-spacing:.15em; color:var(--light-gray); }
 .card-value{ font-family:var(--font-display); font-size:1.2rem; font-weight:800; }
 
-
 /* ==========================
    FOOTER + TOP
 ========================== */
 .footer{
-  padding:var(--space-lg);
+  padding:var(--space-lg) var(--stage-padding-x);
   background:rgba(7,7,13,.85);
   border-top:1px solid rgba(42,42,53,.85);
   text-align:center;
   position:relative;
 }
-.footer-content{ max-width:1400px; margin:0 auto; }
+.footer-content{
+  max-width: var(--stage-max-width);
+  margin:0 auto;
+}
 .copyright{ font-size:.75rem; letter-spacing:.1em; color:var(--light-gray); margin-bottom:var(--space-xs); }
 .notice{ font-size:.75rem; color:var(--light-gray); opacity:.6; }
 
 .back-to-top{
   position:fixed;
-  bottom:var(--space-lg);
-  right:var(--space-lg);
+  bottom:calc(var(--space-lg) + env(safe-area-inset-bottom));
+  right:calc(var(--space-lg) + env(safe-area-inset-right));
   width:50px; height:50px;
   background:rgba(22,22,34,.92);
   border:2px solid rgba(0,240,255,.85);
@@ -1135,7 +1122,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   box-shadow:0 0 30px rgba(0,240,255,.8);
   transform:translateY(-5px);
 }
-
 
 /* ==========================
    BASE MODAL (기존)
@@ -1184,29 +1170,12 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 .modal-meta{ color:var(--lighter-gray); margin-bottom:18px; }
 .modal-description{ font-size:1.05rem; line-height:1.9; color:var(--lighter-gray); margin-bottom:18px; }
 .modal-details{ padding-top:18px; border-top:1px solid rgba(42,42,53,.85); }
-.modal-image1{
-  width:100%;
-  height:360px;
-  background:rgba(17,17,26,.85);
-  border-radius:14px;
-  margin-bottom:18px;
-  border:1px solid rgba(42,42,53,.75);
-  display:flex;
-  justify-content:center;
-}
-.modal-image1 img{ max-width:100%; height:auto; }
-
+.modal-image{ width:100%; display:flex; justify-content:center; }
+.modal-image img{ max-width:100%; height:auto; border-radius:14px; border:1px solid rgba(42,42,53,.75); }
 
 /* =========================
    BONUS STAGE / OTHER WORKS
 ========================= */
-.bonus-stage{ margin-top:56px; padding:24px 0 10px; }
-.bonus-head{ margin-bottom:18px; }
-.bonus-kicker{ margin:0 0 8px; letter-spacing:.14em; opacity:.85; }
-.bonus-title{ margin:0 0 10px; letter-spacing:.08em; }
-.bonus-desc{ margin:0; opacity:.8; line-height:1.6; max-width:72ch; }
-
-/* grid */
 .ow-grid{
   list-style:none;
   padding:0;
@@ -1216,7 +1185,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   grid-template-columns:repeat(auto-fit, minmax(340px, 1fr));
   align-items:start;
 }
-
 .ow-card{
   border:1px solid rgba(255,255,255,.16);
   border-radius:16px;
@@ -1239,7 +1207,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   gap:10px;
   padding:16px;
 }
-
 .ow-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .ow-tag{ font-size:12px; letter-spacing:.14em; opacity:.85; }
 .ow-status{ font-size:12px; opacity:.75; white-space:nowrap; }
@@ -1267,12 +1234,8 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 .ow-meta, .ow-open{ white-space:nowrap; }
 .ow-open{ letter-spacing:.08em; }
 
-
 /* =========================
    OW MODAL (FINAL)
-   ✅ 배경 고정
-   ✅ 내부만 스크롤
-   ✅ 2열 + 모바일 1열
 ========================= */
 .ow-modal{
   position:fixed;
@@ -1355,8 +1318,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   border-radius:14px;
   background:rgba(0,0,0,.35);
   align-self:start;
-
-  /* ✅ 이미지 클릭 */
   pointer-events:auto !important;
   display:flex;
   flex-direction:column;
@@ -1367,12 +1328,11 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   opacity:1 !important;
   width:100% !important;
   height:auto !important;
-  max-height:62vh;      /* 미리보기 제한 */
+  max-height:62vh;
   object-fit:contain;
   cursor:zoom-in;
   pointer-events:auto !important;
 }
-
 .ow-thumbs{
   display:flex;
   gap:8px;
@@ -1395,7 +1355,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 .ow-row dt{ font-size:12px; letter-spacing:.12em; opacity:.8; margin-bottom:4px; }
 .ow-row dd{ margin:0; opacity:.9; line-height:1.6; }
 
-/* 오른쪽 info sticky (2열에서만) */
 .ow-info{
   position:sticky;
   top:14px;
@@ -1408,15 +1367,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   .ow-panel-body{ grid-template-columns:1fr; }
   .ow-info{ position:static; top:auto; }
 }
-
-/* 2컬럼에서 미리보기 중앙(선택) */
-@media (min-width: 861px){
-  .ow-preview{
-    align-self:center;
-    justify-content:center;
-  }
-}
-
 
 /* =========================
    IMAGE LIGHTBOX (Zoom + Pan)
@@ -1448,7 +1398,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   overflow:hidden;
 }
 
-/* toolbar */
 .imglb-toolbar{
   position:absolute;
   top:10px; left:10px; right:10px;
@@ -1484,12 +1433,10 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   opacity:.85;
   margin-left:4px;
 }
-
-/* viewport (높이 0 문제 방지: absolute + inset) */
 .imglb-viewport{
   position:absolute;
   inset:0;
-  padding:56px 0 28px; /* toolbar/hint 공간 */
+  padding:56px 0 28px;
   overflow:hidden;
   cursor:grab;
   touch-action:none;
@@ -1505,7 +1452,6 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   max-width:none;
   max-height:none;
 }
-
 .imglb-hint{
   position:absolute;
   left:14px;
@@ -1516,25 +1462,15 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   z-index:2;
 }
 
-
-/* ==========================
-   CONTAINERS
-========================== */
-#stage3 .container,
-#stage4 .container{
-  max-width: var(--stage-max-width);
-  margin: 0 auto;
-  padding-left: var(--stage-padding-x);
-  padding-right: var(--stage-padding-x);
-  width: 100%;
-}
-
-
 /* ==========================
    RESPONSIVE
 ========================== */
 @media (max-width:1024px){
-  .main-nav{ padding:var(--space-md) var(--space-md); }
+  .main-nav{ padding:
+    calc(var(--space-md) + env(safe-area-inset-top))
+    var(--stage-padding-x)
+    var(--space-md);
+  }
   .character-layout{ grid-template-columns:1fr; }
   .skilltree-layout{ grid-template-columns:1fr; }
   .ending{ grid-template-columns:1fr; }
@@ -1551,14 +1487,22 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
 
 @media (max-width:768px){
   .nav-menu{ display:none; }
-  .hero{ padding:var(--space-xl) var(--space-md); }
+  .hero{
+    padding:
+      calc(var(--space-xl) + 72px + env(safe-area-inset-top))
+      var(--stage-padding-x)
+      var(--space-xl);
+  }
   .tree-grid{ grid-template-columns:1fr; }
+  .quest-grid{ grid-template-columns:1fr; }
 }
 
 @media (max-width:420px){
   .ow-grid{ grid-template-columns:1fr; }
+  #fxFollower img{ width:110px; }
 }
 
+/* 접근성: 모션 감소 */
 @media (prefers-reduced-motion: reduce){
   *{
     animation-duration:.01ms !important;
