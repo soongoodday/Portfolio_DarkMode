@@ -372,6 +372,7 @@ section{
   overflow:hidden;
   transform:translateZ(0);
 }
+
 .hero-container::before{
   content:"";
   position:absolute; inset:0;
@@ -2512,3 +2513,26 @@ section{
     display: none !important;
   }
 }
+
+
+
+
+@media (max-width: 1200px){
+  /* hero가 들어있는 그리드 컨테이너 후보들 */
+  .stage-grid,
+  .stages,
+  .stages-grid,
+  .grid,
+  .container-grid,
+  .main-grid{
+    grid-template-columns: 1fr !important;
+  }
+
+  /* hero 카드 자체는 중앙 정렬 */
+  .hero-container{
+    width: min(92vw, 720px) !important;
+    margin: 0 auto !important;
+  }
+}
+
+
