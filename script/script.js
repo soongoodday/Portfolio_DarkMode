@@ -379,90 +379,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 // =======================
-// 9) HUD time + log + progress
-// =======================
-(() => {
-  if (prefersReducedMotion) return;
-
-  const hudLines = document.getElementById('hudLines');
-  const hudTime = document.getElementById('hudTime');
-  const valueEl = document.getElementById('hudProgressValue');
-  const fillEl = document.getElementById('hudProgressFill');
-
-  if (!hudLines || !hudTime || !valueEl || !fillEl) return;
-
-  function pad2(n){ return String(n).padStart(2,'0'); }
-  function updateTime(){
-    const d = new Date();
-    hudTime.textContent = `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
-  }
-  updateTime();
-  setInterval(updateTime, 1000);
-
-  const pool = [
-    ['디자인은 즐거워', '디자인은 매번 즐겁지만 참 어렵기도 해…', false],
-    ['퍼블이 가장 쉬웠어요', '마크업하러 가야지', false],
-    ['개발하는 개미',  '공부 열심히 해야지', false],
-    ['프론트론',  '바이브 코딩하기 좋은 AI 추천해주라', false],
-    ['취준생A',  '취업난을 이겨내고 말겠어!!!!!!', false],
-    ['이직아직',   '나는 Claude랑 ChatGPT 많이 사용했어!', false],
-    ['시닙',  '채용 공고 떴더라', false],
-    ['웹디자인 마스터',  '합격하고 싶당', false],
-    ['잘될사람누구게',   '나를 믿어 잘 될거야', false],
-    ['취업하고싶다',   '디자인 정보 공유 좀!!', false]
-  ];
-
-  function addLine(tag, msg, accent){
-  const line = document.createElement('div');
-  line.className = 'hud-line';
-  line.innerHTML = `
-    <span class="hud-tag">[${tag}]</span>
-    <span class="${accent ? 'hud-accent' : ''}">${msg}</span>
-  `;
-
-  const caret = document.getElementById('hudCaret');
-  if (caret) hudLines.insertBefore(line, caret);
-  else hudLines.appendChild(line);
-
-  const lines = hudLines.querySelectorAll('.hud-line');
-  if (lines.length > 20) lines[0].remove();
-
-  hudLines.scrollTop = hudLines.scrollHeight;
-}
-
-
-  addLine('운영자', '디자인은 즐거워님. 오늘도 즐거운 하루 보내세요.', true);
-  addLine('서버', '데이터를 불러오는 중…', true);
-
-  // progress
-  let p = 0;
-  function step(){
-    const inc = p < 60 ? (Math.random()*6 + 2) : (Math.random()*3 + 0.6);
-    p = Math.min(100, p + inc);
-
-    const show = Math.floor(p);
-    valueEl.textContent = `${show}%`;
-    fillEl.style.width = `${show}%`;
-
-    if (show >= 100) {
-      addLine('운영자', '게임 시작 버튼을 눌러주세요.', true);
-      return;
-    }
-    const delay = p < 60 ? (Math.random()*160 + 110) : (Math.random()*220 + 180);
-    setTimeout(step, delay);
-  }
-  setTimeout(step, 500);
-
-  // log stream
-  function loop(){
-    const [tag, msg, accent] = pool[Math.floor(Math.random()*pool.length)];
-    addLine(tag, msg, accent);
-    setTimeout(loop, Math.random()*900 + 700);
-  }
-  setTimeout(loop, 900);
-})();
-
-// =======================
 // 10) typing text
 // =======================
 (() => {
@@ -1144,52 +1060,216 @@ setTimeout(syncHudHeight, 800);
 
 
 
+
+/* =========================
+   HUD CHAT SYSTEM (FINAL + NPC TYPING)
+   - 입력 채팅 정상 작동
+   - NPC 반응 (키워드 우선)
+   - NPC 콘솔 말풍선 타이핑
+   - 랜덤 채팅 (중복X 덱)
+   - 같은 태그 연속 방지
+   - 레어 SYSTEM 메시지
+========================= */
 (() => {
-  const lines = document.getElementById('hudLines');
+  const hudLines = document.getElementById('hudLines');
   const form  = document.getElementById('hudForm');
   const input = document.getElementById('hudInput');
   const caret = document.getElementById('hudCaret');
 
-  if(!lines || !form || !input) return;
+  if (!hudLines) return;
 
-  // ✅ 항상 맨 아래로 스크롤
-  function scrollToBottom(){
-    lines.scrollTop = lines.scrollHeight;
+  const MAX_LINES = 30;
+
+  /* =========================
+     공용 addLine (즉시 출력)
+  ========================= */
+  function addLine(tag, msg, accent = false){
+    const line = document.createElement('div');
+    line.className = 'hud-line';
+    line.innerHTML = `
+      <span class="hud-tag">[${tag}]</span>
+      <span class="${accent ? 'hud-accent' : ''}">${msg}</span>
+    `;
+
+    if (caret) hudLines.insertBefore(line, caret);
+    else hudLines.appendChild(line);
+
+    trim();
   }
 
-  function addLine(tag, text){
-    const row = document.createElement('div');
-    row.className = 'hud-line';
-
-    const t = document.createElement('span');
-    t.className = 'hud-tag';
-    t.textContent = `[${tag}]`;
-
-    const msg = document.createElement('span');
-    msg.className = 'hud-msg';
-    msg.textContent = ` ${text}`;
-
-    row.append(t, msg);
-
-    // caret가 항상 맨 아래에 있게: caret 전에 삽입
-    if (caret) lines.insertBefore(row, caret);
-    else lines.appendChild(row);
-
-    scrollToBottom();
+  function trim(){
+    const lines = hudLines.querySelectorAll('.hud-line');
+    if (lines.length > MAX_LINES) lines[0].remove();
+    hudLines.scrollTop = hudLines.scrollHeight;
   }
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const value = input.value.trim();
-    if(!value) return;
+  /* =========================
+     타이핑용 라인 생성
+  ========================= */
+  function createTypingLine(tag, accent = false){
+    const line = document.createElement('div');
+    line.className = 'hud-line';
 
-    addLine('YOU', value);
-    input.value = '';
+    const tagEl = document.createElement('span');
+    tagEl.className = 'hud-tag';
+    tagEl.textContent = `[${tag}]`;
 
-    // 예시: 자동 응답(원하면 삭제)
-    setTimeout(() => addLine('SYSTEM', '입력 확인 완료.'), 350);
-  });
+    const msgEl = document.createElement('span');
+    msgEl.className = accent ? 'hud-accent' : '';
+    msgEl.textContent = '';
 
-  // 처음 로드 시도 맨 아래
-  scrollToBottom();
+    line.appendChild(tagEl);
+    line.appendChild(msgEl);
+
+    if (caret) hudLines.insertBefore(line, caret);
+    else hudLines.appendChild(line);
+
+    trim();
+    return msgEl;
+  }
+
+  /* =========================
+     NPC 반응 데이터
+  ========================= */
+  const NPC_NAME = 'NPC';
+  const NPC_KEYWORDS = [
+    { keys: ['안녕','hi','hello','반가워','ㅎㅇ'], replies: ['안녕! 오늘도 퀘스트 하러 왔어?', '반가워 :) 시작할 준비 됐어?'] },
+    { keys: ['포트폴리오','포폴'], replies: ['포트폴리오는 핵심 3개만 강하게 보여주면 돼.', '히어로 섹션 한 방이면 면접관 시선 잡는다.'] },
+    { keys: ['면접','자소서'], replies: ['면접은 역할 → 문제 → 결과 순서로 정리해.', '자소서는 수치 한 줄만 추가해도 달라져.'] },
+    { keys: ['피그마','figma'], replies: ['오토레이아웃 정리하면 작업 속도 확 올라가.', '컴포넌트 네이밍부터 정리하자.'] },
+    { keys: ['코딩','js','css','html'], replies: ['에러 나면 콘솔부터 확인.', '한 기능씩 켜보면 원인 바로 잡혀.'] },
+    { keys: ['고마워','thanks','땡큐'], replies: ['언제든 도와줄게.', 'EXP +1 획득.'] }
+  ];
+
+  const NPC_FALLBACK = [
+    '로그 확인 완료.',
+    '지금 흐름 좋아.',
+    '그 방향 유지해.',
+    '다음 액션을 선택해.'
+  ];
+
+  function pick(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function getNpcReply(userText){
+    const t = userText.toLowerCase();
+    for (const rule of NPC_KEYWORDS){
+      if (rule.keys.some(k => t.includes(k))) {
+        return pick(rule.replies);
+      }
+    }
+    return pick(NPC_FALLBACK);
+  }
+
+  /* =========================
+     NPC 말풍선 타이핑
+  ========================= */
+  function npcRespond(userText){
+    const reply = getNpcReply(userText);
+    const msgEl = createTypingLine(NPC_NAME, true);
+
+    let i = 0;
+    const TYPE_MIN = 14;
+    const TYPE_MAX = 26;
+    const START_DELAY = Math.random() * 200 + 200;
+
+    setTimeout(() => {
+      const tick = () => {
+        i++;
+        msgEl.textContent = reply.slice(0, i);
+        trim();
+        if (i < reply.length) {
+          setTimeout(tick, Math.random() * (TYPE_MAX - TYPE_MIN) + TYPE_MIN);
+        }
+      };
+      tick();
+    }, START_DELAY);
+  }
+
+  /* =========================
+     입력 채팅
+  ========================= */
+  if (form && input){
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const value = input.value.trim();
+      if (!value) return;
+
+      addLine('YOU', value);
+      input.value = '';
+      npcRespond(value);
+    });
+  }
+
+  /* =========================
+     랜덤 채팅 풀
+  ========================= */
+  const POOL = [
+    ['디자인은 즐거워', '디자인은 매번 즐겁지만 어렵다…'],
+    ['퍼블이 가장 쉬웠어요', '마크업하러 가야지'],
+    ['개발하는 개미', '공부 열심히 해야지'],
+    ['프론트론', '바이브 코딩하기 좋은 AI 추천해주라'],
+    ['취준생A', '취뽀하고 말겠어'],
+    ['이직아직', 'Claude랑 ChatGPT 같이 쓰는 중'],
+    ['시닙', '채용 공고 떴더라'],
+    ['웹디자인 마스터', '합격하고 싶다'],
+    ['잘될사람누구게', '나를 믿어'],
+    ['취업하고싶다', '디자인 정보 공유 좀'],
+    ['경력직같은신입', '오토레이아웃 잘 걸어뒀지?'],
+    ['코딩하는디자이너', '포트폴리오에 뭘 추가해야 하나?'],
+    ['UXUI전문가', '사용자 경험이 중요하지'],
+    ['프로젝트매니저', '일정 관리가 생명이지'],
+    ['디자인러', '새로운 툴 좀 알려줘'],
+    ['웹뻐블', '반응형 레이아웃 짜야지'],
+    ['이직스타트', '최신 프레임워크 뭐가 있지?']
+  ];
+
+  const SYSTEM_POOL = [
+    '📡 CONNECTION STABLE',
+    '💾 AUTO SAVE COMPLETE',
+    '🎮 QUEST UPDATED',
+    '⚡ BOOST READY'
+  ];
+
+  const RARE_RATE = 0.1;
+
+  function shuffle(arr){
+    for (let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  let deck = [];
+  let lastTag = '';
+
+  function refillDeck(){
+    deck = shuffle(POOL.slice());
+  }
+
+  function pickNormal(){
+    if (!deck.length) refillDeck();
+    const idx = deck.findIndex(([tag]) => tag !== lastTag);
+    return idx >= 0 ? deck.splice(idx, 1)[0] : deck.pop();
+  }
+
+  function loop(){
+    if (Math.random() < RARE_RATE){
+      addLine('SYSTEM', pick(SYSTEM_POOL), true);
+      lastTag = 'SYSTEM';
+    } else {
+      const [tag, msg] = pickNormal();
+      addLine(tag, msg);
+      lastTag = tag;
+    }
+    setTimeout(loop, Math.random() * 900 + 700);
+  }
+
+  /* =========================
+     시작
+  ========================= */
+  addLine('서버', '채팅 로그 동기화 중…', true);
+  setTimeout(loop, 1000);
 })();
