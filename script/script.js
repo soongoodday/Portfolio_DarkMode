@@ -1,15 +1,15 @@
 // helpers
-function resolveAsset(path){
+function resolveAsset(path) {
   // "images/a.png" 같은 상대경로를
   // 현재 페이지 기준으로 절대 URL로 바꿔줌 (GitHub Pages 하위경로에서도 안전)
-  try{
+  try {
     return new URL(path, document.baseURI).href;
-  }catch(e){
+  } catch (e) {
     return path;
   }
 }
 
-function setImgSafe(imgEl, path, alt = ''){
+function setImgSafe(imgEl, path, alt = '') {
   if (!imgEl) return;
 
   const url = resolveAsset(path);
@@ -80,7 +80,7 @@ document.addEventListener('mousemove', (e) => {
   targetY = e.clientY + 20;
 });
 
-function shipTick(){
+function shipTick() {
   if (!fxFollower) return;
   shipX = lerp(shipX, targetX, 0.08);
   shipY = lerp(shipY, targetY, 0.08);
@@ -105,14 +105,14 @@ pressBtn?.addEventListener('click', () => {
   setTimeout(() => hero?.classList.remove('cyber-glitch'), 260);
 
   setTimeout(() => {
-    document.getElementById('stage1')?.scrollIntoView({ behavior:'smooth', block:'start' });
+    document.getElementById('stage1')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     pressBtn.classList.remove('is-pressed');
   }, 220);
 });
 
 // nav cta
 document.getElementById('navCta')?.addEventListener('click', () => {
-  document.getElementById('stage3')?.scrollIntoView({ behavior:'smooth', block:'start' });
+  document.getElementById('stage3')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 
 // =======================
@@ -124,7 +124,7 @@ window.addEventListener('scroll', () => {
   if (window.pageYOffset > 500) backToTopButton.classList.add('visible');
   else backToTopButton.classList.remove('visible');
 });
-backToTopButton?.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+backToTopButton?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 // =======================
 // 5) Title auto glitch
@@ -182,7 +182,7 @@ const barsObserver = new IntersectionObserver((entries) => {
       barsAnimated = true;
     }
   });
-}, { threshold:0.25 });
+}, { threshold: 0.25 });
 
 if (stage2) barsObserver.observe(stage2);
 
@@ -402,7 +402,7 @@ document.addEventListener('keydown', (e) => {
   let charIndex = 0;
   let deleting = false;
 
-  function typeLoop(){
+  function typeLoop() {
     const current = texts[textIndex];
 
     if (!deleting) {
@@ -473,7 +473,7 @@ document.addEventListener('keydown', (e) => {
       topic: "당근마켓/배너",
       age: "당근마켓 사용자",
       figma: "https://www.figma.com/",
-      images: ["images/carrot_banner1.png","images/carrot_banner2.png"]
+      images: ["images/carrot_banner1.png", "images/carrot_banner2.png"]
     },
     {
       tag: "ARCHIVE",
@@ -657,15 +657,15 @@ document.addEventListener('keydown', (e) => {
 
 
 
-    // ✅ 이미지 배열 통일 (string/array 모두 지원)
-  function normalizeImages(w){
+  // ✅ 이미지 배열 통일 (string/array 모두 지원)
+  function normalizeImages(w) {
     if (Array.isArray(w.images) && w.images.length) return w.images.filter(Boolean);
     if (typeof w.images === 'string' && w.images) return [w.images];
     return [];
   }
 
   // ✅ 현재 이미지 표시
-  function showImg(idx){
+  function showImg(idx) {
     if (!activeImages.length) {
       console.error('❌ activeImages empty. check images path:', OTHER_WORKS[current]?.images);
       return;
@@ -675,11 +675,11 @@ document.addEventListener('keydown', (e) => {
     if (elIndex) elIndex.textContent = String(currentImg + 1);
     if (elTotal) elTotal.textContent = String(activeImages.length);
     // 썸네일 active 표시
-    if (elThumbs){
-    elThumbs.querySelectorAll('.ow-thumb').forEach((b, i) => {
-    b.classList.toggle('active', i === currentImg);
-  });
-}
+    if (elThumbs) {
+      elThumbs.querySelectorAll('.ow-thumb').forEach((b, i) => {
+        b.classList.toggle('active', i === currentImg);
+      });
+    }
 
   }
 
@@ -724,50 +724,50 @@ document.addEventListener('keydown', (e) => {
   }
 
   function openModal(index) {
-  current = index;
-  const w = OTHER_WORKS[current];
+    current = index;
+    const w = OTHER_WORKS[current];
 
-  elTitle.textContent = w.title;
-  elMeta.textContent = w.meta;
-  elDesc.textContent = w.desc;
-  elTopic.textContent = w.topic;
-  elAge.textContent = w.age;
+    elTitle.textContent = w.title;
+    elMeta.textContent = w.meta;
+    elDesc.textContent = w.desc;
+    elTopic.textContent = w.topic;
+    elAge.textContent = w.age;
 
-  activeImages = normalizeImages(w);
-  currentImg = 0;
-  showImg(0); // ✅ 여기서 이미지 + 인덱스/토탈까지 한 번에 처리
+    activeImages = normalizeImages(w);
+    currentImg = 0;
+    showImg(0); // ✅ 여기서 이미지 + 인덱스/토탈까지 한 번에 처리
 
-  // ✅ 썸네일 만들기
-if (elThumbs){
-  elThumbs.innerHTML = activeImages.map((src, i) => `
-    <button class="ow-thumb ${i===0 ? 'active' : ''}" type="button" data-thumb="${i}">
-      <img src="${resolveAsset(src)}" alt="thumb ${i+1}">
+    // ✅ 썸네일 만들기
+    if (elThumbs) {
+      elThumbs.innerHTML = activeImages.map((src, i) => `
+    <button class="ow-thumb ${i === 0 ? 'active' : ''}" type="button" data-thumb="${i}">
+      <img src="${resolveAsset(src)}" alt="thumb ${i + 1}">
     </button>
   `).join("");
 
-  elThumbs.onclick = (e) => {
-    const b = e.target.closest('[data-thumb]');
-    if (!b) return;
-    showImg(Number(b.dataset.thumb));
-  };
-}
+      elThumbs.onclick = (e) => {
+        const b = e.target.closest('[data-thumb]');
+        if (!b) return;
+        showImg(Number(b.dataset.thumb));
+      };
+    }
 
-  // figma 링크
-  const hasLink = !!w.figma && w.figma !== "#";
-  elFigma.href = hasLink ? w.figma : "#";
-  elFigma.style.pointerEvents = hasLink ? "auto" : "none";
-  elFigma.style.opacity = hasLink ? "1" : ".5";
+    // figma 링크
+    const hasLink = !!w.figma && w.figma !== "#";
+    elFigma.href = hasLink ? w.figma : "#";
+    elFigma.style.pointerEvents = hasLink ? "auto" : "none";
+    elFigma.style.opacity = hasLink ? "1" : ".5";
 
-  // ✅ (선택) 이미지가 여러 장이면 콘솔로 확인
-  // console.log('activeImages=', activeImages);
+    // ✅ (선택) 이미지가 여러 장이면 콘솔로 확인
+    // console.log('activeImages=', activeImages);
 
-  modal.classList.add("is-open");
-  modal.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden";
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
 
-  const bodyEl = modal.querySelector(".ow-panel-body");
-  if (bodyEl) bodyEl.scrollTop = 0;
-}
+    const bodyEl = modal.querySelector(".ow-panel-body");
+    if (bodyEl) bodyEl.scrollTop = 0;
+  }
 
   function closeModal() {
     modal.classList.remove("is-open");
@@ -907,14 +907,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
-  function getImgSize(){
+  function getImgSize() {
     const iw = img.naturalWidth || img.width || 1;
     const ih = img.naturalHeight || img.height || 1;
     return { iw, ih };
   }
 
   // ✅ 항상 "가운데 유지" + (큰 경우엔 드래그 범위 제한)
-  function clampTranslate(){
+  function clampTranslate() {
     const vw = viewport.clientWidth;
     const vh = viewport.clientHeight;
     const { iw, ih } = getImgSize();
@@ -929,13 +929,13 @@ window.addEventListener('DOMContentLoaded', () => {
     else ty = clamp(ty, vh - sh, 0);
   }
 
-  function render(){
+  function render() {
     clampTranslate();
     img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
     if (pctEl) pctEl.textContent = `${Math.round(scale * 100)}%`;
   }
 
-  function reset(){
+  function reset() {
     scale = 1;
     tx = 0;
     ty = 0;
@@ -943,7 +943,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // ✅ 특정 포인트 기준으로 줌
-  function zoomAt(newScale, clientX, clientY){
+  function zoomAt(newScale, clientX, clientY) {
     newScale = clamp(newScale, MIN, MAX);
 
     const rect = viewport.getBoundingClientRect();
@@ -966,7 +966,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const dir = e.deltaY > 0 ? -1 : 1;
     const step = 0.12;
     zoomAt(scale * (1 + step * dir), e.clientX, e.clientY);
-  }, { passive:false });
+  }, { passive: false });
 
   /* DRAG */
   let isDown = false;
@@ -991,7 +991,7 @@ window.addEventListener('DOMContentLoaded', () => {
     render();
   });
 
-  function endDrag(e){
+  function endDrag(e) {
     if (!isDown) return;
     isDown = false;
     viewport.classList.remove('is-dragging');
@@ -1011,12 +1011,12 @@ window.addEventListener('DOMContentLoaded', () => {
   /* BUTTONS */
   btnZoomIn?.addEventListener('click', () => {
     const r = viewport.getBoundingClientRect();
-    zoomAt(scale * 1.2, r.left + r.width/2, r.top + r.height/2);
+    zoomAt(scale * 1.2, r.left + r.width / 2, r.top + r.height / 2);
   });
 
   btnZoomOut?.addEventListener('click', () => {
     const r = viewport.getBoundingClientRect();
-    zoomAt(scale / 1.2, r.left + r.width/2, r.top + r.height/2);
+    zoomAt(scale / 1.2, r.left + r.width / 2, r.top + r.height / 2);
   });
 
   btnReset?.addEventListener('click', reset);
@@ -1025,7 +1025,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const mo = new MutationObserver(() => {
     if (lb.classList.contains('is-open')) reset();
   });
-  mo.observe(lb, { attributes:true, attributeFilter:['class'] });
+  mo.observe(lb, { attributes: true, attributeFilter: ['class'] });
 
   img.addEventListener('load', () => {
     reset();
@@ -1040,10 +1040,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-function syncHudHeight(){
+function syncHudHeight() {
   const card = document.querySelector('.hero-container');
-  const hud  = document.querySelector('.hero-hud');
-  if(!card || !hud) return;
+  const hud = document.querySelector('.hero-hud');
+  if (!card || !hud) return;
 
   // 카드 높이를 HUD에 그대로 적용
   hud.style.height = card.offsetHeight + 'px';
@@ -1072,7 +1072,7 @@ setTimeout(syncHudHeight, 800);
 ========================= */
 (() => {
   const hudLines = document.getElementById('hudLines');
-  const form  = document.getElementById('hudForm');
+  const form = document.getElementById('hudForm');
   const input = document.getElementById('hudInput');
   const caret = document.getElementById('hudCaret');
 
@@ -1083,13 +1083,13 @@ setTimeout(syncHudHeight, 800);
   /* =========================
      공용 addLine (즉시 출력)
   ========================= */
-  function addLine(tag, msg, accent = false){
+  function addLine(tag, msg, accent = false) {
     const line = document.createElement('div');
     line.className = 'hud-line';
     line.innerHTML = `
-      <span class="hud-tag">[${tag}]</span>
-      <span class="${accent ? 'hud-accent' : ''}">${msg}</span>
-    `;
+    <span class="hud-tag">[${tag}]</span>
+    <span class="${accent ? 'hud-accent' : ''}">${msg}</span>
+  `;
 
     if (caret) hudLines.insertBefore(line, caret);
     else hudLines.appendChild(line);
@@ -1097,18 +1097,28 @@ setTimeout(syncHudHeight, 800);
     trim();
   }
 
-  function trim(){
-    const lines = hudLines.querySelectorAll('.hud-line');
-    if (lines.length > MAX_LINES) lines[0].remove();
+  function trim() {
+    const lines = Array.from(hudLines.querySelectorAll('.hud-line'));
+    if (lines.length <= MAX_LINES) return;
+
+    for (const line of lines) {
+      // ✅ 타이핑 중인 줄은 절대 삭제하지 않음
+      if (line.dataset.typing === 'true') continue;
+
+      line.remove();
+      break;
+    }
+
     hudLines.scrollTop = hudLines.scrollHeight;
   }
 
   /* =========================
      타이핑용 라인 생성
   ========================= */
-  function createTypingLine(tag, accent = false){
+  function createTypingLine(tag, accent = false) {
     const line = document.createElement('div');
     line.className = 'hud-line';
+    line.dataset.typing = 'true'; // ✅ 보호 플래그
 
     const tagEl = document.createElement('span');
     tagEl.className = 'hud-tag';
@@ -1118,27 +1128,33 @@ setTimeout(syncHudHeight, 800);
     msgEl.className = accent ? 'hud-accent' : '';
     msgEl.textContent = '';
 
+    const cursorEl = document.createElement('span');
+    cursorEl.className = 'npc-cursor';
+    cursorEl.textContent = '▌';
+
     line.appendChild(tagEl);
     line.appendChild(msgEl);
+    line.appendChild(cursorEl);
 
     if (caret) hudLines.insertBefore(line, caret);
     else hudLines.appendChild(line);
 
     trim();
-    return msgEl;
+    return { line, msgEl, cursorEl };
   }
+
 
   /* =========================
      NPC 반응 데이터
   ========================= */
   const NPC_NAME = 'NPC';
   const NPC_KEYWORDS = [
-    { keys: ['안녕','hi','hello','반가워','ㅎㅇ'], replies: ['안녕! 오늘도 퀘스트 하러 왔어?', '반가워 :) 시작할 준비 됐어?'] },
-    { keys: ['포트폴리오','포폴'], replies: ['포트폴리오는 핵심 3개만 강하게 보여주면 돼.', '히어로 섹션 한 방이면 면접관 시선 잡는다.'] },
-    { keys: ['면접','자소서'], replies: ['면접은 역할 → 문제 → 결과 순서로 정리해.', '자소서는 수치 한 줄만 추가해도 달라져.'] },
-    { keys: ['피그마','figma'], replies: ['오토레이아웃 정리하면 작업 속도 확 올라가.', '컴포넌트 네이밍부터 정리하자.'] },
-    { keys: ['코딩','js','css','html'], replies: ['에러 나면 콘솔부터 확인.', '한 기능씩 켜보면 원인 바로 잡혀.'] },
-    { keys: ['고마워','thanks','땡큐'], replies: ['언제든 도와줄게.', 'EXP +1 획득.'] }
+    { keys: ['안녕', 'hi', 'hello', '반가워', 'ㅎㅇ'], replies: ['안녕! 오늘도 퀘스트 하러 왔어?', '반가워 :) 시작할 준비 됐어?'] },
+    { keys: ['포트폴리오', '포폴'], replies: ['포트폴리오는 핵심 3개만 강하게 보여주면 돼.', '히어로 섹션 한 방이면 면접관 시선 잡는다.'] },
+    { keys: ['면접', '자소서'], replies: ['면접은 역할 → 문제 → 결과 순서로 정리해.', '자소서는 수치 한 줄만 추가해도 달라져.'] },
+    { keys: ['피그마', 'figma'], replies: ['오토레이아웃 정리하면 작업 속도 확 올라가.', '컴포넌트 네이밍부터 정리하자.'] },
+    { keys: ['코딩', 'js', 'css', 'html'], replies: ['에러 나면 콘솔부터 확인.', '한 기능씩 켜보면 원인 바로 잡혀.'] },
+    { keys: ['고마워', 'thanks', '땡큐'], replies: ['언제든 도와줄게.', 'EXP +1 획득.'] }
   ];
 
   const NPC_FALLBACK = [
@@ -1148,13 +1164,13 @@ setTimeout(syncHudHeight, 800);
     '다음 액션을 선택해.'
   ];
 
-  function pick(arr){
+  function pick(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  function getNpcReply(userText){
+  function getNpcReply(userText) {
     const t = userText.toLowerCase();
-    for (const rule of NPC_KEYWORDS){
+    for (const rule of NPC_KEYWORDS) {
       if (rule.keys.some(k => t.includes(k))) {
         return pick(rule.replies);
       }
@@ -1165,9 +1181,9 @@ setTimeout(syncHudHeight, 800);
   /* =========================
      NPC 말풍선 타이핑
   ========================= */
-  function npcRespond(userText){
+  function npcRespond(userText) {
     const reply = getNpcReply(userText);
-    const msgEl = createTypingLine(NPC_NAME, true);
+    const { line, msgEl, cursorEl } = createTypingLine(NPC_NAME, true);
 
     let i = 0;
     const TYPE_MIN = 14;
@@ -1179,8 +1195,13 @@ setTimeout(syncHudHeight, 800);
         i++;
         msgEl.textContent = reply.slice(0, i);
         trim();
+
         if (i < reply.length) {
           setTimeout(tick, Math.random() * (TYPE_MAX - TYPE_MIN) + TYPE_MIN);
+        } else {
+          // ✅ 타이핑 종료 처리
+          cursorEl?.remove();
+          delete line.dataset.typing;
         }
       };
       tick();
@@ -1190,7 +1211,7 @@ setTimeout(syncHudHeight, 800);
   /* =========================
      입력 채팅
   ========================= */
-  if (form && input){
+  if (form && input) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const value = input.value.trim();
@@ -1234,8 +1255,8 @@ setTimeout(syncHudHeight, 800);
 
   const RARE_RATE = 0.1;
 
-  function shuffle(arr){
-    for (let i = arr.length - 1; i > 0; i--){
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
@@ -1245,18 +1266,18 @@ setTimeout(syncHudHeight, 800);
   let deck = [];
   let lastTag = '';
 
-  function refillDeck(){
+  function refillDeck() {
     deck = shuffle(POOL.slice());
   }
 
-  function pickNormal(){
+  function pickNormal() {
     if (!deck.length) refillDeck();
     const idx = deck.findIndex(([tag]) => tag !== lastTag);
     return idx >= 0 ? deck.splice(idx, 1)[0] : deck.pop();
   }
 
-  function loop(){
-    if (Math.random() < RARE_RATE){
+  function loop() {
+    if (Math.random() < RARE_RATE) {
       addLine('SYSTEM', pick(SYSTEM_POOL), true);
       lastTag = 'SYSTEM';
     } else {

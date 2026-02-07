@@ -2279,3 +2279,15 @@ section{ padding:var(--space-xxl) var(--space-lg); position:relative; }
   transform: translateY(2px);
   box-shadow: 0 6px 0 rgba(0,240,255,.08);
 }
+
+
+
+
+.npc-cursor{
+  display:inline-block;
+  margin-left:2px;
+  animation: npcBlink 0.9s steps(1) infinite;
+}
+@keyframes npcBlink{
+  50%{ opacity:0; }
+}
