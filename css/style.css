@@ -2536,3 +2536,262 @@ section{
 }
 
 
+
+
+/* =========================
+   NAV: caret 제거 + active 점멸 추가
+   style.css 맨 아래에 추가
+========================= */
+
+/* (1) 콘솔 커서(█) 제거 */
+.main-nav .nav-menu::after{
+  content: "";              /* 기존 " █" 없앰 */
+  animation: none !important;
+  margin-left: 0;
+}
+
+/* (2) active 링크: 점(●)을 왼쪽에 붙이고 깜박이게 */
+.main-nav .nav-menu a{
+  position: relative;       /* 점 배치를 위해 */
+  padding-left: 28px;       /* 점 들어갈 자리 확보 */
+}
+
+/* 점(●) 기본은 숨김 */
+.main-nav .nav-menu a::before{
+  content: "●";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  opacity: 0;
+}
+
+/* active일 때만 점 보이고 점멸 */
+.main-nav .nav-menu a.is-active::before{
+  opacity: 1;
+  animation: navDotBlink 1s steps(1, end) infinite;
+}
+
+/* 점멸 애니메이션 */
+@keyframes navDotBlink{
+  50%{ opacity: .1; }
+}
+
+/* FINAL은 점 색만 살짝 다르게 */
+.main-nav .nav-menu a[href="#final"].is-active::before{
+  /* 색을 따로 쓰고 싶으면 이 한 줄만 유지 */
+  /* color: rgba(255,0,110,.9); */
+}
+
+
+
+
+.main-nav .nav-menu a.is-active::before{
+  opacity: 1;
+  animation: navDotPulse 1.1s ease-in-out infinite;
+}
+@keyframes navDotPulse{
+  0%,100%{ transform: translateY(-50%) scale(1); opacity: .35; }
+  50%{ transform: translateY(-50%) scale(1.15); opacity: 1; }
+}
+
+
+
+
+/* =========================
+   NAV FIX (1419 wrap + 768 hamburger)
+   style.css 맨 아래에 추가
+========================= */
+
+/* 1) 1419px부터 깨지는 원인: flex shrink + 링크 줄바꿈
+   -> 메뉴는 절대 줄바꿈 금지, 부족하면 가로 스크롤 */
+.main-nav .nav-container{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:nowrap;
+}
+
+.main-nav .nav-menu{
+  display:flex !important;          /* 768에서 숨김 당해도 복구 */
+  flex-wrap:nowrap !important;
+  white-space:nowrap;
+  overflow-x:auto;                  /* 부족하면 스크롤 */
+  -webkit-overflow-scrolling:touch;
+  gap:clamp(10px, 1.2vw, 22px);
+  align-items:center;
+  margin:0;
+  padding:10px 14px;
+  border-radius:14px;
+}
+
+.main-nav .nav-menu li{ flex:0 0 auto; }
+
+.main-nav .nav-menu a{
+  white-space:nowrap;               /* 링크 내부 줄바꿈 금지 */
+  flex:0 0 auto;
+}
+
+/* (선택) 1440 근처에서 더 컴팩트하게 */
+@media (max-width: 1440px){
+  .main-nav .nav-menu a{ font-size:13px; letter-spacing:.08em; }
+  .main-nav .nav-cta{ padding:10px 12px; font-size:13px; }
+}
+
+/* 스크롤바 깔끔 */
+.main-nav .nav-menu::-webkit-scrollbar{ height:6px; }
+.main-nav .nav-menu::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.18);
+  border-radius:999px;
+}
+
+/* =========================
+   2) 768px 이하: 메뉴 숨기고 햄버거로
+========================= */
+.nav-burger{
+  display:none;
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(10,10,15,.35);
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  flex-direction:column;
+}
+.nav-burger span{
+  display:block;
+  width:18px;
+  height:2px;
+  border-radius:999px;
+  background:rgba(255,255,255,.85);
+}
+
+/* 모바일에선 메뉴/버튼 정리 */
+@media (max-width: 768px){
+  .main-nav .nav-menu{ display:none !important; } /* 아예 숨김 */
+  .main-nav .nav-cta{ display:none; }
+  .nav-burger{ display:flex; }
+}
+
+/* =========================
+   MOBILE PANEL
+========================= */
+.nav-panel-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+  z-index:998;
+}
+
+.nav-panel{
+  position:fixed;
+  top:10px;
+  right:10px;
+  width:min(360px, calc(100vw - 20px));
+  max-height:calc(100vh - 20px);
+  background:rgba(10,10,15,.92);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  backdrop-filter:blur(14px);
+  transform:translateX(16px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease;
+  z-index:999;
+  overflow:hidden;
+}
+
+.nav-panel.open{
+  opacity:1;
+  transform:translateX(0);
+  pointer-events:auto;
+}
+.nav-panel-backdrop.open{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.nav-panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.panel-title{
+  font-family:var(--font-pixel,'Press Start 2P',monospace);
+  letter-spacing:.12em;
+  font-size:12px;
+  opacity:.9;
+}
+.panel-close{
+  width:36px;
+  height:36px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(0,0,0,.25);
+  color:inherit;
+  font-size:20px;
+}
+
+.nav-panel-body{
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.panel-hint{
+  opacity:.75;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+
+.panel-link{
+  display:flex;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
+  text-decoration:none;
+  opacity:.9;
+}
+.panel-link:hover{
+  opacity:1;
+  box-shadow:0 0 12px rgba(0,240,255,.14);
+}
+.panel-final{
+  border-color:rgba(255,0,110,.22);
+}
+
+
+
+
+/* =========================
+   1160px 이하: 햄버거 전환
+========================= */
+@media (max-width: 1160px){
+  /* 상단 STAGE 메뉴 숨김 */
+  .main-nav .nav-menu{
+    display:none !important;
+  }
+
+  /* START QUEST 버튼 숨김 */
+  .main-nav .nav-cta{
+    display:none;
+  }
+
+  /* 햄버거 버튼 표시 */
+  .nav-burger{
+    display:flex;
+  }
+}
+

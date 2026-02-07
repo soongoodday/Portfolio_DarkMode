@@ -46,7 +46,33 @@
       </ul>
 
       <button class="nav-cta" type="button" id="navCta">START QUEST</button>
+
+      <!-- ✅ ADD: hamburger -->
+      <button class="nav-burger" type="button" id="navBurger" aria-label="메뉴 열기" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+
+    <!-- ✅ ADD: mobile panel -->
+    <div class="nav-panel" id="navPanel" aria-hidden="true">
+      <div class="nav-panel-head">
+        <span class="panel-title">MINIMAP</span>
+        <button class="panel-close" type="button" id="navPanelClose" aria-label="메뉴 닫기">×</button>
+      </div>
+
+      <div class="nav-panel-body">
+        <p class="panel-hint">> TAP TO JUMP</p>
+        <a class="panel-link" href="#hero">HOME</a>
+        <a class="panel-link" href="#stage1">STAGE 01</a>
+        <a class="panel-link" href="#stage2">STAGE 02</a>
+        <a class="panel-link" href="#stage3">STAGE 03</a>
+        <a class="panel-link" href="#stage4">STAGE 04</a>
+        <a class="panel-link panel-final" href="#final">FINAL STAGE</a>
+      </div>
+    </div>
+
+    <div class="nav-panel-backdrop" id="navPanelBackdrop" aria-hidden="true"></div>
+
   </nav>
 
   <main>

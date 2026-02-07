@@ -1327,4 +1327,131 @@ setTimeout(syncHudHeight, 800);
 
 
 
+/* =========================
+   NAV ACTIVE (HTML 유지 버전)
+   script.js 맨 아래에 추가
+========================= */
+(function () {
+  const links = Array.from(document.querySelectorAll('.main-nav .nav-menu a'));
+  if (!links.length) return;
+
+  // href(#id) → 섹션 찾기
+  const items = links
+    .map(a => {
+      const href = a.getAttribute('href');
+      if (!href || !href.startsWith('#')) return null;
+      const section = document.querySelector(href);
+      if (!section) return null;
+      return { a, section, href };
+    })
+    .filter(Boolean);
+
+  if (!items.length) return;
+
+  // 클릭 시 부드럽게 이동(기존이 있어도 문제 없게)
+  links.forEach(a => {
+    a.addEventListener('click', (e) => {
+      const href = a.getAttribute('href');
+      if (!href || !href.startsWith('#')) return;
+      const target = document.querySelector(href);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.pushState(null, '', href);
+    });
+  });
+
+  // 스크롤 위치에 따라 active 업데이트
+  function setActive(href) {
+    links.forEach(x => x.classList.toggle('is-active', x.getAttribute('href') === href));
+  }
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      // 가장 많이 보이는 섹션 1개 선택
+      let best = null;
+      for (const ent of entries) {
+        if (!ent.isIntersecting) continue;
+        if (!best || ent.intersectionRatio > best.intersectionRatio) best = ent;
+      }
+      if (!best) return;
+
+      const id = '#' + best.target.id;
+      setActive(id);
+    }, { threshold: [0.35, 0.55, 0.75] });
+
+    items.forEach(({ section }) => io.observe(section));
+  } else {
+    // 구형 브라우저 대비(간단)
+    window.addEventListener('scroll', () => {
+      let current = items[0].href;
+      const y = window.scrollY + 120;
+      for (const it of items) {
+        if (it.section.offsetTop <= y) current = it.href;
+      }
+      setActive(current);
+    });
+  }
+})();
+
+
+
+
+/* =========================
+   NAV HAMBURGER PANEL
+   script.js 맨 아래에 추가
+========================= */
+(function () {
+  const burger = document.getElementById('navBurger');
+  const panel = document.getElementById('navPanel');
+  const closeBtn = document.getElementById('navPanelClose');
+  const backdrop = document.getElementById('navPanelBackdrop');
+
+  if (!burger || !panel || !backdrop) return;
+
+  function openPanel() {
+    panel.classList.add('open');
+    backdrop.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    burger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePanel() {
+    panel.classList.remove('open');
+    backdrop.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    burger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  burger.addEventListener('click', () => {
+    const isOpen = panel.classList.contains('open');
+    if (isOpen) closePanel();
+    else openPanel();
+  });
+
+  closeBtn?.addEventListener('click', closePanel);
+  backdrop.addEventListener('click', closePanel);
+
+  // 패널 링크 클릭 시: 스무스 스크롤 + 닫기
+  panel.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+
+    const href = a.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      history.pushState(null, '', href);
+    }
+    closePanel();
+  });
+
+  // ESC 닫기
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closePanel();
+  });
+})();
 
