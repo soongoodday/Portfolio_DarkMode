@@ -3162,6 +3162,22 @@ section{
 
 
 
-#fxFollower,
-#cursorGlow,
-.fx, .fx * { pointer-events: none; }
+/* 부드럽게 떨어지는 기본 상태 */
+.drop-section{
+  opacity: 0;
+  transform: translateY(-24px);
+  transition: transform .8s ease, opacity .8s ease;
+  will-change: transform, opacity;
+}
+
+/* 화면에 보이면 */
+.drop-section.is-in{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 모션 줄이기 */
+@media (prefers-reduced-motion: reduce){
+  .drop-section{ opacity:1; transform:none; transition:none; }
+}
+
