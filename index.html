@@ -389,7 +389,8 @@
       </header>
 
       <div class="quest-layout">
-        <article class="quest featured drop-section" data-project="nextlab" data-tilt data-tilt-strength="10">
+        <article class="quest featured drop-section" data-project="nextlab" data-tilt data-tilt-strength="10"
+          data-preview="images/nextlab_mac_pixel.png">
           <div class="quest-top">
             <span class="quest-type">MAIN QUEST</span>
             <span class="quest-progress">PROGRESS ▓▓▓▓▓░ 100%</span>
@@ -560,14 +561,14 @@
             <span class="card-value">010-7922-7731</span>
           </a>
 
-          <a class="contact-card drop-section" href="mailto:sunge830@gmail.com" data-tilt data-tilt-strength="10">
+          <a class="contact-card drop-section" href="mailto:soongoodday@gmail.com" data-tilt data-tilt-strength="10">
             <span class="card-icon">✉</span>
             <span class="card-label">EMAIL</span>
             <span class="card-value">soongoodday@gmail.com</span>
           </a>
 
-          <a class="contact-card drop-section" href="https://soongoodday.tistory.com/" target="_blank" rel="noopener" data-tilt
-            data-tilt-strength="10">
+          <a class="contact-card drop-section" href="https://soongoodday.tistory.com/" target="_blank" rel="noopener"
+            data-tilt data-tilt-strength="10">
             <span class="card-icon">📝</span>
             <span class="card-label">BLOG</span>
             <span class="card-value">WORK LOG →</span>
@@ -663,6 +664,96 @@
       reveal(); // 최초 1회 실행
     })();
   </script>
+
+  <script>
+    (() => {
+      const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+
+      // tooltip element 생성
+      const tip = document.createElement('div');
+      tip.className = 'preview-tip';
+      tip.innerHTML = `<img alt=""><div class="cap" aria-hidden="true">PREVIEW</div>`;
+      document.body.appendChild(tip);
+
+      const img = tip.querySelector('img');
+
+      let activeEl = null;
+      let raf = null;
+      let lastX = 0, lastY = 0;
+
+      function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
+
+      function place(x, y) {
+        // 커서에서 살짝 떨어진 위치
+        const gap = 18;
+        const w = tip.offsetWidth || 360;
+        const h = tip.offsetHeight || 200;
+
+        // 기본은 커서 오른쪽 아래
+        let tx = x + gap;
+        let ty = y + gap;
+
+        // 화면 밖으로 나가면 반대로 배치
+        const pad = 12;
+        const maxX = window.innerWidth - w - pad;
+        const maxY = window.innerHeight - h - pad;
+
+        if (tx > maxX) tx = x - w - gap;
+        if (ty > maxY) ty = y - h - gap;
+
+        tx = clamp(tx, pad, maxX);
+        ty = clamp(ty, pad, maxY);
+
+        tip.style.left = tx + 'px';
+        tip.style.top = ty + 'px';
+      }
+
+      function show(el) {
+        const src = el.getAttribute('data-preview');
+        if (!src) return;
+
+        activeEl = el;
+        img.src = src;
+        tip.classList.add('is-on');
+
+        if (reduce) return;
+        // 처음 위치 잡기
+        place(lastX, lastY);
+      }
+
+      function hide() {
+        activeEl = null;
+        tip.classList.remove('is-on');
+        // 이미지 깜빡임 방지: 바로 비우지 말고 약간 뒤에 비움
+        setTimeout(() => {
+          if (!activeEl) img.removeAttribute('src');
+        }, 120);
+      }
+
+      // 이벤트 위임: data-preview 가진 애들 전부 적용
+      document.addEventListener('mouseenter', (e) => {
+        const el = e.target.closest?.('[data-preview]');
+        if (!el) return;
+        show(el);
+      }, true);
+
+      document.addEventListener('mouseleave', (e) => {
+        const el = e.target.closest?.('[data-preview]');
+        if (!el) return;
+        hide();
+      }, true);
+
+      document.addEventListener('mousemove', (e) => {
+        lastX = e.clientX; lastY = e.clientY;
+        if (!activeEl) return;
+
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => place(lastX, lastY));
+      }, { passive: true });
+
+    })();
+  </script>
+
 
 </body>
 
