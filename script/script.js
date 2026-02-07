@@ -1398,43 +1398,169 @@ setTimeout(syncHudHeight, 800);
 
 
 /* =========================
-   NAV HAMBURGER PANEL
-   script.js 맨 아래에 추가
+   FINAL STAGE: 로고 보스 모드
 ========================= */
-(function () {
-  const burger = document.getElementById('navBurger');
-  const panel = document.getElementById('navPanel');
+(function finalStageLogo(){
+  const finalSec = document.getElementById('final');
+  const logoText = document.querySelector('.nav-logo .logo-text');
+  const nav = document.querySelector('.main-nav');
+  if(!finalSec || !logoText || !nav) return;
+
+  const io = new IntersectionObserver((entries)=>{
+    const isIn = entries[0]?.isIntersecting;
+    logoText.classList.toggle('is-final', !!isIn);
+    nav.classList.toggle('is-final', !!isIn);
+  }, { threshold: 0.35 }); // FINAL 섹션이 35%쯤 보이면 발동
+
+  io.observe(finalSec);
+})();
+
+
+
+
+/* =========================
+   NAV: HAMBURGER PANEL + PANEL TYPING (UNIFIED, iOS SAFE)
+   - 중복 바인딩 방지
+   - preventDefault/stopPropagation
+   - iOS touch 대응
+========================= */
+window.addEventListener('DOMContentLoaded', () => {
+  const burger   = document.getElementById('navBurger');
+  const panel    = document.getElementById('navPanel');
   const closeBtn = document.getElementById('navPanelClose');
   const backdrop = document.getElementById('navPanelBackdrop');
 
-  if (!burger || !panel || !backdrop) return;
+  if (!burger || !panel || !backdrop) {
+    console.error('❌ NAV DOM missing:', { burger, panel, backdrop, closeBtn });
+    return;
+  }
 
+  // ✅ 중복 바인딩 방지
+  if (burger.dataset.navBound === '1') return;
+  burger.dataset.navBound = '1';
+
+  // ================
+  // typing line
+  // ================
+  let typingEl = panel.querySelector('.panel-typing');
+  let typingTimer = null;
+
+  function ensureTypingEl() {
+    if (typingEl) return typingEl;
+    const head = panel.querySelector('.nav-panel-head');
+    if (!head) return null;
+
+    typingEl = document.createElement('p');
+    typingEl.className = 'panel-typing';
+    typingEl.innerHTML = '<span class="text"></span><span class="caret">█</span>';
+    head.insertAdjacentElement('afterend', typingEl);
+    return typingEl;
+  }
+
+  function startTyping(line) {
+    const el = ensureTypingEl();
+    if (!el) return;
+
+    const textEl = el.querySelector('.text');
+    if (!textEl) return;
+
+    if (typingTimer) clearInterval(typingTimer);
+    textEl.textContent = '';
+
+    let i = 0;
+    typingTimer = setInterval(() => {
+      if (!panel.classList.contains('open')) {
+        clearInterval(typingTimer);
+        typingTimer = null;
+        return;
+      }
+      textEl.textContent = line.slice(0, i++);
+      if (i > line.length) {
+        clearInterval(typingTimer);
+        typingTimer = null;
+      }
+    }, 28);
+  }
+
+  function stopTyping() {
+    if (typingTimer) clearInterval(typingTimer);
+    typingTimer = null;
+    if (typingEl) {
+      const textEl = typingEl.querySelector('.text');
+      if (textEl) textEl.textContent = '';
+    }
+  }
+
+  // ================
+  // open/close
+  // ================
   function openPanel() {
     panel.classList.add('open');
     backdrop.classList.add('open');
+    burger.classList.add('is-open');
+
     panel.setAttribute('aria-hidden', 'false');
+    backdrop.setAttribute('aria-hidden', 'false');
     burger.setAttribute('aria-expanded', 'true');
+
     document.body.style.overflow = 'hidden';
+
+    // 타이핑 시작
+    startTyping('> OPENING MINIMAP...');
   }
 
   function closePanel() {
     panel.classList.remove('open');
     backdrop.classList.remove('open');
+    burger.classList.remove('is-open');
+
     panel.setAttribute('aria-hidden', 'true');
+    backdrop.setAttribute('aria-hidden', 'true');
     burger.setAttribute('aria-expanded', 'false');
+
     document.body.style.overflow = '';
+    stopTyping();
   }
 
-  burger.addEventListener('click', () => {
-    const isOpen = panel.classList.contains('open');
-    if (isOpen) closePanel();
-    else openPanel();
+  function togglePanel() {
+    panel.classList.contains('open') ? closePanel() : openPanel();
+  }
+
+  // ================
+  // handlers (click + iOS touch)
+  // ================
+  function onBurgerActivate(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    togglePanel();
+  }
+
+  burger.addEventListener('click', onBurgerActivate);
+
+  // iOS에서 click 씹히는 경우 대비
+  burger.addEventListener('touchend', (e) => {
+    // 스크롤 제스처 방해 최소화
+    if (e.cancelable) e.preventDefault();
+    e.stopPropagation();
+    togglePanel();
+  }, { passive: false });
+
+  // 패널 내부 클릭은 버블 막기(밖에서 닫히는 류 코드 대비)
+  panel.addEventListener('click', (e) => e.stopPropagation());
+
+  closeBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    closePanel();
   });
 
-  closeBtn?.addEventListener('click', closePanel);
-  backdrop.addEventListener('click', closePanel);
+  backdrop.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    closePanel();
+  });
 
-  // 패널 링크 클릭 시: 스무스 스크롤 + 닫기
+  // 패널 링크 클릭: 스무스 스크롤 + 닫기
   panel.addEventListener('click', (e) => {
     const a = e.target.closest('a');
     if (!a) return;
@@ -1443,7 +1569,7 @@ setTimeout(syncHudHeight, 800);
     if (href && href.startsWith('#')) {
       e.preventDefault();
       const target = document.querySelector(href);
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       history.pushState(null, '', href);
     }
     closePanel();
@@ -1453,5 +1579,4 @@ setTimeout(syncHudHeight, 800);
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closePanel();
   });
-})();
-
+});
