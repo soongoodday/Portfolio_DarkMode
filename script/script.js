@@ -905,7 +905,7 @@ window.addEventListener('DOMContentLoaded', () => {
   const MIN = 0.25;  // ✅ 100%보다 더 축소 가능
   const MAX = 6;
 
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const clamp2 = (v, a, b) => Math.max(a, Math.min(b, v));
 
   function getImgSize() {
     const iw = img.naturalWidth || img.width || 1;
@@ -923,10 +923,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const sh = ih * scale;
 
     if (sw <= vw) tx = (vw - sw) / 2;
-    else tx = clamp(tx, vw - sw, 0);
+    else tx = clamp2(tx, vw - sw, 0);
 
     if (sh <= vh) ty = (vh - sh) / 2;
-    else ty = clamp(ty, vh - sh, 0);
+    else ty = clamp2(ty, vh - sh, 0);
   }
 
   function render() {
@@ -944,7 +944,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // ✅ 특정 포인트 기준으로 줌
   function zoomAt(newScale, clientX, clientY) {
-    newScale = clamp(newScale, MIN, MAX);
+    newScale = clamp2(newScale, MIN, MAX);
 
     const rect = viewport.getBoundingClientRect();
     const px = clientX - rect.left;
@@ -1062,64 +1062,81 @@ setTimeout(syncHudHeight, 800);
 
 
 /* =========================
-   HUD CHAT SYSTEM (FINAL + NPC TYPING)
-   - 입력 채팅 정상 작동
-   - NPC 반응 (키워드 우선)
-   - NPC 콘솔 말풍선 타이핑
-   - 랜덤 채팅 (중복X 덱)
-   - 같은 태그 연속 방지
-   - 레어 SYSTEM 메시지
+   HUD CHAT SYSTEM (ONE BLOCK)
 ========================= */
 (() => {
   const hudLines = document.getElementById('hudLines');
   const form = document.getElementById('hudForm');
   const input = document.getElementById('hudInput');
-
   const caret = document.getElementById('hudCaret');
 
-  if (!hudLines) return;
+  if (!hudLines || !form || !input) return;
 
   const MAX_LINES = 30;
 
-  /* =========================
-     공용 addLine (즉시 출력)
-  ========================= */
-  function addLine(tag, msg, accent = false) {
-    const line = document.createElement('div');
-    line.className = 'hud-line';
-    line.innerHTML = `
-    <span class="hud-tag">[${tag}]</span>
-    <span class="${accent ? 'hud-accent' : ''}">${msg}</span>
-  `;
+  // auto-scroll lock
+  let stickToBottom = true;
+  const BOTTOM_GAP = 12;
 
-    if (caret) hudLines.insertBefore(line, caret);
-    else hudLines.appendChild(line);
-
-    trim();
+  function isNearBottom(el) {
+    return (el.scrollHeight - el.scrollTop - el.clientHeight) <= BOTTOM_GAP;
   }
+
+  let newBadge = null;
+  function showNewBadge() {
+    if (newBadge) return;
+    newBadge = document.createElement('button');
+    newBadge.type = 'button';
+    newBadge.className = 'hud-new-badge';
+    newBadge.textContent = 'NEW MESSAGES ↓';
+    newBadge.addEventListener('click', () => {
+      hudLines.scrollTop = hudLines.scrollHeight;
+      stickToBottom = true;
+      hideNewBadge();
+    });
+    hudLines.parentElement?.appendChild(newBadge);
+  }
+  function hideNewBadge() {
+    newBadge?.remove();
+    newBadge = null;
+  }
+
+  hudLines.addEventListener('scroll', () => {
+    stickToBottom = isNearBottom(hudLines);
+    if (stickToBottom) hideNewBadge();
+  });
 
   function trim() {
     const lines = Array.from(hudLines.querySelectorAll('.hud-line'));
     if (lines.length <= MAX_LINES) return;
 
     for (const line of lines) {
-      // ✅ 타이핑 중인 줄은 절대 삭제하지 않음
       if (line.dataset.typing === 'true') continue;
-
       line.remove();
       break;
     }
 
-    hudLines.scrollTop = hudLines.scrollHeight;
+    if (stickToBottom) hudLines.scrollTop = hudLines.scrollHeight;
+    else showNewBadge();
   }
 
-  /* =========================
-     타이핑용 라인 생성
-  ========================= */
+  function addLine(tag, msg, accent = false) {
+    const line = document.createElement('div');
+    line.className = 'hud-line';
+    line.innerHTML = `
+      <span class="hud-tag">[${tag}]</span>
+      <span class="${accent ? 'hud-accent' : ''}">${msg}</span>
+    `;
+    if (caret) hudLines.insertBefore(line, caret);
+    else hudLines.appendChild(line);
+    trim();
+    if (stickToBottom) hudLines.scrollTop = hudLines.scrollHeight;
+  }
+
   function createTypingLine(tag, accent = false) {
     const line = document.createElement('div');
     line.className = 'hud-line';
-    line.dataset.typing = 'true'; // ✅ 보호 플래그
+    line.dataset.typing = 'true';
 
     const tagEl = document.createElement('span');
     tagEl.className = 'hud-tag';
@@ -1144,10 +1161,7 @@ setTimeout(syncHudHeight, 800);
     return { line, msgEl, cursorEl };
   }
 
-
-  /* =========================
-     NPC 반응 데이터
-  ========================= */
+  // NPC reply
   const NPC_NAME = 'NPC';
   const NPC_KEYWORDS = [
     { keys: ['안녕', 'hi', 'hello', '반가워', 'ㅎㅇ'], replies: ['안녕! 오늘도 퀘스트 하러 왔어?', '반가워 :) 시작할 준비 됐어?'] },
@@ -1157,31 +1171,18 @@ setTimeout(syncHudHeight, 800);
     { keys: ['코딩', 'js', 'css', 'html'], replies: ['에러 나면 콘솔부터 확인.', '한 기능씩 켜보면 원인 바로 잡혀.'] },
     { keys: ['고마워', 'thanks', '땡큐'], replies: ['언제든 도와줄게.', 'EXP +1 획득.'] }
   ];
+  const NPC_FALLBACK = ['로그 확인 완료.', '지금 흐름 좋아.', '그 방향 유지해.', '다음 액션을 선택해.'];
 
-  const NPC_FALLBACK = [
-    '로그 확인 완료.',
-    '지금 흐름 좋아.',
-    '그 방향 유지해.',
-    '다음 액션을 선택해.'
-  ];
-
-  function pick(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   function getNpcReply(userText) {
     const t = userText.toLowerCase();
     for (const rule of NPC_KEYWORDS) {
-      if (rule.keys.some(k => t.includes(k))) {
-        return pick(rule.replies);
-      }
+      if (rule.keys.some(k => t.includes(k))) return pick(rule.replies);
     }
     return pick(NPC_FALLBACK);
   }
 
-  /* =========================
-     NPC 말풍선 타이핑
-  ========================= */
   function npcRespond(userText) {
     const reply = getNpcReply(userText);
     const { line, msgEl, cursorEl } = createTypingLine(NPC_NAME, true);
@@ -1191,30 +1192,24 @@ setTimeout(syncHudHeight, 800);
     const TYPE_MAX = 26;
     const START_DELAY = Math.random() * 200 + 200;
 
-    setTimeout(() => {
-      const tick = () => {
-        i++;
-        msgEl.textContent = reply.slice(0, i);
-        trim();
+    const typeTick = () => {
+      if (!line.isConnected) return;
+      msgEl.textContent = reply.slice(0, i++);
+      if (i <= reply.length) {
+        const next = Math.floor(Math.random() * (TYPE_MAX - TYPE_MIN + 1)) + TYPE_MIN;
+        setTimeout(typeTick, next);
+      } else {
+        cursorEl.remove();
+        delete line.dataset.typing;
+        if (stickToBottom) hudLines.scrollTop = hudLines.scrollHeight;
+        else showNewBadge();
+      }
+    };
 
-        if (i < reply.length) {
-          setTimeout(tick, Math.random() * (TYPE_MAX - TYPE_MIN) + TYPE_MIN);
-        } else {
-          // ✅ 타이핑 종료 처리
-          cursorEl?.remove();
-          delete line.dataset.typing;
-        }
-      };
-      tick();
-    }, START_DELAY);
+    setTimeout(typeTick, START_DELAY);
   }
 
-  /* =========================
-   입력 채팅
-========================= */
-  if (!form || !input) return;
-
-  // ✅ COMMANDS는 if 밖에 있어야 submit에서 쓸 수 있음
+  // commands
   const COMMANDS = {
     help: () => addLine('SYSTEM', 'help / stage1 / stage2 / stage3 / stage4 / final / contact', true),
     stage1: () => document.getElementById('stage1')?.scrollIntoView({ behavior: 'smooth' }),
@@ -1225,38 +1220,30 @@ setTimeout(syncHudHeight, 800);
     contact: () => document.querySelector('.ending-cards')?.scrollIntoView({ behavior: 'smooth' }),
   };
 
-  // =======================
-  // HUD INPUT SUBMIT (FINAL) ✅ only ONE
-  // =======================
+  // submit (✅ only one)
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-
     const raw = (input.value || '').trim();
     if (!raw) return;
 
-    // 1) USER 라인 출력
     addLine('YOU', raw, false);
 
-    // 2) 입력 비우기 + 포커스 유지
     input.value = '';
     input.focus();
 
-    // 3) COMMAND 처리 ("/stage1" or "stage1")
     const cmd = raw.replace(/^\//, '').toLowerCase();
+    if (COMMANDS[cmd]) return COMMANDS[cmd]();
 
-    if (COMMANDS[cmd]) {
-      COMMANDS[cmd]();
-      return;
-    }
-
-    // 4) NPC 반응
     npcRespond(raw);
   });
 
+  // boot
+  addLine('SYSTEM', 'BOOT SEQUENCE START...', true);
+  setTimeout(() => addLine('SYSTEM', 'HUD ONLINE', true), 250);
+  setTimeout(() => addLine('SYSTEM', 'TYPE HELP OR SAY HI', true), 520);
+  hudLines.scrollTop = hudLines.scrollHeight;
 
-  /* =========================
-     랜덤 채팅 풀
-  ========================= */
+  // random chat loop
   const POOL = [
     ['디자인은 즐거워', '디자인은 매번 즐겁지만 어렵다…'],
     ['퍼블이 가장 쉬웠어요', '마크업하러 가야지'],
@@ -1276,14 +1263,7 @@ setTimeout(syncHudHeight, 800);
     ['웹뻐블', '반응형 레이아웃 짜야지'],
     ['이직스타트', '최신 프레임워크 뭐가 있지?']
   ];
-
-  const SYSTEM_POOL = [
-    '📡 CONNECTION STABLE',
-    '💾 AUTO SAVE COMPLETE',
-    '🎮 QUEST UPDATED',
-    '⚡ BOOST READY'
-  ];
-
+  const SYSTEM_POOL = ['📡 CONNECTION STABLE', '💾 AUTO SAVE COMPLETE', '🎮 QUEST UPDATED', '⚡ BOOST READY'];
   const RARE_RATE = 0.1;
 
   function shuffle(arr) {
@@ -1297,9 +1277,7 @@ setTimeout(syncHudHeight, 800);
   let deck = [];
   let lastTag = '';
 
-  function refillDeck() {
-    deck = shuffle(POOL.slice());
-  }
+  function refillDeck() { deck = shuffle(POOL.slice()); }
 
   function pickNormal() {
     if (!deck.length) refillDeck();
@@ -1319,9 +1297,6 @@ setTimeout(syncHudHeight, 800);
     setTimeout(loop, Math.random() * 900 + 700);
   }
 
-  /* =========================
-     시작
-  ========================= */
   addLine('서버', '채팅 로그 동기화 중…', true);
   setTimeout(loop, 1000);
 })();
