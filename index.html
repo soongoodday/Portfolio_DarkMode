@@ -107,23 +107,23 @@
         <div class="hero-hud">
 
           <div class="hud-top">
-            <span class="hud-label">SYSTEM LOG</span>
+            <span class="hud-label">MISSION FEED</span>
             <span class="hud-status"><i class="dot"></i> ONLINE</span>
             <span class="hud-time" id="hudTime">00:00:00</span>
           </div>
 
           <div class="hud-window">
-            <div class="hud-progress">
-              <div class="hud-progress-label">LOADING</div>
-              <div class="hud-progress-value" id="hudProgressValue">0%</div>
-              <div class="hud-progress-bar">
-                <div class="hud-progress-fill" id="hudProgressFill"></div>
-              </div>
-            </div>
 
             <div class="hud-lines" id="hudLines" aria-live="polite">
               <!-- <div class="hud-caret" id="hudCaret" aria-hidden="true"></div> -->
             </div>
+
+            <!-- ✅ NEW MESSAGES 칩 (추가) -->
+            <button class="hud-newmsg" id="newMessagesBtn" type="button" aria-label="새 메시지로 이동">
+              <span class="hud-newmsg-icon">⬇</span>
+              <span class="hud-newmsg-text">NEW MESSAGES</span>
+              <span class="hud-newmsg-count" id="newMsgCount">1</span>
+            </button>
 
             <!-- ✅ 입력창 -->
             <form class="hud-input" id="hudForm" autocomplete="off">

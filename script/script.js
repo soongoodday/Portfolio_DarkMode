@@ -1300,3 +1300,21 @@ setTimeout(syncHudHeight, 800);
   addLine('서버', '채팅 로그 동기화 중…', true);
   setTimeout(loop, 1000);
 })();
+
+
+
+
+(function initHudClock(){
+  const el = document.getElementById('hudTime');
+  if (!el) return;
+
+  const pad = n => String(n).padStart(2, '0');
+
+  function tick(){
+    const d = new Date(); // ✅ 일단 로컬시간 (서버시간 필요하면 아래 2번)
+    el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+
+  tick();
+  setInterval(tick, 1000);
+})();
