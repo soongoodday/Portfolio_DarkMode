@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Sung Kyungeun - Portfolio Game</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/font.css">
@@ -20,7 +23,9 @@
 
   <!-- FX Layers -->
   <div class="fx" aria-hidden="true">
-    <div class="grid-background"><div class="grid-lines"></div></div>
+    <div class="grid-background">
+      <div class="grid-lines"></div>
+    </div>
     <div class="fx-noise"></div>
     <div class="fx-cursor-glow" id="cursorGlow"></div>
   </div>
@@ -37,7 +42,7 @@
         <li><a href="#stage2">STAGE 02</a></li>
         <li><a href="#stage3">STAGE 03</a></li>
         <li><a href="#stage4">STAGE 04</a></li>
-        <li><a href="#final">FINAL</a></li>
+        <li><a href="#final">FINAL STAGE</a></li>
       </ul>
 
       <button class="nav-cta" type="button" id="navCta">START QUEST</button>
@@ -46,96 +51,96 @@
 
   <main>
     <section id="hero" class="hero">
-  <div class="hero-bg" aria-hidden="true">
-    <video class="hero-video" autoplay muted loop playsinline preload="metadata">
-      <source src="" type="video/mp4" />
-    </video>
-    <div class="hero-video-overlay"></div>
-    <div class="hero-scanlines" aria-hidden="true"></div>
-    <div class="hero-glitch" aria-hidden="true"></div>
-  </div>
-
-  <!-- ✅ SIDE LAYOUT -->
-  <div class="hero-layout">
-
-    <!-- LEFT : MAIN HERO CARD -->
-    <div class="hero-container">
-
-      <div class="hero-badge badge-sign">
-        <span class="sign-name">PLAYER</span>
-        <span class="sign-dot"></span>
-        <span class="sign-role">SUNG KYUNGEUN</span>
-        <span class="sign-year">2026</span>
+      <div class="hero-bg" aria-hidden="true">
+        <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+          <source src="" type="video/mp4" />
+        </video>
+        <div class="hero-video-overlay"></div>
+        <div class="hero-scanlines" aria-hidden="true"></div>
+        <div class="hero-glitch" aria-hidden="true"></div>
       </div>
 
-      <h1 class="hero-title">
-        <span class="title-row">
-          <!-- <span class="title-meta">PORTFOLIO</span> -->
-          <span class="title-pixel" data-text="WELCOME,">WELCOME,</span>
-        </span>
-        <span class="title-row">
-          <!-- <span class="title-meta">MODE</span> -->
-          <span class="title-pixel" data-text="PLAYER">PLAYER</span>
-        </span>
-      </h1>
+      <!-- ✅ SIDE LAYOUT -->
+      <div class="hero-layout">
 
-      <p class="hero-description">
-        포트폴리오 게임에 오신 것을 환영합니다!<br />
-        저는 웹디자이너 성경은입니다. <br />
-        이 게임을 통해 저의 스킬과 경험을 탐험해보세요.
-      </p>
+        <!-- LEFT : MAIN HERO CARD -->
+        <div class="hero-container">
 
-      <p class="hero-typing">
-        <span id="typingText"></span><span class="typing-caret">█</span>
-      </p>
-
-      <div class="hero-cta">
-        <button class="press-start" id="pressStartBtn" type="button">
-          <span class="ps-text">PRESS START</span>
-          <!-- <span class="ps-sub">스테이지 입장</span> -->
-        </button>
-      </div>
-
-    </div>
-
-    <!-- RIGHT : SYSTEM LOG HUD -->
-    <div class="hero-hud">
-
-      <div class="hud-top">
-        <span class="hud-label">SYSTEM LOG</span>
-        <span class="hud-status"><i class="dot"></i> ONLINE</span>
-        <span class="hud-time" id="hudTime">00:00:00</span>
-      </div>
-
-      <div class="hud-window">
-        <div class="hud-progress">
-          <div class="hud-progress-label">LOADING</div>
-          <div class="hud-progress-value" id="hudProgressValue">0%</div>
-          <div class="hud-progress-bar">
-            <div class="hud-progress-fill" id="hudProgressFill"></div>
+          <div class="hero-badge badge-sign">
+            <span class="sign-name">PLAYER</span>
+            <span class="sign-dot"></span>
+            <span class="sign-role">SUNG KYUNGEUN</span>
+            <span class="sign-year">2026</span>
           </div>
+
+          <h1 class="hero-title">
+            <span class="title-row">
+              <!-- <span class="title-meta">PORTFOLIO</span> -->
+              <span class="title-pixel" data-text="WELCOME,">WELCOME,</span>
+            </span>
+            <span class="title-row">
+              <!-- <span class="title-meta">MODE</span> -->
+              <span class="title-pixel" data-text="PLAYER">PLAYER</span>
+            </span>
+          </h1>
+
+          <p class="hero-description">
+            포트폴리오 게임에 오신 것을 환영합니다!<br />
+            저는 웹디자이너 성경은입니다. <br />
+            이 게임을 통해 저의 스킬과 경험을 탐험해보세요.
+          </p>
+
+          <p class="hero-typing">
+            <span id="typingText"></span><span class="typing-caret">█</span>
+          </p>
+
+          <div class="hero-cta">
+            <button class="press-start" id="pressStartBtn" type="button">
+              <span class="ps-text">PRESS START</span>
+              <!-- <span class="ps-sub">스테이지 입장</span> -->
+            </button>
+          </div>
+
         </div>
 
-        <div class="hud-lines" id="hudLines" aria-live="polite">
-    <!-- <div class="hud-caret" id="hudCaret" aria-hidden="true"></div> -->
-  </div>
+        <!-- RIGHT : SYSTEM LOG HUD -->
+        <div class="hero-hud">
 
-  <!-- ✅ 입력창 -->
-  <form class="hud-input" id="hudForm" autocomplete="off">
-    <span class="hud-prompt">></span>
-    <input id="hudInput" type="text" placeholder="메시지 입력 후 Enter" />
-    <button type="submit" class="hud-send">SEND</button>
-  </form>
-      </div>
+          <div class="hud-top">
+            <span class="hud-label">SYSTEM LOG</span>
+            <span class="hud-status"><i class="dot"></i> ONLINE</span>
+            <span class="hud-time" id="hudTime">00:00:00</span>
+          </div>
 
-      <!-- <div class="hud-bottom">
+          <div class="hud-window">
+            <div class="hud-progress">
+              <div class="hud-progress-label">LOADING</div>
+              <div class="hud-progress-value" id="hudProgressValue">0%</div>
+              <div class="hud-progress-bar">
+                <div class="hud-progress-fill" id="hudProgressFill"></div>
+              </div>
+            </div>
+
+            <div class="hud-lines" id="hudLines" aria-live="polite">
+              <!-- <div class="hud-caret" id="hudCaret" aria-hidden="true"></div> -->
+            </div>
+
+            <!-- ✅ 입력창 -->
+            <form class="hud-input" id="hudForm" autocomplete="off">
+              <span class="hud-prompt">></span>
+              <input id="hudInput" type="text" placeholder="메시지 입력 후 Enter" />
+              <button type="submit" class="hud-send">SEND</button>
+            </form>
+          </div>
+
+          <!-- <div class="hud-bottom">
         <span class="chip">CLASS: WEB DESIGNER</span>
         <span class="chip">BUILD: AI-ASSIST</span>
         <span class="chip">QUESTS: 6</span>
       </div> -->
-    </div>
-  </div>
-</section>
+        </div>
+      </div>
+    </section>
 
 
     <!-- STAGE 1 : CHARACTER SELECT -->
@@ -143,7 +148,7 @@
       <div class="section-number" aria-hidden="true">STAGE 01</div>
 
       <header class="section-header">
-        <h2 class="section-title glitch" data-text="CHARACTER SELECT">CHARACTER SELECT</h2>
+        <h2 class="section-title glitch" data-text="PLAYER SETUP">PLAYER SETUP</h2>
         <div class="title-line"></div>
         <p class="section-subtitle">플레이어 정보를 확인하고, 스테이지를 진행하세요.</p>
       </header>
@@ -225,7 +230,7 @@
       <div class="section-number" aria-hidden="true">STAGE 02</div>
 
       <header class="section-header">
-        <h2 class="section-title glitch" data-text="SKILL TREE">SKILL TREE</h2>
+        <h2 class="section-title glitch" data-text="SKILL MATRIX">SKILL MATRIX</h2>
         <div class="title-line"></div>
         <p class="section-subtitle">스킬을 확인하고, AI 파워업을 활성화하세요.</p>
       </header>
@@ -352,7 +357,7 @@
       <div class="section-number" aria-hidden="true">STAGE 03</div>
 
       <header class="section-header">
-        <h2 class="section-title glitch" data-text="QUEST LOG">QUEST LOG</h2>
+        <h2 class="section-title glitch" data-text="MAIN MISSION">MAIN MISSION</h2>
         <div class="title-line"></div>
         <p class="section-subtitle">작업물은 퀘스트로 구성됩니다. 클릭하면 상세 확인할 수 있어요.</p>
       </header>
@@ -378,28 +383,32 @@
 
         <div class="quest-grid">
           <article class="quest" data-project="badaju" data-tilt data-tilt-strength="10">
-            <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span></div>
+            <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span>
+            </div>
             <h3 class="quest-title">출판사 바다주 웹페이지</h3>
             <p class="quest-desc">1인 출판사 사이트 디자인·퍼블리싱</p>
             <div class="quest-meta">2025.11 - 2026.01</div>
           </article>
 
           <article class="quest" data-project="ukymelar" data-tilt data-tilt-strength="10">
-            <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span></div>
+            <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span>
+            </div>
             <h3 class="quest-title">유키멜라 웹페이지</h3>
             <p class="quest-desc">사진작가 유키멜라 웹페이지</p>
             <div class="quest-meta">2025.12 - 2026.01</div>
           </article>
 
           <article class="quest" data-project="cheil" data-tilt data-tilt-strength="10">
-            <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span></div>
+            <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span>
+            </div>
             <h3 class="quest-title">분당제일여성병원 웹페이지</h3>
             <p class="quest-desc">분당제일여성병원 웹페이지 리디자인</p>
             <div class="quest-meta">2025.12</div>
           </article>
 
           <article class="quest" data-project="nouvedilie" data-tilt data-tilt-strength="10">
-            <div class="quest-top"><span class="quest-type">TRAINING</span><span class="quest-progress">100%</span></div>
+            <div class="quest-top"><span class="quest-type">TRAINING</span><span class="quest-progress">100%</span>
+            </div>
             <h3 class="quest-title">누베딜리 웹페이지</h3>
             <p class="quest-desc">가상의 반지 브랜딩 웹페이지</p>
             <div class="quest-meta">2026.01</div>
@@ -411,7 +420,7 @@
             <p class="quest-desc">미대입시닷컴 웹페이지 리디자인</p>
             <div class="quest-meta">2025.12</div>
           </article>
-          
+
           <article class="quest" data-project="wethink" data-tilt data-tilt-strength="10">
             <div class="quest-top"><span class="quest-type">ARCHIVE</span><span class="quest-progress">100%</span></div>
             <h3 class="quest-title">위띵크 디자인 스트리밍 & 커뮤니티 앱</h3>
@@ -426,80 +435,80 @@
     <!-- =========================
      BONUS STAGE / OTHER WORKS
 ========================= -->
-<section id="stage4" class="stage stage-quests">
+    <section id="stage4" class="stage stage-quests">
       <div class="section-number" aria-hidden="true">STAGE 04</div>
 
       <header class="section-header">
-        <h2 class="section-title glitch" data-text="OTHER QUEST">OTHER QUEST</h2>
+        <h2 class="section-title glitch" data-text="ARCHIVE MODE">ARCHIVE MODE</h2>
         <div class="title-line"></div>
         <p class="section-subtitle">기타 퀘스트 작업물로 구성됩니다. 클릭하면 상세 확인할 수 있어요.</p>
       </header>
 
-  <!-- ✅ 이 div 추가 (stage3랑 동일한 폭/정렬 기준) -->
-  <div class="quest-layout">
-    <ul class="ow-grid" id="otherWorksGrid" aria-label="Other works list"></ul>
-  </div>
-</section>
+      <!-- ✅ 이 div 추가 (stage3랑 동일한 폭/정렬 기준) -->
+      <div class="quest-layout">
+        <ul class="ow-grid" id="otherWorksGrid" aria-label="Other works list"></ul>
+      </div>
+    </section>
 
-<!-- =========================
+    <!-- =========================
      MODAL
 ========================= -->
-<div class="ow-modal" id="owModal" aria-hidden="true">
-  <div class="ow-backdrop" data-ow-close></div>
+    <div class="ow-modal" id="owModal" aria-hidden="true">
+      <div class="ow-backdrop" data-ow-close></div>
 
-  <article class="ow-panel" role="dialog" aria-modal="true" aria-labelledby="owTitle">
-    <header class="ow-panel-head">
-      <p class="ow-badge">ARCHIVE</p>
-      <h3 class="ow-panel-title" id="owTitle">TITLE</h3>
-      <p class="ow-panel-meta" id="owMeta">TYPE • DATE</p>
+      <article class="ow-panel" role="dialog" aria-modal="true" aria-labelledby="owTitle">
+        <header class="ow-panel-head">
+          <p class="ow-badge">ARCHIVE</p>
+          <h3 class="ow-panel-title" id="owTitle">TITLE</h3>
+          <p class="ow-panel-meta" id="owMeta">TYPE • DATE</p>
 
-      <button class="ow-close" type="button" aria-label="닫기" data-ow-close>×</button>
-    </header>
+          <button class="ow-close" type="button" aria-label="닫기" data-ow-close>×</button>
+        </header>
 
-    <div class="ow-panel-body">
-      <figure class="ow-preview">
-        <img id="owImg" alt="" />
-        <div class="ow-thumbs" id="owThumbs"></div>
-      </figure>
+        <div class="ow-panel-body">
+          <figure class="ow-preview">
+            <img id="owImg" alt="" />
+            <div class="ow-thumbs" id="owThumbs"></div>
+          </figure>
 
-      <section class="ow-info" aria-label="work details">
-        <dl class="ow-dl">
-          <div class="ow-row">
-            <dt>설명</dt>
-            <dd id="owDesc">-</dd>
-          </div>
-          <div class="ow-row">
-            <dt>주제</dt>
-            <dd id="owTopic">-</dd>
-          </div>
-          <div class="ow-row">
-            <dt>연령대</dt>
-            <dd id="owAge">-</dd>
-          </div>
-        </dl>
+          <section class="ow-info" aria-label="work details">
+            <dl class="ow-dl">
+              <div class="ow-row">
+                <dt>설명</dt>
+                <dd id="owDesc">-</dd>
+              </div>
+              <div class="ow-row">
+                <dt>주제</dt>
+                <dd id="owTopic">-</dd>
+              </div>
+              <div class="ow-row">
+                <dt>연령대</dt>
+                <dd id="owAge">-</dd>
+              </div>
+            </dl>
 
-        <div class="ow-actions">
-          <a class="ow-link" id="owFigma" href="#" target="_blank" rel="noreferrer">FIGMA LINK →</a>
+            <div class="ow-actions">
+              <a class="ow-link" id="owFigma" href="#" target="_blank" rel="noreferrer">FIGMA LINK →</a>
+            </div>
+
+            <nav class="ow-nav" aria-label="work navigation">
+              <button class="ow-nav-btn" type="button" id="owPrev" aria-label="이전">‹</button>
+              <p class="ow-nav-text"><span id="owIndex">1</span> / <span id="owTotal">1</span></p>
+              <button class="ow-nav-btn" type="button" id="owNext" aria-label="다음">›</button>
+            </nav>
+          </section>
         </div>
-
-        <nav class="ow-nav" aria-label="work navigation">
-          <button class="ow-nav-btn" type="button" id="owPrev" aria-label="이전">‹</button>
-          <p class="ow-nav-text"><span id="owIndex">1</span> / <span id="owTotal">1</span></p>
-          <button class="ow-nav-btn" type="button" id="owNext" aria-label="다음">›</button>
-        </nav>
-      </section>
+      </article>
     </div>
-  </article>
-</div>
 
-    
+
 
     <!-- FINAL -->
     <section id="final" class="stage stage-final">
-      <div class="section-number" aria-hidden="true">FINAL</div>
+      <div class="section-number" aria-hidden="true">FINAL STAGE</div>
 
       <header class="section-header center">
-        <h2 class="section-title glitch" data-text="MISSION COMPLETE">MISSION COMPLETE</h2>
+        <h2 class="section-title glitch" data-text="END SEQUENCE">END SEQUENCE</h2>
         <div class="title-line"></div>
       </header>
 
@@ -531,7 +540,8 @@
             <span class="card-value">soongoodday@gmail.com</span>
           </a>
 
-          <a class="contact-card" href="https://soongoodday.tistory.com/" target="_blank" rel="noopener" data-tilt data-tilt-strength="10">
+          <a class="contact-card" href="https://soongoodday.tistory.com/" target="_blank" rel="noopener" data-tilt
+            data-tilt-strength="10">
             <span class="card-icon">📝</span>
             <span class="card-label">BLOG</span>
             <span class="card-value">WORK LOG →</span>
@@ -575,28 +585,29 @@
       </div>
     </div>
   </div>
-    <!-- IMAGE LIGHTBOX (Zoom + Pan) -->
-<div class="imglb" id="imgLb" aria-hidden="true">
-  <div class="imglb-backdrop" data-lb-close></div>
+  <!-- IMAGE LIGHTBOX (Zoom + Pan) -->
+  <div class="imglb" id="imgLb" aria-hidden="true">
+    <div class="imglb-backdrop" data-lb-close></div>
 
-  <figure class="imglb-figure" role="dialog" aria-modal="true" aria-label="원본 이미지 확대 보기">
-    <div class="imglb-toolbar" aria-label="이미지 확대 도구">
-      <button class="imglb-btn" type="button" data-lb-zoom-out aria-label="축소">−</button>
-      <button class="imglb-btn" type="button" data-lb-zoom-in aria-label="확대">＋</button>
-      <button class="imglb-btn" type="button" data-lb-reset aria-label="리셋">RESET</button>
-      <span class="imglb-pct" id="imgLbPct">100%</span>
-      <button class="imglb-btn imglb-btn-close" type="button" data-lb-close aria-label="닫기">×</button>
-    </div>
+    <figure class="imglb-figure" role="dialog" aria-modal="true" aria-label="원본 이미지 확대 보기">
+      <div class="imglb-toolbar" aria-label="이미지 확대 도구">
+        <button class="imglb-btn" type="button" data-lb-zoom-out aria-label="축소">−</button>
+        <button class="imglb-btn" type="button" data-lb-zoom-in aria-label="확대">＋</button>
+        <button class="imglb-btn" type="button" data-lb-reset aria-label="리셋">RESET</button>
+        <span class="imglb-pct" id="imgLbPct">100%</span>
+        <button class="imglb-btn imglb-btn-close" type="button" data-lb-close aria-label="닫기">×</button>
+      </div>
 
-    <div class="imglb-viewport" id="imgLbViewport" aria-label="이미지 뷰포트">
-      <img id="imgLbImg" alt="원본 이미지" draggable="false" />
-    </div>
+      <div class="imglb-viewport" id="imgLbViewport" aria-label="이미지 뷰포트">
+        <img id="imgLbImg" alt="원본 이미지" draggable="false" />
+      </div>
 
-    <p class="imglb-hint">휠: 확대/축소 · 드래그: 이동 · 더블클릭: 확대</p>
-  </figure>
-</div>
+      <p class="imglb-hint">휠: 확대/축소 · 드래그: 이동 · 더블클릭: 확대</p>
+    </figure>
+  </div>
 
 
-  <script src="script/script.js"></script>
+  <script src="script/script.js" defer></script>
 </body>
+
 </html>

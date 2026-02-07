@@ -391,11 +391,11 @@ document.addEventListener('keydown', (e) => {
   }
 
   const texts = [
-    'SYSTEM ONLINE',
-    'CHARACTER SELECT READY',
-    'SKILL TREE LOADED',
-    'QUEST LOG AVAILABLE',
-    'PRESS START TO BEGIN'
+    'INSERT COIN',
+    'NEW GAME / CONTINUE?',
+    'LOADING PLAYER DATA...',
+    'QUESTS UPDATED',
+    'PRESS START TO DEPLOY'
   ];
 
   let textIndex = 0;
@@ -1074,6 +1074,7 @@ setTimeout(syncHudHeight, 800);
   const hudLines = document.getElementById('hudLines');
   const form = document.getElementById('hudForm');
   const input = document.getElementById('hudInput');
+
   const caret = document.getElementById('hudCaret');
 
   if (!hudLines) return;
@@ -1209,19 +1210,49 @@ setTimeout(syncHudHeight, 800);
   }
 
   /* =========================
-     입력 채팅
-  ========================= */
-  if (form && input) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const value = input.value.trim();
-      if (!value) return;
+   입력 채팅
+========================= */
+  if (!form || !input) return;
 
-      addLine('YOU', value);
-      input.value = '';
-      npcRespond(value);
-    });
-  }
+  // ✅ COMMANDS는 if 밖에 있어야 submit에서 쓸 수 있음
+  const COMMANDS = {
+    help: () => addLine('SYSTEM', 'help / stage1 / stage2 / stage3 / stage4 / final / contact', true),
+    stage1: () => document.getElementById('stage1')?.scrollIntoView({ behavior: 'smooth' }),
+    stage2: () => document.getElementById('stage2')?.scrollIntoView({ behavior: 'smooth' }),
+    stage3: () => document.getElementById('stage3')?.scrollIntoView({ behavior: 'smooth' }),
+    stage4: () => document.getElementById('stage4')?.scrollIntoView({ behavior: 'smooth' }),
+    final: () => document.getElementById('final')?.scrollIntoView({ behavior: 'smooth' }),
+    contact: () => document.querySelector('.ending-cards')?.scrollIntoView({ behavior: 'smooth' }),
+  };
+
+  // =======================
+  // HUD INPUT SUBMIT (FINAL) ✅ only ONE
+  // =======================
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const raw = (input.value || '').trim();
+    if (!raw) return;
+
+    // 1) USER 라인 출력
+    addLine('YOU', raw, false);
+
+    // 2) 입력 비우기 + 포커스 유지
+    input.value = '';
+    input.focus();
+
+    // 3) COMMAND 처리 ("/stage1" or "stage1")
+    const cmd = raw.replace(/^\//, '').toLowerCase();
+
+    if (COMMANDS[cmd]) {
+      COMMANDS[cmd]();
+      return;
+    }
+
+    // 4) NPC 반응
+    npcRespond(raw);
+  });
+
 
   /* =========================
      랜덤 채팅 풀
