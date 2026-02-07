@@ -162,7 +162,6 @@ button{ font:inherit; }
   font-family:var(--font-pixel);
   font-size:1.1rem;
   font-weight:800;
-  letter-spacing:.12em;
   background:linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
