@@ -632,7 +632,7 @@ document.addEventListener('keydown', (e) => {
   ];
 
   const grid = document.getElementById("otherWorksGrid");
-  const modal = document.getElementById("owModal");
+  const owModal = document.getElementById("owModal");
 
   const elTitle = document.getElementById("owTitle");
   const elMeta = document.getElementById("owMeta");
@@ -648,7 +648,7 @@ document.addEventListener('keydown', (e) => {
   const elTotal = document.getElementById("owTotal");
   const elThumbs = document.getElementById("owThumbs");
 
-  if (!grid || !modal) return;
+  if (!grid || !owModal) return;
 
   let current = 0;
   let currentImg = 0;
@@ -670,6 +670,7 @@ document.addEventListener('keydown', (e) => {
       console.error('❌ activeImages empty. check images path:', OTHER_WORKS[current]?.images);
       return;
     }
+
     currentImg = (idx + activeImages.length) % activeImages.length;
     setImgSafe(elImg, activeImages[currentImg], elTitle?.textContent || '');
     if (elIndex) elIndex.textContent = String(currentImg + 1);
@@ -680,7 +681,22 @@ document.addEventListener('keydown', (e) => {
         b.classList.toggle('active', i === currentImg);
       });
     }
+  }
 
+  function renderThumbs() {
+    if (!elThumbs) return;
+
+    elThumbs.innerHTML = activeImages.map((src, i) => `
+    <button class="ow-thumb ${i === currentImg ? 'active' : ''}" type="button" data-thumb="${i}">
+      <img src="${resolveAsset(src)}" alt="thumb ${i + 1}">
+    </button>
+  `).join("");
+
+    elThumbs.onclick = (e) => {
+      const b = e.target.closest('[data-thumb]');
+      if (!b) return;
+      showImg(Number(b.dataset.thumb));
+    };
   }
 
   // ✅ 이미지 클릭하면 다음 이미지
@@ -691,7 +707,7 @@ document.addEventListener('keydown', (e) => {
 
   // ✅ 키보드 Up/Down도 이미지 넘기기
   document.addEventListener('keydown', (e) => {
-    if (!modal.classList.contains('is-open')) return;
+    if (!owModal.classList.contains('is-open')) return;
     if (activeImages.length <= 1) return;
 
     if (e.key === 'ArrowUp') showImg(currentImg - 1);
@@ -723,7 +739,7 @@ document.addEventListener('keydown', (e) => {
     `).join("");
   }
 
-  function openModal(index) {
+  function openOwModal(index) {
     current = index;
     const w = OTHER_WORKS[current];
 
@@ -736,21 +752,10 @@ document.addEventListener('keydown', (e) => {
     activeImages = normalizeImages(w);
     currentImg = 0;
     showImg(0); // ✅ 여기서 이미지 + 인덱스/토탈까지 한 번에 처리
+    renderThumbs();
 
-    // ✅ 썸네일 만들기
-    if (elThumbs) {
-      elThumbs.innerHTML = activeImages.map((src, i) => `
-    <button class="ow-thumb ${i === 0 ? 'active' : ''}" type="button" data-thumb="${i}">
-      <img src="${resolveAsset(src)}" alt="thumb ${i + 1}">
-    </button>
-  `).join("");
 
-      elThumbs.onclick = (e) => {
-        const b = e.target.closest('[data-thumb]');
-        if (!b) return;
-        showImg(Number(b.dataset.thumb));
-      };
-    }
+
 
     // figma 링크
     const hasLink = !!w.figma && w.figma !== "#";
@@ -761,23 +766,23 @@ document.addEventListener('keydown', (e) => {
     // ✅ (선택) 이미지가 여러 장이면 콘솔로 확인
     // console.log('activeImages=', activeImages);
 
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
+    owModal.classList.add("is-open");
+    owModal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
 
-    const bodyEl = modal.querySelector(".ow-panel-body");
+    const bodyEl = owModal.querySelector(".ow-panel-body");
     if (bodyEl) bodyEl.scrollTop = 0;
   }
 
   function closeModal() {
-    modal.classList.remove("is-open");
-    modal.setAttribute("aria-hidden", "true");
+    owModal.classList.remove("is-open");
+    owModal.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
   }
 
   function move(step) {
     const next = (current + step + OTHER_WORKS.length) % OTHER_WORKS.length;
-    openModal(next);
+    openOwModal(next)
   }
 
   // init
@@ -787,17 +792,17 @@ document.addEventListener('keydown', (e) => {
   grid.addEventListener("click", (e) => {
     const btn = e.target.closest("[data-ow]");
     if (!btn) return;
-    openModal(Number(btn.dataset.ow));
+    openOwModal(Number(btn.dataset.ow));
   });
 
   // close
-  modal.addEventListener("click", (e) => {
+  owModal.addEventListener("click", (e) => {
     if (e.target.matches("[data-ow-close]")) closeModal();
   });
 
   // nav + esc
   document.addEventListener("keydown", (e) => {
-    if (!modal.classList.contains("is-open")) return;
+    if (!owModal.classList.contains("is-open")) return;
     if (e.key === "Escape") closeModal();
     if (e.key === "ArrowLeft") move(-1);
     if (e.key === "ArrowRight") move(1);
@@ -1304,13 +1309,13 @@ setTimeout(syncHudHeight, 800);
 
 
 
-(function initHudClock(){
+(function initHudClock() {
   const el = document.getElementById('hudTime');
   if (!el) return;
 
   const pad = n => String(n).padStart(2, '0');
 
-  function tick(){
+  function tick() {
     const d = new Date(); // ✅ 일단 로컬시간 (서버시간 필요하면 아래 2번)
     el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
   }
@@ -1318,3 +1323,8 @@ setTimeout(syncHudHeight, 800);
   tick();
   setInterval(tick, 1000);
 })();
+
+
+
+
+
