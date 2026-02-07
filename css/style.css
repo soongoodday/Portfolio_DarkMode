@@ -1629,7 +1629,7 @@ section{
 
 /* 칩이 입력창을 가리지 않도록 hud-lines에 패딩 */
 .hero-hud .hud-lines{
-  padding-bottom:72px; /* NEW MESSAGES 칩 + 여유 */
+  padding-bottom:12px; /* NEW MESSAGES 칩 + 여유 */
 }
 
 /* NEW MESSAGES 버튼 */
