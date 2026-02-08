@@ -326,13 +326,11 @@ section{
   filter:saturate(1.05) contrast(1.05);
   transform:none;
   z-index:0;
-  display: none;
 }
 .hero-video-overlay{ position:absolute; inset:0; z-index:1;
   background:
     radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.15), rgba(0,0,0,.75)),
     linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.85));
-    display: none;
 }
 .hero-scanlines{
   position:absolute; inset:0; z-index:2;
@@ -341,7 +339,6 @@ section{
   mix-blend-mode:overlay;
   pointer-events:none;
   animation:scanMove 8s linear infinite;
-  display: none;
 }
 @keyframes scanMove{ 0%{transform:translateY(0);} 100%{transform:translateY(24px);} }
 
@@ -352,7 +349,6 @@ section{
   mix-blend-mode:screen;
   filter:blur(10px);
   pointer-events:none;
-  display: none;
 }
 .hero.cyber-glitch .hero-glitch{ opacity:.55; }
 

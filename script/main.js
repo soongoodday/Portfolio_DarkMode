@@ -1748,4 +1748,3 @@ window.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('mousemove', onMove, { passive: true });
 })();
-
