@@ -4219,7 +4219,7 @@ section{
 @media (max-width: 1259px){
   .nav-burger{
     position: fixed;
-    top: 18px;
+    top: 10px;
     left: 18px;
     z-index: 9999;
   }
