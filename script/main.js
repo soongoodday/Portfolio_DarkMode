@@ -1654,6 +1654,53 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
+(() => {
+  const desktopBtn = document.getElementById('themeSwitch');
+  const mobileBtn  = document.getElementById('themeSwitchMobile');
+  if (!desktopBtn || !mobileBtn) return;
+
+  // 현재 상태 읽기/쓰기 헬퍼
+  function isDark() {
+    return document.documentElement.classList.contains('theme-dark')
+      || document.body.classList.contains('theme-dark')
+      || document.documentElement.getAttribute('data-theme') === 'dark';
+  }
+
+  function setAria(btn, dark) {
+    btn.setAttribute('aria-checked', dark ? 'true' : 'false');
+  }
+
+  // ✅ 여기만 네 기존 테마 적용 방식에 맞게 연결
+  // - 1순위: 이미 전역 함수가 있으면 그걸 호출
+  // - 없으면: html에 data-theme 토글 (CSS가 이걸 쓰게 되어있다면 바로 작동)
+  function applyToggle() {
+    // 전역 함수가 있으면 사용(네가 기존에 만들어뒀을 수도 있어서)
+    if (typeof window.toggleTheme === 'function') {
+      window.toggleTheme();
+    } else {
+      const dark = !isDark();
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      document.documentElement.classList.toggle('theme-dark', dark);
+      document.body.classList.toggle('theme-dark', dark);
+    }
+
+    // 버튼 두 개 상태 동기화
+    const darkNow = isDark()
+      || document.documentElement.getAttribute('data-theme') === 'dark';
+
+    setAria(desktopBtn, darkNow);
+    setAria(mobileBtn, darkNow);
+  }
+
+  // 초기 동기화
+  const initDark = isDark() || document.documentElement.getAttribute('data-theme') === 'dark';
+  setAria(desktopBtn, initDark);
+  setAria(mobileBtn, initDark);
+
+  desktopBtn.addEventListener('click', applyToggle);
+  mobileBtn.addEventListener('click', applyToggle);
+})();
+
 
 
 

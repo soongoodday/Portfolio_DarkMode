@@ -2685,6 +2685,7 @@ section{
   justify-content:center;
   gap:6px;
   flex-direction:column;
+  
 }
 .nav-burger span{
   display:block;
@@ -4131,3 +4132,100 @@ section{
 .main-nav .nav-menu a:hover{
   opacity: 1;
 }
+
+
+
+
+/* =========================================
+   MOBILE PANEL: THEME TOGGLE + CTA
+========================================= */
+
+.panel-actions{
+  margin: 12px 0 14px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(10, 12, 18, .35);
+  backdrop-filter: blur(10px);
+}
+
+.panel-theme{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.panel-actions-label{
+  font-size: 12px;
+  letter-spacing: .08em;
+  opacity: .8;
+}
+
+/* 패널 안 CTA 버튼들 */
+.panel-cta{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.panel-cta-link{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,240,255,.25);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: .02em;
+}
+
+/* 모바일에서는 상단(nav-menu 안) 토글/CTA 숨김 */
+@media (max-width: 1260px){
+  .nav-actions{ display: none !important; }
+}
+
+/* 데스크탑에서는 패널 안 액션 숨김(패널 자체가 안 열릴 수도 있지만 안전하게) */
+@media (min-width: 1261px){
+  .panel-actions{ display: none; }
+}
+
+
+
+
+/* =========================
+   ONLY VISIBILITY CONTROL
+   - Keep your original styles
+========================= */
+
+/* 기본값은 네 기존 CSS를 그대로 따르게 두고,
+   브레이크포인트에서 "보이기/숨기기"만 제어 */
+
+/* <=1259: 햄버거 ON, 웹 메뉴 OFF */
+@media (max-width: 1259px){
+  .nav-burger{ display: inline-flex !important; }
+  .nav-menu{ display: none !important; }
+}
+
+/* >=1260: 햄버거 OFF, 웹 메뉴 ON (원래 스타일로 복귀) */
+@media (min-width: 1260px){
+  .nav-burger{ display: none !important; }
+  .nav-menu{ display: flex !important; } /* ✅ 원래 display값으로 복구 */
+  .nav-actions{ display: flex !important; } /* ✅ 원래 display값으로 복구 */
+}
+
+@media (max-width: 1259px){
+  .nav-burger{
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 9999;
+  }
+}
+
+
+
+
+

@@ -30,13 +30,14 @@
     <div class="fx-cursor-glow" id="cursorGlow"></div>
   </div>
 
-  
+
   <header class="header">
     <nav class="main-nav" aria-label="주요 메뉴">
+
       <div class="nav-container">
         <a class="nav-logo" href="#hero" aria-label="홈으로">
         </a>
-  
+
         <ul class="nav-menu">
           <!-- ✅ LEFT: HOME~FINAL 묶음 -->
           <li class="nav-links">
@@ -47,7 +48,7 @@
             <a href="#stage4">STAGE 4</a>
             <a href="#final">FINAL STAGE</a>
           </li>
-  
+
           <!-- ✅ RIGHT: 토글 + CTA -->
           <li class="nav-item nav-actions">
             <div class="theme-toggle" id="themeToggleWrap" aria-label="테마 전환">
@@ -58,37 +59,64 @@
                 <span class="theme-thumb" aria-hidden="true"></span>
               </button>
             </div>
-  
+
             <a href="https://soongoodday.tistory.com/" class="nav-link nav-link--cta1" target="_blank"
               rel="noopener noreferrer">
               작업일기 →
             </a>
-  
+
             <a href="https://www.notion.so/_-2c08e9fe2cec80b6957ceee2ea7d17ec?source=copy_link"
               class="nav-link nav-link--cta2" target="_blank" rel="noopener noreferrer">
               타임라인 →
             </a>
           </li>
         </ul>
-  
-  
+
+
         <!-- <button class="nav-cta" type="button" id="navCta">START QUEST</button> -->
-  
+
         <!-- ✅ ADD: hamburger -->
         <button class="nav-burger" type="button" id="navBurger" aria-label="메뉴 열기" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
       </div>
-  
+
       <!-- ✅ ADD: mobile panel -->
       <div class="nav-panel" id="navPanel" aria-hidden="true">
         <div class="nav-panel-head">
           <span class="panel-title">MINIMAP</span>
           <button class="panel-close" type="button" id="navPanelClose" aria-label="메뉴 닫기">×</button>
         </div>
-  
+
         <div class="nav-panel-body">
           <p class="panel-hint">> TAP TO JUMP</p>
+
+          <!-- ✅ ADD: 모바일 패널 액션(토글 + CTA) -->
+          <div class="panel-actions" aria-label="빠른 설정">
+            <div class="panel-theme">
+              <span class="panel-actions-label">THEME</span>
+
+              <!-- ✅ 모바일용 토글(같은 구조, id만 다르게) -->
+              <button class="theme-switch" id="themeSwitchMobile" type="button" role="switch" aria-checked="false"
+                aria-label="라이트 / 다크 테마 전환">
+                <span class="theme-icon theme-icon--sun" aria-hidden="true">☀</span>
+                <span class="theme-icon theme-icon--moon" aria-hidden="true">☾</span>
+                <span class="theme-thumb" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="panel-cta">
+              <a href="https://soongoodday.tistory.com/" class="panel-cta-link" target="_blank"
+                rel="noopener noreferrer">
+                작업일기 →
+              </a>
+              <a href="https://www.notion.so/_-2c08e9fe2cec80b6957ceee2ea7d17ec?source=copy_link" class="panel-cta-link"
+                target="_blank" rel="noopener noreferrer">
+                타임라인 →
+              </a>
+            </div>
+          </div>
+
           <a class="panel-link" href="#hero">HOME</a>
           <a class="panel-link" href="#stage1">STAGE 1</a>
           <a class="panel-link" href="#stage2">STAGE 2</a>
@@ -97,9 +125,9 @@
           <a class="panel-link panel-final" href="#final">FINAL STAGE</a>
         </div>
       </div>
-  
+
       <div class="nav-panel-backdrop" id="navPanelBackdrop" aria-hidden="true"></div>
-  
+
     </nav>
   </header>
 
