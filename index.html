@@ -30,50 +30,78 @@
     <div class="fx-cursor-glow" id="cursorGlow"></div>
   </div>
 
-  <!-- NAV -->
-  <nav class="main-nav" aria-label="주요 메뉴">
-    <div class="nav-container">
-      <a class="nav-logo" href="#hero" aria-label="홈으로">
-        <span class="logo-text">PORTFOLIO GAME</span>
-      </a>
-
-      <ul class="nav-menu">
-        <li><a href="#stage1">STAGE 01</a></li>
-        <li><a href="#stage2">STAGE 02</a></li>
-        <li><a href="#stage3">STAGE 03</a></li>
-        <li><a href="#stage4">STAGE 04</a></li>
-        <li><a href="#final">FINAL STAGE</a></li>
-      </ul>
-
-      <button class="nav-cta" type="button" id="navCta">START QUEST</button>
-
-      <!-- ✅ ADD: hamburger -->
-      <button class="nav-burger" type="button" id="navBurger" aria-label="메뉴 열기" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-
-    <!-- ✅ ADD: mobile panel -->
-    <div class="nav-panel" id="navPanel" aria-hidden="true">
-      <div class="nav-panel-head">
-        <span class="panel-title">MINIMAP</span>
-        <button class="panel-close" type="button" id="navPanelClose" aria-label="메뉴 닫기">×</button>
+  
+  <header class="header">
+    <nav class="main-nav" aria-label="주요 메뉴">
+      <div class="nav-container">
+        <a class="nav-logo" href="#hero" aria-label="홈으로">
+        </a>
+  
+        <ul class="nav-menu">
+          <!-- ✅ LEFT: HOME~FINAL 묶음 -->
+          <li class="nav-links">
+            <a href="#hero">HOME</a>
+            <a href="#stage1">STAGE 1</a>
+            <a href="#stage2">STAGE 2</a>
+            <a href="#stage3">STAGE 3</a>
+            <a href="#stage4">STAGE 4</a>
+            <a href="#final">FINAL STAGE</a>
+          </li>
+  
+          <!-- ✅ RIGHT: 토글 + CTA -->
+          <li class="nav-item nav-actions">
+            <div class="theme-toggle" id="themeToggleWrap" aria-label="테마 전환">
+              <button class="theme-switch" id="themeSwitch" type="button" role="switch" aria-checked="false"
+                aria-label="라이트 / 다크 테마 전환">
+                <span class="theme-icon theme-icon--sun" aria-hidden="true">☀</span>
+                <span class="theme-icon theme-icon--moon" aria-hidden="true">☾</span>
+                <span class="theme-thumb" aria-hidden="true"></span>
+              </button>
+            </div>
+  
+            <a href="https://soongoodday.tistory.com/" class="nav-link nav-link--cta1" target="_blank"
+              rel="noopener noreferrer">
+              작업일기 →
+            </a>
+  
+            <a href="https://www.notion.so/_-2c08e9fe2cec80b6957ceee2ea7d17ec?source=copy_link"
+              class="nav-link nav-link--cta2" target="_blank" rel="noopener noreferrer">
+              타임라인 →
+            </a>
+          </li>
+        </ul>
+  
+  
+        <!-- <button class="nav-cta" type="button" id="navCta">START QUEST</button> -->
+  
+        <!-- ✅ ADD: hamburger -->
+        <button class="nav-burger" type="button" id="navBurger" aria-label="메뉴 열기" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
-
-      <div class="nav-panel-body">
-        <p class="panel-hint">> TAP TO JUMP</p>
-        <a class="panel-link" href="#hero">HOME</a>
-        <a class="panel-link" href="#stage1">STAGE 01</a>
-        <a class="panel-link" href="#stage2">STAGE 02</a>
-        <a class="panel-link" href="#stage3">STAGE 03</a>
-        <a class="panel-link" href="#stage4">STAGE 04</a>
-        <a class="panel-link panel-final" href="#final">FINAL STAGE</a>
+  
+      <!-- ✅ ADD: mobile panel -->
+      <div class="nav-panel" id="navPanel" aria-hidden="true">
+        <div class="nav-panel-head">
+          <span class="panel-title">MINIMAP</span>
+          <button class="panel-close" type="button" id="navPanelClose" aria-label="메뉴 닫기">×</button>
+        </div>
+  
+        <div class="nav-panel-body">
+          <p class="panel-hint">> TAP TO JUMP</p>
+          <a class="panel-link" href="#hero">HOME</a>
+          <a class="panel-link" href="#stage1">STAGE 1</a>
+          <a class="panel-link" href="#stage2">STAGE 2</a>
+          <a class="panel-link" href="#stage3">STAGE 3</a>
+          <a class="panel-link" href="#stage4">STAGE 4</a>
+          <a class="panel-link panel-final" href="#final">FINAL STAGE</a>
+        </div>
       </div>
-    </div>
-
-    <div class="nav-panel-backdrop" id="navPanelBackdrop" aria-hidden="true"></div>
-
-  </nav>
+  
+      <div class="nav-panel-backdrop" id="navPanelBackdrop" aria-hidden="true"></div>
+  
+    </nav>
+  </header>
 
   <main>
     <section id="hero" class="hero">
@@ -171,7 +199,7 @@
 
     <!-- STAGE 1 : CHARACTER SELECT -->
     <section id="stage1" class="stage stage-character">
-      <div class="section-number" aria-hidden="true">STAGE 01</div>
+      <div class="section-number" aria-hidden="true">STAGE 1</div>
 
       <header class="section-header">
         <h2 class="section-title glitch" data-text="PLAYER SETUP">PLAYER SETUP</h2>
@@ -253,7 +281,7 @@
 
     <!-- STAGE 2 : SKILL TREE + AI POWER-UP -->
     <section id="stage2" class="stage stage-skills">
-      <div class="section-number" aria-hidden="true">STAGE 02</div>
+      <div class="section-number" aria-hidden="true">STAGE 2</div>
 
       <header class="section-header">
         <h2 class="section-title glitch" data-text="SKILL MATRIX">SKILL MATRIX</h2>
@@ -380,7 +408,7 @@
 
     <!-- STAGE 3 : QUEST LOG -->
     <section id="stage3" class="stage stage-quests">
-      <div class="section-number" aria-hidden="true">STAGE 03</div>
+      <div class="section-number" aria-hidden="true">STAGE 3</div>
 
       <header class="section-header">
         <h2 class="section-title glitch" data-text="MAIN MISSION">MAIN MISSION</h2>
@@ -409,7 +437,8 @@
         </article>
 
         <div class="quest-grid">
-          <article class="quest drop-section" data-project="badaju" data-tilt data-tilt-strength="10" data-preview="images/badaju_mac_pixel.png">
+          <article class="quest drop-section" data-project="badaju" data-tilt data-tilt-strength="10"
+            data-preview="images/badaju_mac_pixel.png">
             <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span>
             </div>
             <h3 class="quest-title">출판사 바다주 웹페이지</h3>
@@ -417,7 +446,8 @@
             <div class="quest-meta">2025.11 - 2026.01</div>
           </article>
 
-          <article class="quest drop-section" data-project="ukymelar" data-tilt data-tilt-strength="10" data-preview="images/ukymelar_mac_pixel.png">
+          <article class="quest drop-section" data-project="ukymelar" data-tilt data-tilt-strength="10"
+            data-preview="images/ukymelar_mac_pixel.png">
             <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span>
             </div>
             <h3 class="quest-title">유키멜라 웹페이지</h3>
@@ -425,7 +455,8 @@
             <div class="quest-meta">2025.12 - 2026.01</div>
           </article>
 
-          <article class="quest drop-section" data-project="cheil" data-tilt data-tilt-strength="10" data-preview="images/cheil_mac_pixel.png">
+          <article class="quest drop-section" data-project="cheil" data-tilt data-tilt-strength="10"
+            data-preview="images/cheil_mac_pixel.png">
             <div class="quest-top"><span class="quest-type">SIDE QUEST</span><span class="quest-progress">100%</span>
             </div>
             <h3 class="quest-title">분당제일여성병원 웹페이지</h3>
@@ -433,7 +464,8 @@
             <div class="quest-meta">2025.12</div>
           </article>
 
-          <article class="quest drop-section" data-project="nouvedilie" data-tilt data-tilt-strength="10" data-preview="images/nouvedilie_mac_pixel.png">
+          <article class="quest drop-section" data-project="nouvedilie" data-tilt data-tilt-strength="10"
+            data-preview="images/nouvedilie_mac_pixel.png">
             <div class="quest-top"><span class="quest-type">TRAINING</span><span class="quest-progress">100%</span>
             </div>
             <h3 class="quest-title">누베딜리 웹페이지</h3>
@@ -441,14 +473,16 @@
             <div class="quest-meta">2026.01</div>
           </article>
 
-          <article class="quest drop-section" data-project="art" data-tilt data-tilt-strength="10" data-preview="images/art_mac_pixel.png">
+          <article class="quest drop-section" data-project="art" data-tilt data-tilt-strength="10"
+            data-preview="images/art_mac_pixel.png">
             <div class="quest-top"><span class="quest-type">ARCHIVE</span><span class="quest-progress">100%</span></div>
             <h3 class="quest-title">미대입시닷컴 웹페이지</h3>
             <p class="quest-desc">미대입시닷컴 웹페이지 리디자인</p>
             <div class="quest-meta">2025.12</div>
           </article>
 
-          <article class="quest drop-section" data-project="wethink" data-tilt data-tilt-strength="10" data-preview="images/wethink_mac_pixel.png">
+          <article class="quest drop-section" data-project="wethink" data-tilt data-tilt-strength="10"
+            data-preview="images/wethink_mac_pixel.png">
             <div class="quest-top"><span class="quest-type">ARCHIVE</span><span class="quest-progress">100%</span></div>
             <h3 class="quest-title">위띵크 디자인 스트리밍 & 커뮤니티 앱</h3>
             <p class="quest-desc">디자이너를 위한 커뮤니티 협업앱</p>
@@ -463,7 +497,7 @@
      BONUS STAGE / OTHER WORKS
 ========================= -->
     <section id="stage4" class="stage stage-quests">
-      <div class="section-number" aria-hidden="true">STAGE 04</div>
+      <div class="section-number" aria-hidden="true">STAGE 4</div>
 
       <header class="section-header">
         <h2 class="section-title glitch" data-text="ARCHIVE MODE">ARCHIVE MODE</h2>
@@ -634,7 +668,7 @@
   </div>
 
 
-  <script src="script/script.js"></script>
+  <script src="script/main.js"></script>
   <script>
     (function () {
       const targets = document.querySelectorAll('.drop-section');

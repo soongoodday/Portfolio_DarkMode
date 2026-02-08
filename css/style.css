@@ -131,6 +131,12 @@ button{ font:inherit; }
 /* FX는 전부 클릭 막지 않게 */
 .fx, .fx *{ pointer-events:none !important; }
 
+/* header */
+.header{
+  height: auto;
+  overflow: visible;
+}
+
 /* ==========================
    NAV
 ========================== */
@@ -138,24 +144,20 @@ button{ font:inherit; }
   position:fixed;
   top:0; left:0; right:0;
   z-index:1000;
-
-  /* ✅ iOS safe-area 대응 */
-  padding:
-    calc(var(--space-md) + env(safe-area-inset-top))
-    var(--stage-padding-x)
-    var(--space-md);
+  height: 62px;
 
   background:rgba(10,10,15,.76);
   backdrop-filter:blur(18px);
   border-bottom:1px solid rgba(42,42,53,.75);
 }
 .nav-container{
-  max-width:1600px;
-  margin:0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 12px 280px; /* ⭐ 고정 170 대신 유동 */
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: 24px;
 }
 .nav-logo{ text-decoration:none; }
 .logo-text{
@@ -166,11 +168,17 @@ button{ font:inherit; }
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
-.nav-menu{ display:flex; list-style:none; gap:var(--space-lg); }
+.nav-menu{ 
+  display:flex; 
+  list-style:none; 
+  gap:var(--space-lg);
+  overflow-y: hidden;
+}
 .nav-menu a{
+  font-family: 'Mulmaru';
   text-decoration:none;
   color:var(--lighter-gray);
-  font-size:.85rem;
+  font-size:.8rem;
   font-weight:600;
   letter-spacing:.12em;
   position:relative;
@@ -1466,8 +1474,8 @@ section{
    RESPONSIVE
 ========================== */
 @media (max-width:1024px){
-  .main-nav{ padding:
-    calc(var(--space-md) + env(safe-area-inset-top))
+  .main-nav{ 
+    padding:calc(var(--space-md) + env(safe-area-inset-top))
     var(--stage-padding-x)
     var(--space-md);
   }
@@ -2551,15 +2559,14 @@ section{
 
 /* (2) active 링크: 점(●)을 왼쪽에 붙이고 깜박이게 */
 .main-nav .nav-menu a{
-  position: relative;       /* 점 배치를 위해 */
-  padding-left: 28px;       /* 점 들어갈 자리 확보 */
+  position: relative;       /* 점 배치를 위해 */      /* 점 들어갈 자리 확보 */
 }
 
 /* 점(●) 기본은 숨김 */
 .main-nav .nav-menu a::before{
   content: "●";
   position: absolute;
-  left: 12px;
+  left: 6%;
   top: 50%;
   transform: translateY(-50%);
   font-size: 10px;
@@ -3330,6 +3337,407 @@ section{
 
 
 
+/* =================================
+   THEME TOGGLE (Light / Dark)
+================================= */
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+/* 버튼 바디 */
+.theme-switch {
+  position: relative;
+  width: 74px;
+  height: 34px;
+  border-radius: 999px;
+  border: 2px solid rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.theme-switch:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.28);
+}
+
+.theme-switch:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 4px rgba(66, 120, 255, 0.18),
+    0 10px 22px rgba(0, 0, 0, 0.1);
+}
+
+/* 아이콘 */
+.theme-icon {
+  font-size: 15px;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+/* 동그란 스위치 */
+.theme-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
+  transition: transform 0.22s ease, background 0.22s ease;
+}
+
+/* ===============================
+   DARK MODE (aria-checked = true)
+=============================== */
+
+.theme-switch[aria-checked="true"] {
+  background: rgba(20, 20, 26, 0.92);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.theme-switch[aria-checked="true"] .theme-thumb {
+  transform: translateX(40px);
+  background: #11111a;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.38);
+}
+
+/* 현재 상태 아이콘 강조 */
+.theme-switch[aria-checked="false"] .theme-icon--sun {
+  opacity: 1;
+}
+
+.theme-switch[aria-checked="true"] .theme-icon--moon {
+  opacity: 1;
+}
 
 
 
+
+/* =========================
+   NAV CTA BUTTONS (WORK LOG / TIMELINE)
+   - glass + neon + pixel scanlines
+   - .nav-link--cta1 / .nav-link--cta2 전용
+   - style.css 맨 아래에 추가
+========================= */
+
+/* CTA 줄 정렬 (네가 쓰는 li.nav-cta-row 기준) */
+.nav-cta-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* 기본 버튼 */
+.nav-link--cta1,
+.nav-link--cta2{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  padding:8px 32px;
+  border-radius:999px;
+
+  text-decoration:none;
+  white-space:nowrap;
+
+  font-family:var(--font-pixel);
+  font-size:11px;
+  letter-spacing:.14em;
+
+  color:rgba(255,255,255,.92);
+  background:rgba(8,10,14,.36);
+  border:1px solid rgba(255,255,255,.14);
+
+  box-shadow:
+    0 14px 40px rgba(0,0,0,.28),
+    inset 0 0 0 1px rgba(255,255,255,.05);
+
+  backdrop-filter: blur(12px);
+  -webkit-tap-highlight-color: transparent;
+
+  transition:
+    transform .18s var(--easing),
+    border-color .18s var(--easing),
+    box-shadow .18s var(--easing),
+    background .18s var(--easing),
+    color .18s var(--easing);
+}
+
+/* 스캔라인(픽셀 UI 느낌) */
+.nav-link--cta1::before,
+.nav-link--cta2::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  pointer-events:none;
+
+  background:repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,.07) 0px,
+    rgba(255,255,255,.07) 1px,
+    transparent 3px,
+    transparent 6px
+  );
+  opacity:.10;
+}
+
+/* 네온 글로우(버튼 바깥) */
+.nav-link--cta1::after,
+.nav-link--cta2::after{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border-radius:inherit;
+  pointer-events:none;
+  filter: blur(14px);
+  opacity:.0;
+  transition: opacity .18s var(--easing);
+}
+
+/* ✅ 작업일기(Blue) */
+.nav-link--cta1{
+  border-color: rgba(0,240,255,.35);
+}
+.nav-link--cta1::after{
+  background: linear-gradient(90deg,
+    rgba(0,240,255,.30),
+    rgba(157,0,255,.14),
+    rgba(0,240,255,.30)
+  );
+}
+
+/* ✅ 타임라인(Purple/Pink) */
+.nav-link--cta2{
+  border-color: rgba(157,0,255,.38);
+}
+.nav-link--cta2::after{
+  background: linear-gradient(90deg,
+    rgba(157,0,255,.30),
+    rgba(255,0,110,.18),
+    rgba(157,0,255,.30)
+  );
+}
+
+/* hover / active */
+.nav-link--cta1:hover,
+.nav-link--cta2:hover{
+  background: rgba(8,10,14,.50);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.36),
+    inset 0 0 0 1px rgba(255,255,255,.07);
+}
+.nav-link--cta1:hover{
+  border-color: rgba(0,240,255,.75);
+  color: rgba(0,240,255,.95);
+  text-shadow: 0 0 14px rgba(0,240,255,.22);
+}
+.nav-link--cta2:hover{
+  border-color: rgba(255,0,110,.65);
+  color: rgba(255,255,255,.95);
+  text-shadow: 0 0 14px rgba(255,0,110,.18);
+}
+.nav-link--cta1:hover::after,
+.nav-link--cta2:hover::after{
+  opacity:.55;
+}
+
+.nav-link--cta1:active,
+.nav-link--cta2:active{
+  transform: translateY(0px) scale(.99);
+}
+
+/* 접근성 포커스 */
+.nav-link--cta1:focus-visible,
+.nav-link--cta2:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 4px rgba(0,240,255,.18),
+    0 18px 60px rgba(0,0,0,.36);
+}
+
+.nav-link--cta1::marker,
+.nav-link--cta2::marker{ content:""; }
+
+.nav-link--cta1 span,
+.nav-link--cta2 span{ position:relative; z-index:1; }
+
+.nav-link--cta1::before,
+.nav-link--cta2::before{ z-index:0; }
+.nav-link--cta1::after,
+.nav-link--cta2::after{ z-index:0; }
+
+/* 모바일에서 너무 커 보이면 살짝 컴팩트 */
+@media (max-width: 420px){
+  .nav-link--cta1,
+  .nav-link--cta2{
+    height:38px;
+    padding:0 12px;
+    font-size:10px;
+    letter-spacing:.12em;
+  }
+}
+
+
+
+
+/* =========================
+   NAV ACTIONS GROUP (theme + CTAs)
+========================= */
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* nav-menu가 가로일 때 오른쪽 끝으로 밀기 (필요한 경우) */
+.nav-menu{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+}
+
+/* 모바일/태블릿에서 메뉴가 패널로 들어가면 숨기고 싶으면(선택) */
+@media (max-width: 1160px){
+  /* 네가 이미 1160부터 햄버거 쓰는 흐름이면, 상단 바에서는 오른쪽 그룹 숨김 */
+  .nav-menu .nav-actions{
+    display:none;
+  }
+}
+
+
+
+
+/* nav-menu 전체 정렬 */
+.main-nav .nav-menu{
+  display:flex;
+  align-items:center;
+  gap:288px;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+
+/* ✅ LEFT 그룹: 한 덩어리(필) */
+.main-nav .nav-links a{
+  display:flex;
+  align-items:center;
+}
+
+/* LEFT 그룹 안의 a는 li가 아니라 a라서 여기서 스타일 */
+.main-nav .nav-links > a{
+  display:inline-flex;
+  align-items:center;
+  height:28px;
+  padding:0 10px;
+  border-radius:10px;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.main-nav .nav-links > a:hover{
+  background: rgba(255,255,255,.06);
+}
+
+/* ✅ RIGHT 액션은 오른쪽으로 */
+.main-nav .nav-actions a{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+
+
+
+/* =========================
+   NAV: 잘림 제거 + 간격 늘리기 (FINAL OVERRIDE)
+   - nav-links를 "왼쪽 그룹"으로 묶어서 gap 컨트롤
+   - nav-actions는 오른쪽 끝으로 밀기
+   - 화면 좁아지면 가로 스크롤(잘림 대신)
+========================= */
+
+/* 0) 컨테이너가 꽉 차도 잘림 없게 */
+.main-nav{
+  overflow: visible;
+}
+
+/* 1) ul(nav-menu): 초대형 gap 제거 + 한 줄 고정 + 스크롤로 안전장치 */
+.main-nav .nav-menu{
+  display:flex;
+  align-items:center;
+
+  gap: 0;                 /* ✅ 288px 같은 고정 gap 제거 */
+  margin:0;
+  padding:0;
+  list-style:none;
+
+  flex-wrap:nowrap;
+  white-space:nowrap;
+
+  overflow-x:hidden;        /* ✅ 잘림 대신 스크롤 */
+  overflow-y:hidden;
+  -webkit-overflow-scrolling:touch;
+
+  min-width:0;            /* ✅ flex overflow 계산 안정화 */
+}
+
+
+/* 2) 왼쪽 그룹(li.nav-links): 여기서 "버튼들 사이 간격" 조절 */
+.main-nav .nav-links{
+  display:flex;
+  align-items:center;
+  gap: clamp(12px, 1.2vw, 22px); /* ✅ 메뉴 버튼 사이 간격(원하는 만큼 조절) */
+  flex: 0 0 auto;
+}
+
+/* 3) 버튼(a) 자체는 가볍게(패딩/높이 통일) */
+.main-nav .nav-links > a{
+  display:inline-flex;
+  align-items:center;
+  height: 36px;           /* ✅ pill 높이 */
+  padding: 0 22px;        /* ✅ pill 좌우 여백(버튼 크기) */
+  border-radius: 999px;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+/* 혹시 예전 규칙이 a에 flex/padding 크게 주면 무력화 */
+.main-nav .nav-links a{
+  gap: 0;
+}
+
+/* 4) 오른쪽 액션(li.nav-actions): 오른쪽 끝으로 */
+.main-nav .nav-actions{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  margin-left:auto;       /* ✅ 오른쪽 끝으로 밀기 */
+  flex: 0 0 auto;
+  padding-left: 18px;     /* ✅ 왼쪽 그룹과 오른쪽 그룹 사이 간격 */
+}
+
+/* 5) "잘리는 것"의 또 다른 주범: nav-container 패딩이 너무 크면 폭이 줄어듦
+      네 CSS에 170px까지 커지는 padding이 있어서, 여기서 안전하게 제한 */
+.nav-container{
+  padding-left: clamp(16px, 3vw, 56px) !important;
+  padding-right: clamp(16px, 3vw, 56px) !important;
+}
