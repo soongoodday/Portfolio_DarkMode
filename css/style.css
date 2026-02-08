@@ -2731,6 +2731,7 @@ section{
   transition:opacity .2s ease, transform .2s ease;
   z-index:999;
   overflow:hidden;
+  text-align: center;
   
 }
 
@@ -2768,6 +2769,7 @@ section{
 }
 
 .nav-panel-body{
+  font-family: 'Mulmaru';
   padding:14px;
   display:flex;
   flex-direction:column;
@@ -4225,6 +4227,9 @@ section{
     z-index: 9999;
   }
 }
+
+
+
 
 
 
