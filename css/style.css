@@ -46,6 +46,9 @@
   /* ✅ 전체 섹션 컨테이너 기준(Quest Log 폭 기준으로 통일) */
   --stage-max-width: 1400px;
   --stage-padding-x: clamp(16px, 3vw, 28px);
+
+  --ui-accent: var(--neon-blue);
+  --ui-accent-soft: rgba(0,240,255,.18);
 }
 
 html{
@@ -174,6 +177,7 @@ button{ font:inherit; }
   gap:var(--space-lg);
   overflow-y: hidden;
 }
+
 .nav-menu a{
   font-family: 'Mulmaru';
   text-decoration:none;
@@ -184,7 +188,20 @@ button{ font:inherit; }
   position:relative;
   transition:all .25s ease;
 }
-.nav-menu a:hover{ color:var(--neon-blue); text-shadow:0 0 18px rgba(0,240,255,.35); }
+
+.nav-menu a:hover{ color:var(--white); text-shadow:0 0 18px rgba(0,240,255,.35); }
+
+/* 클릭 후 유지되는 상태 */
+.nav-menu a.is-active{
+  color: var(--neon-blue);
+  text-shadow: 0 0 18px rgba(0,240,255,.35);
+}
+
+/* 선택된 상태에서 hover해도 유지 */
+.nav-menu a.is-active:hover{
+  color: var(--neon-blue);
+  text-shadow:0 0 18px rgba(0,240,255,.35);
+}
 .nav-cta{
   padding:10px 16px;
   border-radius:12px;
@@ -2569,7 +2586,7 @@ section{
   left: 6%;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 10px;
+  font-size: 8px;
   opacity: 0;
 }
 
@@ -2577,6 +2594,7 @@ section{
 .main-nav .nav-menu a.is-active::before{
   opacity: 1;
   animation: navDotBlink 1s steps(1, end) infinite;
+  display: none;
 }
 
 /* 점멸 애니메이션 */
@@ -3089,43 +3107,6 @@ section{
     padding-top: 10px;
   }
 }
-
-
-
-
-/* =========================
-   FINAL STAGE: LOGO BOSS MODE
-========================= */
-.nav-logo .logo-text{
-  transition: filter .3s ease;
-}
-
-/* FINAL 진입 시 로고에 클래스 붙이면 보스전 연출 */
-.nav-logo .logo-text.is-final{
-  -webkit-text-fill-color: transparent;
-  background: linear-gradient(90deg, #ff003c, #9d00ff, #ff006e);
-  -webkit-background-clip: text;
-  animation: bossLogoFlicker 1.4s steps(1,end) both;
-  filter: drop-shadow(0 0 14px rgba(255,0,60,.35))
-          drop-shadow(0 0 18px rgba(157,0,255,.30));
-}
-
-@keyframes bossLogoFlicker{
-  0%{   filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
-  12%{  filter: drop-shadow(0 0 18px rgba(255,0,60,.65)); }
-  24%{  filter: drop-shadow(0 0 18px rgba(157,0,255,.65)); }
-  40%{  filter: drop-shadow(0 0 24px rgba(255,0,110,.55)); }
-  60%{  filter: drop-shadow(0 0 30px rgba(255,0,60,.45)); }
-  100%{ filter: drop-shadow(0 0 26px rgba(255,0,110,.45))
-                 drop-shadow(0 0 18px rgba(157,0,255,.35)); }
-}
-
-/* (옵션) FINAL 진입 시 네비 전체도 살짝 경고톤 */
-.main-nav.is-final{
-  border-bottom-color: rgba(255,0,110,.35);
-  box-shadow: 0 18px 80px rgba(255,0,110,.08);
-}
-
 
 
 
@@ -3740,4 +3721,413 @@ section{
 .nav-container{
   padding-left: clamp(16px, 3vw, 56px) !important;
   padding-right: clamp(16px, 3vw, 56px) !important;
+}
+
+
+
+
+/* =========================
+   EXTRA FINAL FX (NAV)
+========================= */
+
+/* FINAL 들어가면 살짝 '경보'처럼 반짝이는 틴트 */
+.main-nav.is-final{
+  animation: finalNavPulse 2.2s ease-in-out infinite;
+  position: sticky; /* 이미 fixed면 지워도 됨 */
+  top: 0;
+  z-index: 9999;
+}
+
+@keyframes finalNavPulse{
+  0%,100% { filter: saturate(1.05) brightness(1.00); }
+  50%     { filter: saturate(1.25) brightness(1.08); }
+}
+
+/* 상단에 빨간 경고 라인(엔딩/보스 진입 느낌) */
+.main-nav.is-final::before{
+  content:"FINAL STAGE • END SEQUENCE • FINAL STAGE • END SEQUENCE •";
+  position:absolute;
+  left:0; right:0; top:-1px;
+  height: 26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family: var(--font-pixel, 'Press Start 2P', monospace);
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.92);
+  background: linear-gradient(90deg,
+    rgba(255,0,110,.20),
+    rgba(0,240,255,.18),
+    rgba(157,0,255,.18),
+    rgba(255,0,110,.20)
+  );
+  border-bottom: 1px solid rgba(255,0,110,.25);
+  text-shadow: 0 0 12px rgba(255,0,110,.55);
+  overflow:hidden;
+  white-space:nowrap;
+  animation: finalMarquee 9s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes finalMarquee{
+  0%   { transform: translateX(0);   }
+  100% { transform: translateX(-12%); }
+}
+
+/* nav 자체가 before 때문에 위로 살짝 올라갈 수 있어서 padding 보정 */
+.main-nav.is-final .nav-container{
+  padding-top: 10px; /* 이미 padding 있으면 값만 조절 */
+}
+
+
+
+
+/* =========================
+   FINAL STAGE : RED ACTIVATION
+   (no cutscene, no auto scroll)
+========================= */
+
+.stage-final{
+  position: relative;
+  overflow: hidden;
+}
+
+/* FINAL 발동 상태 */
+.stage-final.is-final-armed{
+  filter: saturate(1.1) hue-rotate(-10deg);
+}
+
+/* 붉은 오라 + 비네트 */
+.stage-final::before{
+  content:"";
+  position:absolute;
+  inset:-12%;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .4s ease;
+  background:
+    radial-gradient(
+      900px 500px at 50% 30%,
+      rgba(255,40,60,.28),
+      rgba(0,0,0,0) 55%
+    ),
+    radial-gradient(
+      1200px 900px at 50% 85%,
+      rgba(0,0,0,.75),
+      rgba(0,0,0,0) 60%
+    );
+  mix-blend-mode: screen;
+}
+
+.stage-final.is-final-armed::before{
+  opacity:1;
+}
+
+/* FINAL 내부 스캔라인 (섹션 안에서만) */
+.stage-final::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .4s ease;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,90,110,.08) 0px,
+    rgba(255,90,110,.08) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.stage-final.is-final-armed::after{
+  opacity:.9;
+}
+
+/* FINAL 텍스트 강조 */
+.stage-final.is-final-armed
+.section-title{
+  color:#ff2e4d;
+  text-shadow:
+    0 0 12px rgba(255,40,60,.55),
+    0 0 32px rgba(255,0,80,.25);
+}
+
+/* 카드류 붉은 글로우 */
+.stage-final.is-final-armed
+.drop-section{
+  box-shadow:
+    0 0 0 rgba(0,0,0,0),
+    0 18px 80px rgba(255,30,60,.12);
+}
+
+
+
+
+/* =========================
+   SECTION ACCENT SYSTEM
+   - 섹션마다 --stage-accent만 바꾸면 색상 바뀜
+========================= */
+
+/* 기본값(혹시 빠져도 안전) */
+.stage{
+  --stage-accent: var(--neon-blue);
+  --stage-accent-soft: rgba(0,240,255,.18);
+}
+
+/* 섹션별로 색만 바꾸기 */
+#hero   { --stage-accent: var(--neon-blue);   --stage-accent-soft: rgba(0,240,255,.18); }
+#stage1 { --stage-accent: var(--neon-blue); --stage-accent-soft: rgba(157,0,255,.18); }
+#stage2 { --stage-accent: var(--neon-blue);  --stage-accent-soft: rgba(57,255,20,.16); }
+#stage3 { --stage-accent: var(--neon-blue);   --stage-accent-soft: rgba(255,0,110,.16); }
+#stage4 { --stage-accent: var(--neon-purple);   --stage-accent-soft: rgba(0,240,255,.16); }
+#final  { --stage-accent: #ff2e4d;            --stage-accent-soft: rgba(255,46,77,.18); }
+
+/* 공통: 섹션 헤더/라인/넘버 */
+.stage .section-number{
+  color: var(--stage-accent);
+  text-shadow: 0 0 14px color-mix(in srgb, var(--stage-accent) 55%, transparent);
+}
+
+.stage .section-title{
+  color: var(--stage-accent);
+  text-shadow:
+    0 0 12px color-mix(in srgb, var(--stage-accent) 55%, transparent),
+    0 0 30px color-mix(in srgb, var(--stage-accent) 20%, transparent);
+}
+
+.stage .title-line{
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--stage-accent),
+    transparent
+  );
+  box-shadow: 0 0 22px var(--stage-accent-soft);
+}
+
+/* 카드/패널에 은은한 accent 라인 */
+.stage .drop-section,
+.stage .quest,
+.stage .panel,
+.stage .character-card,
+.stage .power-card,
+.stage .contact-card{
+  position: relative;
+}
+
+.stage .drop-section::before,
+.stage .quest::before,
+.stage .panel::before,
+.stage .character-card::before,
+.stage .power-card::before,
+.stage .contact-card::before{
+  content:"";
+  position:absolute;
+  left:0; top:0; right:0;
+  height:2px;
+  opacity:.55;
+  background: linear-gradient(90deg, transparent, var(--stage-accent), transparent);
+  pointer-events:none;
+}
+
+/* hover 시 약간 더 살아남 */
+.stage .drop-section:hover,
+.stage .quest:hover,
+.stage .panel:hover,
+.stage .power-card:hover,
+.stage .contact-card:hover{
+  box-shadow: 0 18px 80px color-mix(in srgb, var(--stage-accent) 18%, transparent);
+}
+
+/* 태그/칩류도 accent로 */
+.stage .card-tag,
+.stage .tag,
+.stage .quest-type,
+.stage .ow-tag{
+  color: var(--stage-accent);
+  border-color: color-mix(in srgb, var(--stage-accent) 45%, transparent);
+  background: color-mix(in srgb, var(--stage-accent) 10%, transparent);
+}
+
+
+
+/* =========================
+   HERO CARD = STAGE1 GLOW FX
+   (style.css 맨 아래에 추가)
+========================= */
+
+/* hero 카드가 pseudo-element를 쓸 수 있게 */
+.hero-container{
+  position: relative;
+  overflow: hidden;              /* 빛이 카드 밖으로 안 튀게 */
+  border-radius: 26px;           /* 기존 카드 라운드랑 비슷하게 */
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(10,12,18,.62); /* 기존 다크 카드 느낌 유지 */
+  backdrop-filter: blur(10px);
+}
+
+/* 1) 바깥 네온 라인 + 은은한 발광 */
+.hero-container::before{
+  content:"";
+  position:absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events:none;
+
+  /* 네온 테두리 */
+  border: 1px solid color-mix(in srgb, var(--stage-accent) 35%, transparent);
+
+  /* glow */
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.06) inset,
+    0 0 28px color-mix(in srgb, var(--stage-accent) 24%, transparent),
+    0 0 70px color-mix(in srgb, var(--stage-accent) 18%, transparent);
+  opacity: .95;
+}
+
+/* 2) stage1에서 보이던 “모서리 빛 번짐(라이트 블룸)” */
+.hero-container::after{
+  content:"";
+  position:absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events:none;
+
+  /* 모서리 쪽으로 퍼지는 빛 */
+  background:
+    radial-gradient(1200px 480px at 50% -10%,
+      color-mix(in srgb, var(--stage-accent) 22%, transparent),
+      transparent 55%),
+    radial-gradient(900px 420px at 0% 0%,
+      color-mix(in srgb, var(--stage-accent) 18%, transparent),
+      transparent 60%),
+    radial-gradient(900px 420px at 100% 0%,
+      color-mix(in srgb, var(--stage-accent) 18%, transparent),
+      transparent 60%),
+    radial-gradient(900px 520px at 50% 120%,
+      rgba(0,0,0,.55),
+      transparent 55%);
+
+  mix-blend-mode: screen;
+  opacity: .75;
+  filter: blur(0.2px);
+}
+
+/* 3) 살짝 “점등” 느낌 애니메이션 (과하면 숫자 낮춰) */
+@keyframes heroGlowPulse{
+  0%   { filter: brightness(0.96); }
+  50%  { filter: brightness(1.08); }
+  100% { filter: brightness(0.98); }
+}
+@media (prefers-reduced-motion: no-preference){
+  .hero-container{
+    animation: heroGlowPulse 3.6s ease-in-out infinite;
+  }
+}
+
+/* 4) 내부 텍스트/컴포넌트가 glow 위에 올라오게 */
+.hero-container > *{
+  position: relative;
+  z-index: 1;
+}
+
+
+
+
+/* =========================
+   NAV TEXT COLOR (ACTIVE ONLY)
+   - 기본: white
+   - active: section accent color
+========================= */
+
+:root{
+  --nav-accent: var(--neon-blue);
+  --nav-accent-soft: rgba(0,240,255,.18);
+}
+
+/* 기본 메뉴 글자 */
+.main-nav .nav-menu a{
+  color: rgba(255,255,255,.78);
+  opacity: .75;
+  transition:
+    color .18s ease,
+    opacity .18s ease,
+    text-shadow .18s ease,
+    filter .18s ease;
+}
+
+/* hover → 살짝 살아남 */
+@media (hover:hover){
+  .main-nav .nav-menu a:hover{
+    opacity: 1;
+    color: rgba(255,255,255,.95);
+    text-shadow: 0 0 10px rgba(255,255,255,.25);
+  }
+}
+
+/* =========================
+   현재 섹션(active)
+========================= */
+.main-nav .nav-menu a.is-active{
+  color: var(--nav-accent);
+  opacity: 1;
+  filter: saturate(1.25) brightness(1.15);
+  text-shadow:
+    0 0 10px color-mix(in srgb, var(--nav-accent) 55%, transparent),
+    0 0 26px color-mix(in srgb, var(--nav-accent) 30%, transparent);
+}
+
+/* =========================
+   메뉴 아래 네온 라인도 active 색
+========================= */
+.main-nav::after{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-1px;
+  height:1px;
+  pointer-events:none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--nav-accent) 80%, transparent),
+    transparent
+  );
+  opacity:.9;
+}
+
+
+
+
+/* =========================
+   NAV TEXT = SECTION ACCENT
+========================= */
+
+/* nav가 사용할 색(기본값) */
+:root{
+  --nav-accent: var(--neon-blue);
+}
+
+/* 기본 메뉴 글자 */
+.main-nav .nav-menu a{
+  color: rgba(255,255,255,.55);
+  opacity: .75;
+  transition: color .18s ease, opacity .18s ease, filter .18s ease, text-shadow .18s ease;
+}
+
+/* 현재 섹션(active) 메뉴 글자 = 섹션 색 */
+.main-nav .nav-menu a.is-active{
+  color: var(--nav-accent);
+  opacity: 1;
+  filter: saturate(1.3) brightness(1.25);
+  text-shadow:
+    0 0 10px color-mix(in srgb, var(--nav-accent) 60%, transparent),
+    0 0 24px color-mix(in srgb, var(--nav-accent) 35%, transparent),
+    0 0 56px color-mix(in srgb, var(--nav-accent) 18%, transparent);
+}
+
+/* hover도 살짝 강조 (선택) */
+.main-nav .nav-menu a:hover{
+  opacity: 1;
 }

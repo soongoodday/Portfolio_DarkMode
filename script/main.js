@@ -1401,27 +1401,6 @@ setTimeout(syncHudHeight, 800);
 
 
 /* =========================
-   FINAL STAGE: 로고 보스 모드
-========================= */
-(function finalStageLogo() {
-  const finalSec = document.getElementById('final');
-  const logoText = document.querySelector('.nav-logo .logo-text');
-  const nav = document.querySelector('.main-nav');
-  if (!finalSec || !logoText || !nav) return;
-
-  const io = new IntersectionObserver((entries) => {
-    const isIn = entries[0]?.isIntersecting;
-    logoText.classList.toggle('is-final', !!isIn);
-    nav.classList.toggle('is-final', !!isIn);
-  }, { threshold: 0.35 }); // FINAL 섹션이 35%쯤 보이면 발동
-
-  io.observe(finalSec);
-})();
-
-
-
-
-/* =========================
    NAV: HAMBURGER PANEL + PANEL TYPING (UNIFIED, iOS SAFE)
    - 중복 바인딩 방지
    - preventDefault/stopPropagation
@@ -1583,6 +1562,94 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') closePanel();
   });
 });
+
+
+
+
+/* =========================
+   FINAL STAGE ACTIVATION
+   - when #final enters viewport
+========================= */
+
+(() => {
+  const finalStage = document.querySelector('.stage-final');
+  if (!finalStage) return;
+
+  let activated = false;
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting && !activated) {
+        finalStage.classList.add('is-final-armed');
+        activated = true; // 한번만 발동
+      }
+    },
+    {
+      threshold: 0.35, // FINAL 섹션 35% 보이면 발동
+    }
+  );
+
+  observer.observe(finalStage);
+})();
+
+
+
+
+/* =========================
+   NAV ACCENT = CURRENT SECTION --stage-accent
+========================= */
+(() => {
+  const nav = document.querySelector('.main-nav');
+  if (!nav) return;
+
+  // 네 사이트에 있는 섹션들(원하면 더 추가 가능)
+  const sectionIds = ['hero', 'stage1', 'stage2', 'stage3', 'stage4', 'final'];
+  const sections = sectionIds
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
+
+  if (!sections.length) return;
+
+  // 섹션의 CSS 변수(--stage-accent)를 읽어서 nav 변수로 세팅
+  function applyAccentFrom(sectionEl) {
+    const accent = getComputedStyle(sectionEl).getPropertyValue('--stage-accent').trim();
+    if (accent) {
+      nav.style.setProperty('--nav-accent', accent);
+    }
+  }
+
+  // IntersectionObserver로 "가장 많이 보이는 섹션"을 선택
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      // 보이는 것 중 가장 많이 보이는 섹션 찾기
+      let best = null;
+      for (const ent of entries) {
+        if (!ent.isIntersecting) continue;
+        if (!best || ent.intersectionRatio > best.intersectionRatio) best = ent;
+      }
+      if (!best) return;
+
+      applyAccentFrom(best.target);
+    }, { threshold: [0.25, 0.35, 0.5, 0.65, 0.8] });
+
+    sections.forEach(sec => io.observe(sec));
+
+    // 첫 로드에서 한 번 보정 (맨 위는 hero일 가능성)
+    applyAccentFrom(sections[0]);
+  } else {
+    // 구형 브라우저 fallback
+    function onScroll() {
+      const y = window.scrollY + 140;
+      let current = sections[0];
+      for (const sec of sections) {
+        if (sec.offsetTop <= y) current = sec;
+      }
+      applyAccentFrom(current);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+})();
 
 
 
