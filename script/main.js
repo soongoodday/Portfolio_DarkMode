@@ -1703,4 +1703,49 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
+(function(){
+  const bg = document.querySelector('.bg-parallax');
+  if (!bg) return;
+
+  const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+  if (prefersReduced) return;
+
+  let raf = null;
+  let targetX = 0, targetY = 0;  // -1 ~ 1
+  let curX = 0, curY = 0;
+
+  function onMove(e){
+    const x = (e.clientX / window.innerWidth) * 2 - 1;
+    const y = (e.clientY / window.innerHeight) * 2 - 1;
+    targetX = x;
+    targetY = y;
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+
+  function tick(){
+    // 부드럽게 따라가게 (lerp)
+    curX += (targetX - curX) * 0.10;
+    curY += (targetY - curY) * 0.10;
+
+    // 이동량(px) / 기울기(deg)
+    const tx = (-curX * 18).toFixed(2) + 'px';
+    const ty = (-curY * 14).toFixed(2) + 'px';
+    const rx = (curY * 2.2).toFixed(2) + 'deg';
+    const ry = (-curX * 2.6).toFixed(2) + 'deg';
+
+    bg.style.setProperty('--tx', tx);
+    bg.style.setProperty('--ty', ty);
+    bg.style.setProperty('--rx', rx);
+    bg.style.setProperty('--ry', ry);
+
+    // 계속 추적 (마우스 멈춰도 잔여 보간)
+    if (Math.abs(targetX - curX) > 0.001 || Math.abs(targetY - curY) > 0.001){
+      raf = requestAnimationFrame(tick);
+    } else {
+      raf = null;
+    }
+  }
+
+  window.addEventListener('mousemove', onMove, { passive: true });
+})();
 

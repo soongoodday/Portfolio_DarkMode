@@ -326,11 +326,13 @@ section{
   filter:saturate(1.05) contrast(1.05);
   transform:none;
   z-index:0;
+  display: none;
 }
 .hero-video-overlay{ position:absolute; inset:0; z-index:1;
   background:
     radial-gradient(60% 60% at 50% 40%, rgba(0,0,0,.15), rgba(0,0,0,.75)),
     linear-gradient(to bottom, rgba(0,0,0,.15), rgba(0,0,0,.85));
+    display: none;
 }
 .hero-scanlines{
   position:absolute; inset:0; z-index:2;
@@ -339,6 +341,7 @@ section{
   mix-blend-mode:overlay;
   pointer-events:none;
   animation:scanMove 8s linear infinite;
+  display: none;
 }
 @keyframes scanMove{ 0%{transform:translateY(0);} 100%{transform:translateY(24px);} }
 
@@ -349,6 +352,7 @@ section{
   mix-blend-mode:screen;
   filter:blur(10px);
   pointer-events:none;
+  display: none;
 }
 .hero.cyber-glitch .hero-glitch{ opacity:.55; }
 
@@ -4230,6 +4234,107 @@ section{
 
 
 
+
+/* ==========================
+   Parallax Stars Background
+   - UI 위로 올라오지 않음 (z-index 0)
+   - 마우스 움직임에 따라 살짝 이동 + 살짝 기울기
+========================== */
+
+.bg-parallax{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+
+  /* default values */
+  --tx: 0px;
+  --ty: 0px;
+  --rx: 0deg;
+  --ry: 0deg;
+}
+
+/* 레이어 공통 */
+.bg-parallax .bg-layer{
+  position: absolute;
+  inset: -8%;
+  display: block;
+
+  transform:
+    translate3d(var(--tx), var(--ty), 0)
+    rotateX(var(--rx))
+    rotateY(var(--ry))
+    scale(1.05);
+
+  will-change: transform;
+  filter: blur(.2px);
+  opacity: .9;
+}
+
+/* 1) 먼 배경 (작고 많음) */
+.bg-parallax .l1{
+  opacity: .35;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.45) 1px, transparent 2px) 0 0 / 120px 120px,
+    radial-gradient(circle, rgba(0,240,255,.22) 1px, transparent 2px) 40px 60px / 160px 160px,
+    radial-gradient(circle, rgba(157,0,255,.18) 1px, transparent 2px) 80px 20px / 220px 220px;
+  transform:
+    translate3d(calc(var(--tx) * .25), calc(var(--ty) * .25), 0)
+    rotateX(calc(var(--rx) * .6))
+    rotateY(calc(var(--ry) * .6))
+    scale(1.06);
+}
+
+/* 2) 중간 레이어 (조금 더 큼) */
+.bg-parallax .l2{
+  opacity: .45;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.55) 1px, transparent 3px) 0 0 / 180px 180px,
+    radial-gradient(circle, rgba(0,240,255,.28) 1px, transparent 3px) 70px 30px / 260px 260px;
+  transform:
+    translate3d(calc(var(--tx) * .5), calc(var(--ty) * .5), 0)
+    rotateX(calc(var(--rx) * .8))
+    rotateY(calc(var(--ry) * .8))
+    scale(1.07);
+}
+
+/* 3) 가까운 레이어 (가장 눈에 띄는 포인트들) */
+.bg-parallax .l3{
+  opacity: .55;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.75) 2px, transparent 5px) 0 0 / 320px 320px,
+    radial-gradient(circle, rgba(255,0,110,.18) 2px, transparent 6px) 120px 140px / 420px 420px;
+  transform:
+    translate3d(calc(var(--tx) * .9), calc(var(--ty) * .9), 0)
+    rotateX(var(--rx))
+    rotateY(var(--ry))
+    scale(1.08);
+}
+
+/* ✅ 배경 레이어는 맨 뒤 */
+.bg-parallax{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ✅ 헤더는 무조건 위로 */
+header, .header, #header, .nav-container{
+  position: relative; /* fixed는 기존 CSS가 유지됨 */
+  z-index: 9999;
+}
+
+/* 모션 최소화 설정 */
+@media (prefers-reduced-motion: reduce){
+  .bg-parallax .bg-layer{ transform: none !important; }
+}
+
+/* 태블릿/모바일에서는 숨기거나 약하게 */
+@media (max-width: 1024px){
+  .bg-parallax{ display:none; }
+}
 
 
 
