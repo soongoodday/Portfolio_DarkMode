@@ -4484,3 +4484,73 @@ header, .header, #header, .nav-container{
     animation: none;
   }
 }
+
+
+
+
+/* =========================
+   iOS Safari bottom cut fix
+   - HERO HUD(미션피드) 입력창이 홈바에 가려지는 문제 해결
+   - vh 대신 svh/dvh 사용 + safe-area 적용
+   ========================= */
+
+:root{
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --hud-input-h: 64px; /* 입력줄 높이(대충). 필요하면 58~72 사이로 조절 */
+}
+
+/* iOS에서 100vh 흔들리는 문제 대비 */
+body{
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+/* ✅ HUD 전체 높이/레이아웃 안정화 */
+.hero-hud{
+  /* 이미 다른 값이 있어도 괜찮아(덮어쓰기) */
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* 중요: 내부 스크롤이 제대로 되게 */
+}
+
+/* ✅ MISSION FEED 창(스크롤+입력창 포함) */
+.hud-window{
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* 중요 */
+  /* 입력창이 홈바에 가리지 않도록 아래 여유 */
+  padding-bottom: calc(12px + var(--safe-b));
+  box-sizing: border-box;
+}
+
+/* ✅ 스크롤 되는 로그 영역: 입력창/세이프영역만큼 높이 빼기 */
+.hud-lines{
+  flex: 1;
+  min-height: 0;           /* 중요 */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  /* 아래 입력창 + safe-area 만큼 내용이 가려지지 않게 */
+  padding-bottom: calc(var(--hud-input-h) + 12px + var(--safe-b));
+  box-sizing: border-box;
+}
+
+/* ✅ 맨 아래 입력창: sticky로 바닥에 붙이고 safe-area 만큼 패딩 */
+.hud-input{
+  position: sticky;
+  bottom: 0;
+
+  /* 홈바에 안 먹히게 */
+  padding-bottom: var(--safe-b);
+
+  /* iOS에서 sticky 안정화 */
+  z-index: 5;
+  box-sizing: border-box;
+  background-clip: padding-box;
+}
+
+/* (선택) iOS에서 input zoom/레이아웃 튐 방지 */
+#hudInput{
+  font-size: 16px; /* iOS 사파리 자동 확대 방지 */
+}
