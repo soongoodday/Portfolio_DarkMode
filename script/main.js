@@ -1748,3 +1748,76 @@ window.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('mousemove', onMove, { passive: true });
 })();
+
+
+
+
+
+(() => {
+  const joy = document.querySelector('.hero-joystick');
+  if (!joy) return;
+
+  const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+  if (reduce) return;
+
+  // 조절값
+  const NEAR_PX = 220;      // 근접 판정 거리
+  const MAX_PUSH = 10;      // 마우스 방향으로 밀리는 최대 px
+  const MAX_ROT = 10;       // 추가 회전 최대 deg
+  const SCALE_NEAR = 1.06;  // 근접 시 스케일
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let raf = null;
+
+  const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
+  function tick() {
+    raf = null;
+
+    const r = joy.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+
+    const dx = mouseX - cx;
+    const dy = mouseY - cy;
+    const dist = Math.hypot(dx, dy);
+
+    const t = 1 - clamp(dist / NEAR_PX, 0, 1); // 0(멀다) ~ 1(가깝다)
+
+    // 근접 클래스
+    if (t > 0.12) joy.classList.add('is-near');
+    else joy.classList.remove('is-near');
+
+    // 마우스 방향으로 아주 살짝 밀기 + 회전
+    const nx = dist ? dx / dist : 0;
+    const ny = dist ? dy / dist : 0;
+
+    const pushX = nx * MAX_PUSH * t;
+    const pushY = ny * MAX_PUSH * t;
+
+    // 기본 회전(-6deg)에 근접 회전 더하기
+    const addRot = clamp(nx * MAX_ROT * t, -MAX_ROT, MAX_ROT);
+
+    const sc = 1 + (SCALE_NEAR - 1) * t;
+
+    // transform 덮어쓰기 (float 애니메이션과 섞이면 복잡해져서,
+    // 근접 시에는 is-near에서 animation pause 시켜둠)
+    if (t > 0.12) {
+      joy.style.transform =
+        `translate3d(${pushX}px, ${pushY}px, 0) rotate(${(-6 + addRot).toFixed(2)}deg) scale(${sc.toFixed(3)})`;
+    } else {
+      // 멀어지면 인라인 제거해서 float 애니메이션으로 복귀
+      joy.style.transform = '';
+    }
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: true });
+
+  // 터치 환경: 굳이 반응 안 하게 (원하면 터치로도 켤 수 있음)
+})();
+
